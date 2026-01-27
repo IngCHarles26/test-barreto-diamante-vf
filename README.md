@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Agregar precio de compra de los activos
+https://registrohuespedes.migraciones.gob.pe/web_sigrhe/ResponsableHospedaje/Index
 
-## Getting Started
+"busar API"
+retirar el pdf de los reportes de extrangeros
+(los reportes de extrangeros se llenan diarios)
+agregar la funcionalidad para agregar el costo mensual de los choferes (ABC Cargas)
+agregar base de datos de chasis
+Crear un abase de datos de empresas y poder asignarlas al momento de crear u nnuevo client
 
-First, run the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+ECHO
+Color en estadias
+Registrar imagenes de como encontraron la habitación si
+Opcion para guardar imagenes de como dejaron el cuarto si
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+PENDIENTE
+agregar un tiempo de caducidadd a los activos
+agregar la columna de caducidad en la lista de activos por habitacin
+Agregar pagos por adelantado
+Agre finalizacion de estafia individual
+Agregar un Alias pendiente
+Opcion de resetear contraseña
+Poner una marca cuando el cliente esta betado pendiente
+Agregar un componente de validación de caja
+Sgregar un resumen diario del flujo de caja
+Con validaciones diarias
+Con porcentaje de efectivo yape y transferencia
+Agregar comentarios de la validacion de caja por dia
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-## Learn More
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
