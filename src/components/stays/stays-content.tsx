@@ -1,10 +1,11 @@
 import { months, years } from "@/lib"
 import { FilterSelect, PageContent, PageHeader, SearchButton } from "../general"
 import { DetailStay } from "./detail-stay"
-import { StaysTable } from "./stays-table"
+import { StaysTable, StayTableProps } from "./stays-table"
+import { HistoryRow } from "./stays-table-row";
 
 
-export const reservaciones = [
+export const reservaciones:HistoryRow[] = [
   {
     names: [["Ricardo Guarino", "🇵🇪"], ["Sofía Across Teller", "🇦🇷"]],
     room: 102,

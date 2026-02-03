@@ -1,7 +1,7 @@
 import { PageContent, TableApp, TableHeader, TableRow } from '../general'
 import { CardResume } from './card-resume';
 import { IoMdWallet } from 'react-icons/io';
-import { DailyTableRow } from './daily-table-row';
+import { DailyTableRow, DailyTableRowProps } from './daily-table-row';
 import { FaCheckCircle, FaList } from 'react-icons/fa';
 import { IoShieldCheckmark } from 'react-icons/io5';
 import { GoAlertFill } from 'react-icons/go';
@@ -31,7 +31,7 @@ const estadisticas= [
   }
 ];
 
-const transacciones = [
+const transacciones:DailyTableRowProps[] = [
   {
     hour: "08:30",
     room: 104,

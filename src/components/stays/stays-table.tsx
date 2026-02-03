@@ -4,11 +4,11 @@ import { HistoryRow, StaysTableRow } from './stays-table-row'
 
 
 
-export interface Props{
+export interface StayTableProps{
   staysInfo: HistoryRow[]
 }
 
-export const StaysTable = ({staysInfo}:Props) => {
+export const StaysTable = ({staysInfo}:StayTableProps) => {
   return (
     <TableApp pagination>  
       <TableHeader>

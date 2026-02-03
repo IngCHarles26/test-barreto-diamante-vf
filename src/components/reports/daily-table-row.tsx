@@ -4,7 +4,7 @@ import clsx from 'clsx'
 
 type Method = 'efectivo' | 'yape' | 'transfe' | 'plin'
 
-interface Props{
+export interface DailyTableRowProps{
   hour: string
   room: number
   newDateEnd: Date
@@ -21,7 +21,7 @@ const methodStyles:Record<Method,string> = {
   yape: 'text-white bg-yape',
 }
 
-export const DailyTableRow = ({hour,room,newDateEnd,user,payMethod,operation,price}:Props) => {
+export const DailyTableRow = ({hour,room,newDateEnd,user,payMethod,operation,price}:DailyTableRowProps) => {
   const [date,hourEnd] = formatDate(newDateEnd)
   
   return (
