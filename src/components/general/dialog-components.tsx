@@ -9,7 +9,7 @@ interface CenterDialogProps {
 export const CenterDialog = ({id,children}:CenterDialogProps) => {
   return (
     <dialog 
-      className="p-0 rounded-xl backdrop:bg-body/80 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden outline-0"
+      className="p-0 rounded-xl backdrop:bg-black/90 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden outline-0"
       id={id} popover="auto" 
     >
       {children}
@@ -25,13 +25,13 @@ interface DialogFooterSaveProps {
 export const DialogFooterSave = ({id}:DialogFooterSaveProps) => {
   return (
     <div className='p-3 flex justify-end items-center gap-4 mt-2'>
-      <p className=' mr-auto text-xs text-danger'>Mensaje de error</p>
+      <p className=' mr-auto text-sm text-red-01 font-bold'>Mensaje de error</p>
       
-      <button popoverTarget={id} className='px-3 py-1.5 bg-done-button-bg rounded-lg shadow text-done-button-text hover:opacity-80 transition-all duration-300 cursor-pointer'>
+      <button popoverTarget={id} className='px-3 py-1.5 bg-white-02 rounded-lg shadow text-gray-03 hover:opacity-80 transition-all duration-300 cursor-pointer'>
         Cancelar
       </button>
 
-      <button popoverTarget={id} className='px-3 py-1.5 bg-primary rounded-lg shadow text-white hover:opacity-80 transition-all duration-300 cursor-pointer flex gap-3 items-center'>
+      <button popoverTarget={id} className='px-3 py-1.5 bg-blue-02 rounded-lg shadow text-white hover:opacity-80 transition-all duration-300 cursor-pointer flex gap-3 items-center font-bold'>
         <FaSave />
         Guardar
       </button>
@@ -47,7 +47,7 @@ interface DialogContentProps {
 }
 export const DialogContent = ({children,maxWRem}:DialogContentProps) => {
   return (
-    <div className='flex flex-col gap-1 w-[95dvw] text-body shadow-xl'
+    <div className='flex flex-col gap-1 w-[95dvw] text-black-01 shadow-xl'
       style={{maxWidth: maxWRem+'rem'}}>
       {children}
     </div>
@@ -65,10 +65,10 @@ interface DialogHeaderProps {
 export const DialogHeader = ({Icon,title,subTitle,children}:DialogHeaderProps) => {
   return (
     <div className='bg-primary w-full px-3 pt-3 pb-2 flex items-center gap-3 text-white mb-2'>
-      <Icon  className='size-10 md:size-13 bg-back-white text-primary px-2 rounded-lg'/>
+      <Icon  className='size-10 md:size-13 bg-white text-primary px-2 rounded-lg'/>
       <div>
         <p className='text-xl md:text-2xl font-bold '>{title}</p>
-        <p className='hidden md:block text-sm text-back-1'>{subTitle}</p>
+        <p className='hidden md:block text-sm text-white-04'>{subTitle}</p>
       </div>
 
       <div className='ml-auto flex flex-col items-end'>

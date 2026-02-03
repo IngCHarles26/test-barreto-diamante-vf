@@ -35,7 +35,7 @@ const sideBarItems= [
     Icon: FaClipboard  , 
     options:[
       {name:'Flujo de Caja',href:'/dashboard/reports/daily'},
-      {name:'Choferes',href:'/dashboard/reports/drivers'},
+      // {name:'Choferes',href:'/dashboard/reports/drivers'},
     ]
   },
   {
@@ -51,25 +51,25 @@ export const Sidebar = () => {
   return (
     <div className='h-dvh w-70 flex flex-col sticky bottom-0 bg-bg-1 z-30 bg-bg-sidebar border-r border-border-sidebar'>
 
-      <header className="w-full flex p-4 gap-3 items-center  ">
-        <LuHotel className="size-13 bg-primary text-white p-2 rounded-lg"/>
+      <header className="w-full flex px-3 py-2 gap-3 items-center  ">
+        <LuHotel className="size-11 md:size-13 bg-blue-02 text-white p-1.5 rounded-lg"/>
 
         <div className="h-full">
-          <p className="font-extrabold uppercase text-title text-xl ">Hostal BArreto</p>
-          <p className=" text-sub-title text-lg">Administrador</p>
+          <p className="font-extrabold uppercase text-black-01 text-lg md:text-xl ">Hostal BArreto</p>
+          <p className=" text-gray-02 text-base md:text-lg">Administrador</p>
         </div>
 
       </header>
 
-      <section className="flex-1">
+      <section className="flex-1 ml-1">
         { sideBarItems.map( (item,ix) => <SidebarItem key={'sideBarMenuItem'+ix} {...item}/>) }
       </section>
 
-      <footer className="w-full flex items-center justify-between p-2 gap-2 border-t border-border-sidebar">
+      <footer className="w-full flex items-center justify-between px-3 py-2 gap-2 border-t border-border-sidebar">
         <div className="flex gap-2 items-center">
           <div className='relative'>
             <button >
-              <FaUserCog  className="size-9 text-body"/>
+              <FaUserCog  className="size-7 text-gray-03"/>
             </button>
             {/* Popover */}
             <div className="absolute left-0 bottom-15 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform w-max bg-primary text-white px-2 py-1 rounded shadow-lg z-50">
@@ -78,17 +78,17 @@ export const Sidebar = () => {
             </div>
           </div>
 
-          <p className="font-bold text-title text-xl">Carlos C.</p>
+          <p className="font-bold text-gray-03 text-xl font-code">User_Carlos</p>
         </div>
 
         <div className="relative group inline-block ">
           <button className="rounded flex items-center" popoverTarget='modal-session'>
-            <IoIosLogOut className="size-9 text-title"/>
+            <IoIosLogOut className="size-8 text-gray-05"/>
           </button>
           {/* Popover */}
-          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-5 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform w-max bg-primary text-white px-2 py-1 rounded shadow-lg z-50">
+          <div className="absolute left-full top-1/2 -translate-y-1/2 ml-5 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-300 transform w-max bg-blue-02 text-white px-2 py-1 rounded shadow-lg z-50 font-bold">
             Cerrar Sesion
-            <div className="absolute right-full top-1/2 -translate-y-1/2  border-8 border-transparent border-r-primary"/>
+            <div className="absolute right-full top-1/2 -translate-y-1/2  border-8 border-transparent border-r-blue-02"/>
           </div>
         </div>
       </footer>

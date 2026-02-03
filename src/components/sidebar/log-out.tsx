@@ -13,7 +13,7 @@ export const LogOut = () => {
   return (
     <CenterDialog id='modal-session'>
       <div className="p-6 w-100 bg-background-light flex flex-col items-center gap-2">
-        <IoIosLogOut  className="size-18 text-red-500 bg-red-100 p-4.5 rounded-full mb-4"/>
+        <IoIosLogOut  className="size-18 text-red-01 bg-red-01/10 p-4.5 rounded-full mb-4"/>
         
         <h3 className="text-xl font-bold">¿Cerrar Sesion?</h3>
         <p className="text-gray-600 mb-6">
@@ -27,7 +27,7 @@ export const LogOut = () => {
           </button>
           <button 
             onClick={onLogOut}
-            className="bg-primary text-white px-8 py-2 rounded-lg transition-colors cursor-pointer hover:opacity-80"
+            className="bg-blue-03 text-white px-8 py-2 rounded-lg transition-colors cursor-pointer hover:opacity-80"
             popoverTarget="modal-session" popoverTargetAction="hide">
             Salir
           </button>

@@ -1,5 +1,5 @@
 import { CenterDialog, DialogContent, DialogFooterSave, DialogHeader, InputApp } from '../general'
-import { FaCalendarCheck, FaCalendarTimes, FaPhoneAlt, FaUser } from 'react-icons/fa'
+import { FaCalendarCheck, FaCalendarTimes, FaPeopleArrows, FaPhoneAlt, FaUser } from 'react-icons/fa'
 import { FaPeopleGroup } from 'react-icons/fa6'
 import { MdOutlineMeetingRoom, MdRoomPreferences } from 'react-icons/md'
 
@@ -54,7 +54,7 @@ export const ReservationForm = () => {
             placeHolder="+51 *** *** ***"
           />
           <InputApp
-            Icon={FaPeopleGroup }
+            Icon={FaPeopleArrows}
             label="Numero de Personas"
             inputId="input-persons"
             type="number"

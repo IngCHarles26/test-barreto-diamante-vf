@@ -58,9 +58,9 @@ export const CalendarReportContent = () => {
         
       </div>
 
-      <div className="mt-auto">
+      {/* <div className="mt-auto">
         footer
-      </div>
+      </div> */}
     </PageContent>
   )
 }

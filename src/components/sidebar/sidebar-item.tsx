@@ -14,7 +14,7 @@ interface SideBarItemProps {
 export const SidebarItem = ({Icon,title,options}:SideBarItemProps) => {
   return (
     <details className="w-full group ease-in-out z-10 overflow-hidden mb-1 p-1">
-      <summary className="cursor-pointer pt-1 pb-1.5 px-1.5 flex justify-between items-center rounded-lg group-hover:bg-hover-back-1 group-hover:text-primary duration-300 text-sub-title">
+      <summary className="cursor-pointer pt-1 pb-1.5 px-1.5 flex justify-between items-center rounded-lg group-hover:bg-blue-01 group-hover:text-white duration-300 text-gray-03">
         <div className="flex items-center gap-2">
           <Icon className="size-6" />
             <p className="group-open:font-bold text-xl">
@@ -23,16 +23,13 @@ export const SidebarItem = ({Icon,title,options}:SideBarItemProps) => {
         </div>
           <IoIosArrowDown size={15} className="group-open:-rotate-180 duration-300"/>
       </summary>
-        <div className="text-body">
-          {/* <div className="self-stretch flex items-center">
-            <div className="border-r border-body group-hover:border-primary h-full "/> 
-          </div> */}
+        <div className="text-gray-06">
+          {/*<div className="self-stretch flex items-center"><div className="border-r border-body group-hover:border-primary h-full "/></div> */}
           <ul className="w-[87%] ml-auto">
-            {
-              options.map(({name,href},ix) => 
-                <Link key={'option'+name+ix} href={href} className="w-full">
-                  <p className="py-0.5 px-2 rounded-lg hover:text-primary hover:font-bold cursor-pointer w-full duration-300 text-lg">{name}</p>
-                </Link>)
+            {options.map(({name,href},ix) => 
+              <Link key={'option'+name+ix} href={href} className="w-full">
+                <p className="py-0.5 px-2 rounded-lg hover:text-blue-01 hover:font-bold cursor-pointer w-full duration-300 text-lg">{name}</p>
+              </Link>)
             }
           </ul>
         </div>
