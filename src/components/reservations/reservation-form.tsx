@@ -77,16 +77,16 @@ export const ReservationForm = () => {
         <div className='px-3 mt-1'>
           <p className='mb-1 text-sm font-bold'>Seleccciona las habitaciones</p>
 
-          <div className='border rounded border-neutral-300'>
+          <div className='rounded shadow border border-back-1'>
 
             <div className='flex bg-back-1 items-center border-b border-hover-back-1'>
-              <p className='w-1/3 p-1 text-center'>Tipo</p>
-              <p className='w-2/3 border-l border-neutral-300 p-1 text-center'>Habitaciones Disponibles</p>
+              <p className='w-1/3 p-1 text-center'>TIPO</p>
+              <p className='w-2/3 border-l border-neutral-300 p-1 text-center'>HABITACIONES DISPONIBLES</p>
             </div>
 
             {habitaciones.map( ({type,rooms}) => 
               <div key={'input_type_'+type} className='flex items-center'>
-                <div className='w-1/3 border-hover-back-1 p-1 text-sm flex items-center justify-between '>
+                <div className='w-1/3 border-hover-back-1 py-1 px-2 text-sm flex items-center justify-between '>
                   <p>{type}</p>
                   <div className='flex items-center'>
                     <p className='md:mb-0.5'>{rooms.length}</p>
@@ -114,7 +114,7 @@ export const ReservationForm = () => {
 
         <div className='px-3 mt-1'>
           <p className='mb-1 text-sm font-bold'>Observaciones</p>
-          <textarea placeholder='Escribe aqui cualquier observacion .... ' className='w-full shadow rounded focus-within:ring-1 focus-within:ring-details outline-none border border-hover-back-1 resize-none h-20 p-1'/>
+          <textarea placeholder='Escribe aqui cualquier observacion .... ' className='w-full shadow rounded focus-within:ring-1 focus-within:ring-details outline-none border border-back-1 resize-none h-20 p-1'/>
         </div>
 
 

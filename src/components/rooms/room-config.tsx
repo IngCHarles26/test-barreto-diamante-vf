@@ -2,9 +2,13 @@ import { MdOutlineRoomPreferences } from "react-icons/md"
 import { CenterDialog, DialogContent, DialogFooterSave, DialogHeader, InputApp } from "../general"
 import { FaDoorClosed, FaLevelUpAlt, FaMoneyBill, FaSmile } from "react-icons/fa"
 
-export const RoomConfig = () => {
+interface Props {
+  room: number
+}
+
+export const RoomConfig = ({room}:Props) => {
   return (
-    <CenterDialog id="detail-room">
+    <CenterDialog id={"detail-room"+room}>
       <DialogContent maxWRem={35}>
         
         <DialogHeader
@@ -12,7 +16,7 @@ export const RoomConfig = () => {
           title='Configuracion de Habitacion'
           subTitle="Solo se guardaran los cambios realizados">
 
-          <p className="text-3xl text-back-header font-bold">101</p>
+          <p className="text-3xl text-back-header font-bold">{room}</p>
         </DialogHeader>
 
         <div className='px-3 grid grid-cols-2 gap-3 md:gap-4 items-center'>
@@ -23,6 +27,7 @@ export const RoomConfig = () => {
             inputId="input-type-room"
             type="select"
             selectData={['Matrimonial','Simple','Familiar']}
+            className="col-span-2"
           />
 
           <InputApp
@@ -40,19 +45,11 @@ export const RoomConfig = () => {
             type="select"
             selectData={['1','2','3']}
           />
-
-          <InputApp
-            Icon={FaSmile}
-            label="Estado"
-            inputId="input-status"
-            type="select"
-            selectData={['Activo','Inactivo']}
-          />
           
         </div>
         
 
-        <DialogFooterSave id="detail-room"/>
+        <DialogFooterSave id={"detail-room"+room}/>
 
       </DialogContent>
     </CenterDialog>

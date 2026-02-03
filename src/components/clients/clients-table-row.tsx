@@ -2,6 +2,8 @@ import Link from 'next/link'
 import React from 'react'
 import { TbListDetails } from 'react-icons/tb'
 import { TableRow } from '../general'
+import { genRandomColor } from '@/lib'
+import { FaBan, FaEye, FaStar, FaStarHalf } from 'react-icons/fa'
 
 interface Props {
   id: number
@@ -10,35 +12,50 @@ interface Props {
   typeDocument: string
   numberDocument: string
   flag: string
+  country: string
   age: number
   rank: number
   banned?: true
 }
 
-export const ClientsTableRow = ({id,firstName,lastName,typeDocument,numberDocument,flag,age,rank,banned}:Props) => {
+export const ClientsTableRow = ({id,firstName,lastName,typeDocument,numberDocument,flag,age,rank,banned,country}:Props) => {
+  const color = genRandomColor()
+  const fullRank = Math.floor(rank)
+  const halfRank = Math.ceil(rank - fullRank)
+  
+  
   return (
     <TableRow>
 
-      <div className="w-[43%] md:w-[38%] px-2 flex justify-between">
-        <p className=''>{lastName}, {firstName}</p>
-        <p className='text-red-500'>{banned && '🛇'} </p>
+      <div className="w-[50%] md:w-[38%] px-2 flex items-center gap-1">
+        <div className='rounded-full text-2xl font-bold w-16 h-12  items-center justify-center hidden md:flex mr-2'  
+          style={{backgroundColor: `${color}10`,color: `${color}`}}>
+          <p>{firstName[0]}{lastName[0]}</p>
+        </div>
+        <p className='text-lg md:text-xl font-bold'>{lastName}, {firstName}</p>
+        {banned && <FaBan className='text-danger'/> }
       </div>
 
-      <div className="w-[25%] md:w-[15%] text-center">
-        <p className='text-sm -mb-1'>{numberDocument}</p>
-        <p className='text-neutral-500 scale-90 -mt-1'>{typeDocument}</p>
+      <p className="w-[10%] md:w-[15%] text-lg">
+        {flag} <span className='hidden md:inline'>{country}</span>
+      </p>
+
+      <div className="w-[30%] md:w-[15%]">
+        <p className='text-sm md:text-lg -mb-1'>{numberDocument}</p>
+        <p className='text-neutral-500  -mt-1'>{typeDocument}</p>
       </div>
 
-      <p className="w-[10%] md:w-[15%] text-center">{flag}</p>
+      <p className="md:w-[10%] hidden md:block">{age}</p>
 
-      <p className="md:w-[10%] hidden md:block text-center">{age}</p>
+      <div className="md:w-[12%] justify-center hidden md:flex">
+         {Array.from({length:fullRank}, (_,ix) => <FaStar key={'star_'+ix} className='text-stars size-4'/>)}
+         {Array.from({length:halfRank}, (_,ix) => <FaStarHalf key={'star_'+ix} className='text-stars size-4'/>)}
+      </div>
 
-      <p className="w-[10%] md:w-[12%] text-center">{rank}</p>
-
-      <div className='w-[12%] md:w-[10%] flex justify-center '>
+      <div className='w-[10%] md:w-[10%] flex justify-center '>
         <Link href={`/dashboard/clients/${id}`}>
-          <div  className='cursor-pointer rounded-md p-1.5 md:px-2 bg-green-app text-white hover:opacity-80'>
-            <TbListDetails className="mx-auto size-4 md:size-4.5" /> 
+          <div  className='cursor-pointer rounded-md p-1.5 md:px-2 bg-primary text-white hover:opacity-80'>
+            <FaEye  className="mx-auto size-4 md:size-5 lg:size-6" /> 
           </div> 
         </Link>
       </div>

@@ -25,13 +25,13 @@ export const ConfirmBan = ({banned}:Props) => {
         </p>
         
         <div className='w-full flex items-center justify-between'>
-          <button className='px-5 py-2 bg-gray-200 rounded-lg cursor-pointer hover:opacity-80' 
+          <button className='px-5 py-2 bg-gray-200 rounded-lg cursor-pointer ' 
             popoverTarget="confirm-user-ban" popoverTargetAction="hide" >
             NO
           </button>
           <button 
             className={clsx(
-              "text-white px-8 py-2 rounded-lg transition-colors cursor-pointer hover:opacity-80",
+              "text-white px-5 py-2 rounded-lg cursor-pointer",
               banned ? 'bg-details' : 'bg-danger '
             )}
             popoverTarget="confirm-user-ban" popoverTargetAction="hide">

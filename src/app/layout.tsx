@@ -6,6 +6,7 @@ export const metadata: Metadata = {
   description: "Aplicacion de Next",
 };
 
+
 export default function RootLayout({
   children,
 }: Readonly<{

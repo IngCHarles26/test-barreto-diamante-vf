@@ -7,16 +7,13 @@ export default function ReservationsPage() {
       
       <PageTitle 
         title="Reservaciones"
+        subTitle="Registra y administra las reservaciones de los clientes"
         children={ 
           <HeaderButton target={"form-create-reservation"} Icon={FaPlus} textMobile="Nueva" textDesktop="Reservacion" />
           }  
       />
 
-      <section className="flex-1 ">
-
-        <ReservationsContent/>
-        
-      </section>
+      <ReservationsContent/>
      
     </div>
   );

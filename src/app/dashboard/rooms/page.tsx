@@ -6,11 +6,7 @@ export default function RoomsPage() {
       
       <PageTitle  title="Relacion de Habitaciones"/>
 
-      <section className="flex-1">
-
-        <RoomsContent/>
-        
-      </section>
+      <RoomsContent/>
      
     </div>
   );

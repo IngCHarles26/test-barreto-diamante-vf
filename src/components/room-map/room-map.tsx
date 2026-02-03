@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { Room, RoomProps } from './room';
 import { Fragment } from "react/jsx-runtime";
+import { RoomLegend } from "./room-legend";
 
 interface Floor {
   id: string
@@ -15,11 +16,11 @@ const pisos:Floor[] = [
     src: '/plano_prueba.jpg',
     name: 'Piso 1',
     rooms: [
-      {number: 101, top: 20, left: 33, status: 'free', },
-      {number: 102, top: 33, left: 63, status: 'busy', },
-      {number: 103, top: 58, left: 57, status: 'reserved', disabled: true},
-      {number: 104, top: 77, left: 34, status: 'free', },
-      {number: 105, top: 80, left: 67, status: 'reserved', },
+      {number: 101, top: 19, left: 29, status: 'free', },
+      {number: 102, top: 36, left: 67, status: 'busy', },
+      {number: 103, top: 57, left: 57, status: 'reserved', disabled: true},
+      {number: 104, top: 74, left: 25, status: 'free', },
+      {number: 105, top: 77, left: 72, status: 'reserved', },
     ]
   },
   {
@@ -27,11 +28,11 @@ const pisos:Floor[] = [
     src: '/plano_prueba.jpg',
     name: 'Piso 2',
     rooms:[
-      {number: 201, top: 20, left: 33, status: 'free', },
-      {number: 202, top: 33, left: 63, status: 'busy', },
-      {number: 203, top: 58, left: 57, status: 'free', },
-      {number: 204, top: 77, left: 34, status: 'reserved', },
-      {number: 205, top: 80, left: 67, status: 'busy', },
+      {number: 201, top: 19, left: 29, status: 'free', },
+      {number: 202, top: 36, left: 67, status: 'busy', },
+      {number: 203, top: 57, left: 57, status: 'free', },
+      {number: 204, top: 74, left: 25, status: 'reserved', },
+      {number: 205, top: 77, left: 72, status: 'busy', },
     ]
   },
   {
@@ -39,70 +40,62 @@ const pisos:Floor[] = [
     src: '/plano_prueba.jpg',
     name: 'Piso 3',
     rooms:[
-      {number: 201, top: 20, left: 33, status: 'free', },
-      {number: 202, top: 33, left: 63, status: 'free', },
-      {number: 203, top: 58, left: 57, status: 'free', },
-      {number: 204, top: 77, left: 34, status: 'free', },
-      {number: 205, top: 80, left: 67, status: 'free', disabled: true },
+      {number: 201, top: 19, left: 29, status: 'free', },
+      {number: 202, top: 36, left: 67, status: 'free', },
+      {number: 203, top: 57, left: 57, status: 'free', },
+      {number: 204, top: 74, left: 25, status: 'free', },
+      {number: 205, top: 77, left: 72, status: 'free', disabled: true },
     ]
   },
 ]
 
 const __html = pisos.map( ({id}) => `
   .peer\\/${id}:checked ~ div.peer-checked\\/${id}\\:block { display: block; } 
-  body:has(#${id}:checked) label[for="${id}"] { background: #137fec; color: white; }`).join('')
+  body:has(#${id}:checked) label[for="${id}"] { background: #fff; color: #0d5caf; font-weight: bold; }`).join('')
+
+const legend = [
+  {color: 'bg-green-500' , label: 'Libre' },
+  {color: 'bg-blue-500' , label: 'Separado' },
+  {color: 'bg-orange-500' , label: 'Ocupado' },
+  {color: 'bg-background-dark' , label: 'No Disponible' },
+]
 
 
 export const RoomMap = () => {
   return (
-    <div className="h-full w-full flex flex-col items-center justify-center p-4 ">
+    <div className="w-full h-full md:w-auto md:h-full max-h-250 min-h-150 flex flex-col md:flex-col-reverse items-center justify-between gap-2">
 
-      <div className="flex w-full justify-center gap-3 mb-3">
-        <div className="flex items-center gap-1">
-          <div className="size-2 rounded bg-green-500"/>
-          <p className="text-xs">Libre</p>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="size-2 rounded bg-blue-500"/>
-          <p className="text-xs">Separado</p>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="size-2 rounded bg-red-500"/>
-          <p className="text-xs">Ocupado</p>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="size-2 rounded bg-background-dark"/>
-          <p className="text-xs">No Disponible</p>
-        </div>
-      </div>
-      
-      <div className="relative w-full max-w-lg  p-6 min-h-150">
-
-        {
-          pisos.map( ({id,rooms,src},ixFloor) => (
-            <Fragment key={'floor_'+ixFloor}>
-              <input type="radio" id={id} name="piso-selector" className={`hidden peer/${id}`} defaultChecked={ixFloor == 0}/>
-              <div className={`hidden peer-checked/${id}:block animate-in fade-in zoom-in-95 duration-300`}>
-                <Image 
-                  src={src}
-                  alt={`imagen fondo piso`} 
-                  fill 
-                  className='object-contain image-room-map'
-                />
-
-                {rooms.map( (data,ixRoom) => (<Room {...data} key={`room_piso_${ixFloor}_${ixRoom}`}/>))}
-              </div>
-            </Fragment>
-          ))
-        }
-        
+      <div className="flex w-full justify-center gap-2">
+        {legend.map( (el,ix) => <RoomLegend key={'room-legend-'+ix} {...el}/>)}
       </div>
 
-      <div className="mt-6 flex p-1 bg-blue-50/50 rounded-xl border border-primary w-fit">
+      <div className="relative h-full aspect-11/20 ">
+
+          {
+            pisos.map( ({id,rooms,src},ixFloor) => (
+              <Fragment key={'floor_'+ixFloor}>
+                <input type="radio" id={id} name="piso-selector" className={`hidden peer/${id}`} defaultChecked={ixFloor == 0}/>
+                <div className={`hidden peer-checked/${id}:block w-full h-full `}>
+                  <Image 
+                    src={src}
+                    alt={`imagen fondo piso`} 
+                    fill 
+                    className=''
+                  />
+
+                  {rooms.map( (data,ixRoom) => (<Room {...data} key={`room_piso_${ixFloor}_${ixRoom}`}/>))}
+                </div>
+              </Fragment>
+            ))
+          }
+
+      </div>
+
+      <div className="flex p-1 bg-back-1 rounded-xl  w-fit">
         {
           pisos.map(({id,name},ix) => (        
           <label 
-            className={`px-4 py-2 text-sm font-medium rounded-lg cursor-pointer transition-all peer-checked/${id}:bg-white peer-checked/${id}:shadow-md peer-checked/${id}:text-blue-600 hover:bg-primborder-primary/50 text-gray-500`}
+            className={`px-3 py-1.5 text-lg md:text-base rounded-lg cursor-pointer transition-all hover:opacity-80 text-sub-title`}
             htmlFor={id} key={'label_'+ix}>
             {name}
           </label>))
@@ -114,3 +107,5 @@ export const RoomMap = () => {
     </div>
   )
 }
+
+

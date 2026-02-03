@@ -10,11 +10,7 @@ export default function UsersPage() {
         children={<HeaderButton target="new-user" Icon={FaPlus} textMobile="Nuevo" textDesktop="Usuario" />}
       />
 
-      <section className="flex-1 ">
-
-        <UsersContent/>
-        
-      </section>
+      <UsersContent/>
         
     </div>
   );

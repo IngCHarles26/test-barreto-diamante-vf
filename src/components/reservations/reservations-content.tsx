@@ -1,18 +1,17 @@
 import { CiSearch } from 'react-icons/ci'
-import { PageContent, PageHeader, Pagination, SearchButton, TableFooter, TableHeader, TableSeparator } from '../general'
+import { FilterInput, FilterSelect, PageContent, PageHeader, Pagination, SearchButton, TableApp, TableFooter, TableHeader, TableSeparator } from '../general'
 import { ReservationsTableRow } from './reservation-table-row'
 import { ReservationForm } from './reservation-form'
-import { MdMeetingRoom } from 'react-icons/md'
 
 
-const dataRows = [
+const bookings = [
   { 
     name: 'Carlos Condori',
     phone: 936664619,
     persons: 3,
-    rooms: [101,102],
-    start: new Date(),
-    end: new Date(),
+    rooms: [101, 102],
+    start: new Date('2026-01-28'),
+    end: new Date('2026-01-30'),
     active: true,
     price: 30
   },
@@ -20,62 +19,178 @@ const dataRows = [
     name: 'Julio Condori',
     phone: 936664619,
     persons: 10,
-    rooms: [101,202,203,204],
-    start: new Date(),
-    end: new Date(),
-    // active: true,
+    rooms: [101, 202, 203, 204],
+    start: new Date('2026-02-01'),
+    end: new Date('2026-02-05'),
+    active: true, // Lo mantengo activo para consistencia, pero puedes comentarlo
+    price: 120
+  },
+  { 
+    name: 'Ana Vizcarra',
+    phone: 955123456,
+    persons: 2,
+    rooms: [305],
+    start: new Date('2026-01-29'),
+    end: new Date('2026-02-01'),
+    active: true,
+    price: 45
+  },
+  { 
+    name: 'Marcos Quispe',
+    phone: 988765432,
+    persons: 5,
+    rooms: [105, 106],
+    start: new Date('2026-03-10'),
+    end: new Date('2026-03-15'),
+    active: false,
+  },
+  { 
+    name: 'Lucía Fernández',
+    phone: 912345678,
+    persons: 1,
+    rooms: [401],
+    start: new Date('2026-01-20'),
+    end: new Date('2026-01-22'),
+    active: false,
+    price: 25
+  },
+  { 
+    name: 'Carlos Condori',
+    phone: 936664619,
+    persons: 3,
+    rooms: [101, 102],
+    start: new Date('2026-01-28'),
+    end: new Date('2026-01-30'),
+    active: true,
     price: 30
   },
-]
+  { 
+    name: 'Julio Condori',
+    phone: 936664619,
+    persons: 10,
+    rooms: [101, 202, 203, 204],
+    start: new Date('2026-02-01'),
+    end: new Date('2026-02-05'),
+    active: true, // Lo mantengo activo para consistencia, pero puedes comentarlo
+    price: 120
+  },
+  { 
+    name: 'Ana Vizcarra',
+    phone: 955123456,
+    persons: 2,
+    rooms: [305],
+    start: new Date('2026-01-29'),
+    end: new Date('2026-02-01'),
+    active: true,
+    price: 45
+  },
+  { 
+    name: 'Marcos Quispe',
+    phone: 988765432,
+    persons: 5,
+    rooms: [105, 106],
+    start: new Date('2026-03-10'),
+    end: new Date('2026-03-15'),
+    active: false,
+  },
+  { 
+    name: 'Lucía Fernández',
+    phone: 912345678,
+    persons: 1,
+    rooms: [401],
+    start: new Date('2026-01-20'),
+    end: new Date('2026-01-22'),
+    active: false,
+    price: 25
+  },
+  { 
+    name: 'Carlos Condori',
+    phone: 936664619,
+    persons: 3,
+    rooms: [101, 102],
+    start: new Date('2026-01-28'),
+    end: new Date('2026-01-30'),
+    active: true,
+    price: 30
+  },
+  { 
+    name: 'Julio Condori',
+    phone: 936664619,
+    persons: 10,
+    rooms: [101, 202, 203, 204],
+    start: new Date('2026-02-01'),
+    end: new Date('2026-02-05'),
+    active: true, // Lo mantengo activo para consistencia, pero puedes comentarlo
+    price: 120
+  },
+  { 
+    name: 'Ana Vizcarra',
+    phone: 955123456,
+    persons: 2,
+    rooms: [305],
+    start: new Date('2026-01-29'),
+    end: new Date('2026-02-01'),
+    active: true,
+    price: 45
+  },
+  { 
+    name: 'Marcos Quispe',
+    phone: 988765432,
+    persons: 5,
+    rooms: [105, 106],
+    start: new Date('2026-03-10'),
+    end: new Date('2026-03-15'),
+    active: false,
+  },
+  { 
+    name: 'Lucía Fernández',
+    phone: 912345678,
+    persons: 1,
+    rooms: [401],
+    start: new Date('2026-01-20'),
+    end: new Date('2026-01-22'),
+    active: false,
+    price: 25
+  },
+];
 
 export const ReservationsContent = () => {
   return (
-    <PageContent maxWRem={60}>
-      <PageHeader>
-        <div className='flex items-center gap-2 border border-back-header shadow rounded-lg overflow-hidden focus-within:ring-1 focus-within:ring-details '>
-          <p className='bg-back-header h-full py-1 px-2 flex items-center'>
-            <CiSearch />
-          </p>
-          <input type="text" placeholder='Busqueda por Cliente' className='outline-0 w-36 md:w-auto text-sm md:text-lg' />
-        </div>
+    <PageContent>
 
-        <div className='flex items-center gap-2 '>
-          <label htmlFor="select-pending" className='hidden text-xs md:block md:text-lg'>Filtrar Por:</label>
-          <select id='select-pending' className='border pl-1 py-1 rounded-lg h-full border-back-header cursor-pointer hover:opacity-80 text-sm md:text-lg shadow focus-within:ring-1 focus-within:ring-details'>
-            <option value="pending">Todos</option>
-            <option value="pending">Pendientes</option>
-            <option value="already">Registrados</option>
-          </select>
-        </div>
+      <PageHeader>
+        <FilterInput 
+          id='search-client-reservations'
+          placeholder='Buscar por Cliente' 
+        />
+
+        <FilterSelect 
+          id='select-type-reservations' 
+          label='Estado:' 
+          options={['pendiente','registrado','todos']} 
+        />
 
         <SearchButton/>
       </PageHeader>
-      <div className='flex-1 '>
 
+      <TableApp pagination>
         <TableHeader>
-          <p className='w-[40%] md:w-[35%]'>Clientes</p>
-          <p className='w-[25%] md:w-[20%] text-center'>Habitaciones</p>
-          <p className='w-[15%] md:w-[10%] text-center'>Inicio</p>
-          <p className='hidden md:block md:w-[10%] text-center'>Fin</p>
-          <p className='hidden md:block md:w-[10%]'>Adelanto</p>
-          <p className='w-[20%] md:w-[15%]'>Registro</p>
+          <p className='w-[35%] md:w-[35%] '>Clientes</p>
+          <p className='w-[27%] md:w-[20%] '>Habitaciones</p>
+          <p className='w-[15%] md:w-[10%] '>Inicio</p>
+          <p className='hidden md:block md:w-[10%] '>Fin</p>
+          <p className='hidden md:block md:w-[10%] text-center'>Adelanto</p>
+          <p className='w-[20%] md:w-[15%] text-center'>Registro</p>
         </TableHeader>
 
-        <TableSeparator/>
-
         {
-          dataRows.map((el,ix) => <ReservationsTableRow key={'item_reservation_row'+ix} {...el}/>)
+          bookings.slice(0,5).map((el,ix) => <ReservationsTableRow key={'item_reservation_row'+ix} {...el}/>)
         }
 
-        <TableFooter/>
-
-      </div>
-
-      <div className="mx-auto pb-1 md:pb-0">
-        <Pagination/>
-      </div>
+      </TableApp>
       
       <ReservationForm/>
+
     </PageContent>
   )
 }

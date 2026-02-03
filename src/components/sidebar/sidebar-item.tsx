@@ -16,8 +16,8 @@ export const SidebarItem = ({Icon,title,options}:SideBarItemProps) => {
     <details className="w-full group ease-in-out z-10 overflow-hidden mb-1 p-1">
       <summary className="cursor-pointer pt-1 pb-1.5 px-1.5 flex justify-between items-center rounded-lg group-hover:bg-hover-back-1 group-hover:text-primary duration-300 text-sub-title">
         <div className="flex items-center gap-2">
-          <Icon className="size-5" />
-            <p className="group-open:font-bold text-lg">
+          <Icon className="size-6" />
+            <p className="group-open:font-bold text-xl">
               {title}
             </p>
         </div>
@@ -31,7 +31,7 @@ export const SidebarItem = ({Icon,title,options}:SideBarItemProps) => {
             {
               options.map(({name,href},ix) => 
                 <Link key={'option'+name+ix} href={href} className="w-full">
-                  <p className="py-0.5 px-2 rounded-lg text-sm hover:text-primary cursor-pointer w-full duration-300">{name}</p>
+                  <p className="py-0.5 px-2 rounded-lg hover:text-primary hover:font-bold cursor-pointer w-full duration-300 text-lg">{name}</p>
                 </Link>)
             }
           </ul>

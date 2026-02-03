@@ -1,5 +1,4 @@
 import { JSX, ReactNode } from "react"
-import { MdOutlineSearch } from "react-icons/md"
 import { IconType } from 'react-icons'
 
 interface Props {
@@ -12,36 +11,33 @@ interface Props {
 export const HeaderButton = ({target,textDesktop,textMobile,Icon}:Props) => {
   return (
     <button popoverTarget={target}
-      className="cursor-pointer hover:opacity-80 bg-primary rounded-lg px-3 py-2 text-back-white font-bold text-xs md:text-sm flex items-center gap-1 transition-all duration-200"
+      className="cursor-pointer hover:opacity-80 bg-primary rounded-lg md:px-5 px-3 md:py-3 py-2 text-back-white font-bold flex items-center gap-2 transition-all duration-200 md:text-lg text-base"
       >
-      <Icon/>
-        {textMobile}
-      <span className="hidden md:inline"> {textDesktop}</span>
+      <Icon className="size-4 md:size-5 "/>
+      <span className="">{textMobile}</span>
+      <span className="hidden md:inline ">{textDesktop}</span>
     </button>
   )
 }
 
 
-export const SearchButton = () => {
-  return (
-    <button popoverTarget="form-create-reservation" className="bg-back-header rounded-lg px-4 py-2 text-body font-bold text-xs md:text-sm flex items-center gap-2 hover:opacity-80 cursor-pointer transition-all duration-200">
-      <MdOutlineSearch className="size-4"/> 
-      <span className="hidden md:inline"> Buscar</span>
-    </button>
-  )
-}
+
 
 
 interface PageTitleProps {
   title: string
+  subTitle?: string
   children?: JSX.Element
 }
 
-export const PageTitle = ({title,children}:PageTitleProps) => {
+export const PageTitle = ({title,subTitle,children}:PageTitleProps) => {
   return (
-    <header className="w-full px-2 md:px-3 py-2 flex justify-between items-center shadow">
-      <p className="text-2xl md:text-3xl text-title font-bold">{title}</p>
-
+    <header className="w-full max-w-600 p-2 md:px-7 md:py-4 flex justify-between items-center mx-auto">
+      <div>
+        <p className="text-2xl md:text-3xl text-title font-bold uppercase">{title}</p>
+        <p className="hidden md:block text-sub-title">{subTitle}</p>
+      </div>
+      
       {children}
     </header>
   )
@@ -49,14 +45,14 @@ export const PageTitle = ({title,children}:PageTitleProps) => {
 
 interface PageContentProps {
   children: ReactNode
-  maxWRem: number
+  maxWRem?: number
 }
 
 export const PageContent = ({children,maxWRem}:PageContentProps) => {
   return (
-    <section className='w-full mx-auto h-full p-2 md:p-3 flex flex-col text-body justify-end'
-      style={{maxWidth: maxWRem+'rem'}}
-    >
+    <section className='flex-1 w-full py-0  lg:py-0 px-2 md:px-7 md:py-4 flex flex-col text-body bg-white mx-auto' 
+      style={{maxWidth: (maxWRem || 110)+'rem'}}
+      >
       {children}
     </section>
   )
@@ -68,8 +64,11 @@ interface PageHeaderProps {
 
 export const PageHeader = ({children}:PageHeaderProps) => {
   return (
-    <header className='flex w-full mb-4 text-sub-title gap-3'>
+    <header className='flex w-full mb-4 md:mb-7 lg:mb-4 gap-3 justify-between items-center bg-white md:bg-bg-sidebar py-2 lg:py-3 md:py-5 px-0 lg:px-4 md:px-7 rounded-2xl text-sub-title '>
       {children}
     </header>
   )
 }
+
+
+

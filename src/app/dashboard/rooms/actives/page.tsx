@@ -10,11 +10,7 @@ export default function ActivesPage() {
         children={<HeaderButton target="form-create-active" Icon={FaPlus} textMobile="Nuevo" textDesktop="Activo" />}
       />
 
-      <section className="flex-1 ">
-
-        <ActivesContent/>
-        
-      </section>
+      <ActivesContent/>
         
     </div>
   );

@@ -9,7 +9,7 @@ interface CenterDialogProps {
 export const CenterDialog = ({id,children}:CenterDialogProps) => {
   return (
     <dialog 
-      className="p-0 rounded-lg shadow-2xl border-none backdrop:bg-body/80 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+      className="p-0 rounded-xl backdrop:bg-body/80 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden outline-0"
       id={id} popover="auto" 
     >
       {children}
@@ -27,11 +27,11 @@ export const DialogFooterSave = ({id}:DialogFooterSaveProps) => {
     <div className='p-3 flex justify-end items-center gap-4 mt-2'>
       <p className=' mr-auto text-xs text-danger'>Mensaje de error</p>
       
-      <button popoverTarget={id} className='px-3 py-1.5 bg-neutral-200 rounded-lg shadow text-neutral-600 hover:opacity-80 transition-all duration-300 cursor-pointer'>
+      <button popoverTarget={id} className='px-3 py-1.5 bg-done-button-bg rounded-lg shadow text-done-button-text hover:opacity-80 transition-all duration-300 cursor-pointer'>
         Cancelar
       </button>
 
-      <button className='px-3 py-1.5 bg-details rounded-lg shadow text-white hover:opacity-80 transition-all duration-300 cursor-pointer flex gap-3 items-center'>
+      <button popoverTarget={id} className='px-3 py-1.5 bg-primary rounded-lg shadow text-white hover:opacity-80 transition-all duration-300 cursor-pointer flex gap-3 items-center'>
         <FaSave />
         Guardar
       </button>
@@ -64,8 +64,8 @@ interface DialogHeaderProps {
 }
 export const DialogHeader = ({Icon,title,subTitle,children}:DialogHeaderProps) => {
   return (
-    <div className='bg-details w-full p-3 border-b border-gray-300 flex items-center gap-3 text-white mb-2'>
-      <Icon  className='size-10 md:size-13 bg-back-white text-details px-2 rounded-lg'/>
+    <div className='bg-primary w-full px-3 pt-3 pb-2 flex items-center gap-3 text-white mb-2'>
+      <Icon  className='size-10 md:size-13 bg-back-white text-primary px-2 rounded-lg'/>
       <div>
         <p className='text-xl md:text-2xl font-bold '>{title}</p>
         <p className='hidden md:block text-sm text-back-1'>{subTitle}</p>
@@ -77,3 +77,5 @@ export const DialogHeader = ({Icon,title,subTitle,children}:DialogHeaderProps) =
     </div>
   )
 }
+
+

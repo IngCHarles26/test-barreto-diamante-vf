@@ -74,7 +74,7 @@ export const DetailStay = () => {
           </div>
         </div>
 
-        <div className='px-3'>
+        <div className='px-3 mt-2'>
           <p className='mb-1 text-sm font-bold'>Cuadro de ocupantes</p>
 
           <div className='border rounded border-neutral-300'>
@@ -103,20 +103,18 @@ export const DetailStay = () => {
           </div>
         </div>
 
-        <div className='px-3'>
-          <div className='mb-1 flex text-sm'>
+        <div className='px-3 mt-2'>
+          <div className='mb-1 flex text-sm items-center justify-between'>
             <p className=' font-bold'>Comentarios</p>
-            <button className='py-1.5 px-2 ml-auto bg-gray-400 rounded-md cursor-pointer hover:opacity-80 text-white'>
-              <MdModeEditOutline/>
-            </button>
-            <button className='py-1.5 px-2 ml-1.5 bg-primary rounded-md cursor-pointer hover:opacity-80 text-white'>
-              <FaSave />
+            <button className='py-1.5 px-2 ml-1.5 bg-primary rounded-md cursor-pointer hover:opacity-80 text-white flex items-center gap-2'>
+              <FaSave className='size-4' />
+              <p className="hidden md:block font-bold">Guardar</p>
             </button>
           </div>
-          <textarea disabled placeholder='Comentarios .... ' className='w-full shadow rounded focus-within:ring-1 focus-within:ring-primary outline-none border border-neutral-300 resize-none h-20 p-1'/>
+          <textarea placeholder='Comentarios .... ' rows={5} className='w-full shadow rounded focus-within:ring-1 focus-within:ring-primary outline-none border border-neutral-300 resize-none p-1'/>
         </div>
 
-        <div className='px-3'>
+        <div className='px-3 mt-2'>
           <div className='mb-1 flex items-center text-sm'>
             <p className='font-bold'>Imagenes y videos</p>
             <a href='#' target='_blank' className='flex items-center text-white gap-2 py-1.5 px-2 ml-auto bg-neutral-400 rounded-md cursor-pointer hover:opacity-80'>
@@ -129,7 +127,11 @@ export const DetailStay = () => {
             </a>
           </div>
         </div>
-        <p className='px-3 text-xs font-bold ml-auto opacity-50'>id: 144999</p>
+
+        <div className='flex justify-between items-center px-3 mb-2'>
+          <p className='text-danger text-xs md:text-sm'>Mensaje Error</p>
+          <p className='text-xs font-bold ml-auto opacity-50 pb-1'>id: 144999</p>
+        </div>
       </DialogContent>
     </CenterDialog>
   )

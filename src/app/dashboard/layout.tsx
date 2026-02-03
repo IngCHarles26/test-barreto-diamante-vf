@@ -15,7 +15,7 @@ export default function DasnboardLayout({
 
       <LogOut/>
 
-      <main className="h-full w-full">
+      <main className="flex-1 overflow-y-auto">
 
         {children}
         

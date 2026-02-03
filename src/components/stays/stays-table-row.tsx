@@ -1,6 +1,6 @@
 import { formatDate } from '@/lib'
-import { TbListDetails } from 'react-icons/tb'
 import { TableRow } from '../general'
+import { FaEye, FaStar, FaWalking } from 'react-icons/fa'
 
 export interface HistoryRow {
   names: [string,string][]
@@ -18,39 +18,45 @@ export const StaysTableRow = ({names,room,stars,start,end,price,user}:HistoryRow
   return (
     <TableRow>
 
-      <div className='px-1 w-[56%] md:w-[37%]'>
+      <div className='w-[40%] md:w-[25%]'>
         {
           names.map( ([name,flag],ix) =>  
-            <div key={'name_row_history_stay_'+name+ix} className="w-full flex justify-between items-center -my-1.5 md:text-lg">
-            <p>{name}</p><p>{flag}</p>
-          </div>)
+            <p key={'name_row_history_stay_'+name+ix} className="-my-1.5 md:text-xl font-bold ml-2">
+              {flag} {name}
+            </p>)
         }
       </div>
 
-      <p className='text-center w-[18%] md:w-[10%] '> {room} </p>
-
-      <div className='text-center w-[16%] md:w-[10%] '>
-        <p className='text-sm -mb-1'>{startDate}</p>
-        <p className='text-neutral-500 scale-80 -mt-1'>{startTime}</p>
+      <div className='w-[18%] md:w-[17.5%] '> 
+        <p className='py-2 bg-back-1 text-sub-title mr-auto md:mx-auto rounded-lg w-12 md:w-14 text-center font-bold'>
+          {room}
+        </p> 
       </div>
 
-      <div className='text-center w-[10%] hidden md:block '>
-        <p className='text-sm -mb-1'>{endDate}</p>
-        <p className='text-neutral-500 scale-80 -mt-1'>{endTime}</p>
+      <div className='w-[30%] md:w-[17.5%] flex flex-col gap-0.5'>
+        <div className='flex gap-1 items-center'>
+            <FaWalking className='text-in-client px-1.5 py-1 rounded-md bg-in-client/20 size-6'/>
+            <p className='md:text-lg'>{startDate}</p>
+            <p className='text-neutral-500 text-sm mt-auto'>{startTime}</p>
+        </div>
+        <div className='flex gap-1 items-center'>
+            <FaWalking className='text-out-client px-1.5 py-1 rounded-md bg-out-client/20 size-6 -scale-x-100'/>
+            <p className='md:text-lg'>{endDate}</p>
+            <p className='text-neutral-500 text-sm mt-auto'>{endTime}</p>
+        </div>
       </div>
 
-      <p className='text-center w-[7%] hidden md:block '>S/ {price}</p>
+      <p className='md:w-[10%] hidden md:block text-money font-bold'>S/ {price}.00</p>
 
-      <p className='text-center w-[12%] hidden md:block text-xs '>{user}</p>
+      <p className='md:w-[10%] hidden md:block'>{user}</p>
 
-      <p className='text-center w-[8%] hidden md:block '>
-        {stars}
-        <span className="text-xl">★</span>
-      </p>
+      <div className='md:w-[10%] hidden md:flex justify-center '>
+        {Array.from({length:stars}, (_,ix) => <FaStar key={'star_'+ix} className='text-stars'/>)}
+      </div>
 
-      <div className='text-center w-[10%] md:w-[8%]'>
-        <button popoverTarget="detail-stay" className='cursor-pointer rounded-md p-1.5 bg-green-app text-white hover:opacity-80'>
-          <TbListDetails className="mx-auto size-4 md:size-4.5" /> 
+      <div className='w-[10%] md:w-[10%] text-center '>
+        <button popoverTarget="detail-stay" className='cursor-pointer rounded-md p-1.5 bg-primary text-white hover:opacity-80'>
+          <FaEye className="mx-auto size-4 md:size-4.5" /> 
         </button> 
       </div>
 

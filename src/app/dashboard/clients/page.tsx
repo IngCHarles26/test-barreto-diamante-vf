@@ -14,11 +14,9 @@ export default function ClientsPage() {
           }  
       />
 
-      <section className="flex-1 ">
         
-        <ClientsContent/>
+      <ClientsContent/>
         
-      </section>
       
     </div>
   );

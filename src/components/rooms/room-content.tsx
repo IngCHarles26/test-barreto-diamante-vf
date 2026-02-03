@@ -1,7 +1,8 @@
 import { MdMeetingRoom } from 'react-icons/md';
-import { PageContent, Pagination, TableFooter, TableHeader } from '../general'
+import { PageContent, Pagination, TableApp, TableFooter, TableHeader } from '../general'
 import { RoomConfig } from './room-config'
 import { RoomTableRow } from './room-table-row'
+import { ToggleActiveRoom } from './toggle-active';
 
 
 const rooms = [
@@ -28,7 +29,7 @@ const rooms = [
   },
   {
     room: 410,
-    type: "Penthouse",
+    type: "Matrimonial",
     price: 300,
     active: true,
     floor: 4
@@ -45,16 +46,19 @@ const rooms = [
 
 export const RoomsContent = () => {
   return (
-    <PageContent maxWRem={40}>
+    <PageContent>
 
-      <div className='flex-1'>
+      <TableApp pagination>
         <TableHeader>
-          <div className='w-[16%]'><MdMeetingRoom className='size-7 mx-auto'/></div>
-          <p className='w-[21%]'>Tipo</p>
-          <p className='w-[16%]'>Precio</p>
-          <p className='w-[16%]'>Piso</p>
-          <p className='w-[16%]'>Activo</p>
-          <p className='w-[15%]'><span className="hidden md:inline">Config</span></p>
+          <div className='w-[16%] flex items-center gap-2'>
+            <MdMeetingRoom className='size-7 block md:hidden'/>
+            <p className='hidden md:block'>Habitacion</p>
+          </div>
+          <p className='w-[22%]'>Tipo</p>
+          <p className='w-[16%] text-center'>Precio</p>
+          <p className='w-[20%] text-center'>Piso</p>
+          <p className='w-[16%] text-center'>Estado</p>
+          <p className='w-[10%] text-center'><span className="hidden md:inline">Activar</span></p>
         </TableHeader>
   
         { 
@@ -62,13 +66,7 @@ export const RoomsContent = () => {
         }
   
         <TableFooter/>
-      </div>
-      
-      <div className="mx-auto pb-1 md:pb-0">
-        <Pagination/>
-      </div>
-
-      <RoomConfig/>
+      </TableApp>
 
     </PageContent>
   )

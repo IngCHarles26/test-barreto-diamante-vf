@@ -1,5 +1,5 @@
 import React from 'react'
-import { PageContent, TableFooter, TableHeader, TableRow } from '../general'
+import { PageContent, TableApp, TableFooter, TableHeader, TableRow } from '../general'
 import { UserTableRow } from './user-table-row';
 import { NewUser } from './new-user';
 import { DisableUser } from './disabled-user';
@@ -69,28 +69,25 @@ const users = [
 
 export const UsersContent = () => {
   return (
-    <PageContent maxWRem={50}>
+    <PageContent>
      
-      <div className='flex-1'>
+      <TableApp>
 
         <TableHeader>
-          <p className='w-[25%]'>Apellidos</p>
-          <p className='w-[25%]'>Nombres</p>
-          <p className='w-[20%]'>Usuario</p>
-          <p className='w-[15%]'>Activo</p>
-          <p className='w-[10%]'><span className="hidden md:inline">Desactivar</span></p>
+          <p className='w-[20%]'>Apellidos</p>
+          <p className='w-[20%]'>Nombres</p>
+          <p className='w-[30%]'>Usuario</p>
+          <p className='w-[15%] text-center'>Activo</p>
+          <p className='w-[15%] text-center'><span className="hidden md:inline">Clave</span></p>
         </TableHeader>
 
         {
           users.map((el,ix) => <UserTableRow key={'user_info_row'+ix} {...el}/>)
         }
 
-        <TableFooter/>
-
-      </div>
+      </TableApp>
 
       <NewUser/>
-      <DisableUser banned={false}/>
       
     </PageContent>
   )
