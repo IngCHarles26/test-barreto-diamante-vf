@@ -1,8 +1,11 @@
 import { InputApp } from "@/components";
-import { RoomMap } from "@/components/room-map/room-map";
+import { redirect } from "next/navigation";
 import { FaAd, FaAdjust } from "react-icons/fa";
 
 export default function DashPage() {
+
+  redirect('/dashboard/stays/register')
+  
   return (
     <div className="w-full h-full bg-white grid grid-cols-2 md:grid-cols-6 gap-3 px-3 items-center">
 
