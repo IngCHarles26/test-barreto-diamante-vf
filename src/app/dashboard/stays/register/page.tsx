@@ -10,7 +10,7 @@ export default function RegisterPage() {
       />
 
       <PageContent>
-        <div className="w-full h-full flex flex-col lg:flex-row pb-5 gap-3 md:gap-5 items-center">
+        <div className="w-full h-full flex flex-col lg:flex-row pb-5 gap-3 md:gap-5 ">
 
           <RoomMap/>
 

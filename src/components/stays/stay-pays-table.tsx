@@ -39,14 +39,14 @@ export const StayPaysTable = () => {
               
       <div className="w-full bg-bg-sidebar flex px-3 md:px-5 py-2 items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="bg-primary/10  px-3 py-2 rounded-xl">
-            <PiCashRegisterFill  className="text-primary size-9"/>
+          <div className="bg-primary/10  px-2 md:px-3 py-2 rounded-xl">
+            <PiCashRegisterFill  className="text-primary size-6 md:size-7 2xl:size-8"/>
           </div>
-          <p className="font-bold text-xl md:text-2xl text-body">Pagos</p>
+          <p className="font-bold text-lg md:text-xl 2xl:text-2xl text-body">Pagos</p>
         </div>
 
-        <button popoverTarget="form-pay-stay" className="bg-primary text-white px-4 rounded-xl font-bold text-base md:text-xl flex items-center gap-1 py-2">
-          <FaMoneyBill1  className="size-6"/>
+        <button popoverTarget="form-pay-stay" className="bg-primary text-white px-3 md:px-4 rounded-xl font-bold text-base md:text-xl flex items-center gap-1 py-2">
+          <FaMoneyBill1  className="size-6 md:size-7 2xl:size-8"/>
           <span className="hidden 2xl:block">Registrar</span>
         </button>
             

@@ -63,7 +63,7 @@ const legend = [
 
 export const RoomMap = () => {
   return (
-    <div className="w-full h-full md:w-auto md:h-full max-h-250 min-h-150 flex flex-col md:flex-col-reverse items-center justify-between gap-2">
+    <div className="w-full h-full md:w-auto md:h-full md:max-h-180 2xl:max-h-230 min-h-150 flex flex-col md:flex-col-reverse items-center justify-between gap-2 md:sticky md:top-10">
 
       <div className="flex w-full justify-center gap-2">
         {legend.map( (el,ix) => <RoomLegend key={'room-legend-'+ix} {...el}/>)}

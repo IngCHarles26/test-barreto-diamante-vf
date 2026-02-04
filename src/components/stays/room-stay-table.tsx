@@ -14,15 +14,6 @@ const personas = [
     typeDocument: "DNI"
   },
   {
-    dateStart: new Date('2026-03-05T09:00:00'),
-    dateEnd: new Date('2026-03-10T17:00:00'),
-    name: "Isabella Silva",
-    flag: "🇧🇷", // Brasil
-    age: 24,
-    document: 99887711,
-    typeDocument: "CPF"
-  },
-  {
     dateStart: new Date('2026-04-12T10:30:00'),
     dateEnd: new Date('2026-04-20T19:00:00'),
     name: "Carlos Huamán",
@@ -57,8 +48,8 @@ export const RoomStayTable = () => {
     
       <div className="w-full bg-bg-sidebar flex px-3 md:px-5 py-2 items-center justify-between">
         <div className="flex items-center gap-2">
-          <p className="bg-primary/10  px-4 py-2 rounded-xl text-primary text-4xl font-bold">4</p>
-          <p className="font-bold text-xl md:text-2xl text-body hidden md:block">Clientes</p>
+          <p className="bg-primary/10 px-3 md:px-4 py-1 rounded-xl text-primary text-2xl md:text-3xl 2xl:text-4xl font-bold">4</p>
+          <p className="font-bold text-lg md:text-xl 2xl:text-2xl text-body hidden md:block">Clientes</p>
         </div>
 
         <div className="flex items-center gap-2 h-10 md:h-11">
@@ -66,14 +57,14 @@ export const RoomStayTable = () => {
             id="select_type_document_stay"
             options={['DNI','PAS.','C.E.']}
           />
-          <button className="bg-sub-title text-white px-4 rounded-xl font-bold text-base md:text-xl flex items-center gap-1 h-full">
+          <button className="bg-sub-title text-white px-3 md:px-4 rounded-xl font-bold text-base md:text-xl flex items-center gap-1 h-full">
             <FaSearch className="size-4"/>
             <span className="hidden md:block">Buscar</span>
           </button>
 
-          <button popoverTarget="form-new-client" className="bg-primary text-white px-4 rounded-xl font-bold text-base md:text-xl flex items-center gap-1 h-full">
+          <button popoverTarget="form-new-client" className="bg-primary text-white px-3 md:px-4 rounded-xl font-bold text-base md:text-xl flex items-center gap-1 h-full">
             <FaPlus className="size-4"/>
-            <span className="hidden 2xl:block">Nuevo</span>
+            <span className="hidden md:block">Nuevo</span>
           </button>
 
           <NewClientForm/>

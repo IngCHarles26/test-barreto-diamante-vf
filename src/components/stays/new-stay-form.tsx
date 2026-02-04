@@ -6,12 +6,13 @@ import { FaMountainSun } from 'react-icons/fa6'
 export const NewStayForm = () => {
   return (
     <div className="shadow w-full rounded-xl">
+
       <div className="w-full bg-bg-sidebar flex px-3 md:px-5 py-2 items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="bg-primary/10  px-3 py-2 rounded-xl">
-            <FaClipboardList className="text-primary size-8"/>
+          <div className="bg-primary/10  px-2 md:px-3 py-2 rounded-xl">
+            <FaClipboardList className="text-primary size-6 md:size-7 2xl:size-8"/>
           </div>
-          <p className="font-bold text-xl md:text-2xl text-body">Datos Generales</p>
+          <p className="font-bold text-lg md:text-xl 2xl:text-2xl text-body">Datos Generales</p>
         </div>
         <p className="text-2xl font-bold text-title-table bg-border-sidebar rounded-xl px-3 py-2">101</p>
       </div>

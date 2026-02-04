@@ -14,7 +14,7 @@ export const SideBarMobile = () => {
       <dialog
         id="sheet-sidebar"
         popover="auto"
-        className=" h-full backdrop:bg-black/30" // Fondo cuando el sidebar visible en la vista telefono
+        className="h-full backdrop:bg-black/30" // Fondo cuando el sidebar visible en la vista telefono
       >
         <Sidebar/>
       </dialog>

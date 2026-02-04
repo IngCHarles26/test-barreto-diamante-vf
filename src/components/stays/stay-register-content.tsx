@@ -6,7 +6,7 @@ import { FaArrowRight } from 'react-icons/fa'
 
 export const StayRegisterContent = () => {
   return (
-    <div className=" w-full h-auto lg:h-full flex flex-col gap-5">
+    <div className=" w-full h-auto lg:h-full flex flex-col gap-4">
     
       <NewStayForm/>
 
