@@ -67,10 +67,7 @@ export const Sidebar = () => {
       <footer className="w-full flex items-center justify-between px-3 py-2 gap-2 border-t border-border-sidebar">
         <div className="flex gap-2 items-center">
           <div className='relative'>
-            <button >
-              <FaUserCog  className="size-7 text-gray-03"/>
-            </button>
-           
+            <FaUserCog  className="size-7 text-gray-03"/>
           </div>
 
           <p className="font-bold text-gray-03 text-xl font-code">User_Carlos</p>
