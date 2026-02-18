@@ -1,6 +1,11 @@
 import { LoginForm } from "@/components";
+import { prisma } from "@/lib";
 
 export default function LoginPage() {
+
+  // const holi = prisma.prueba.findMany()
+  
+  
   return (
     <div className="bg-back-1 text-body  min-h-screen flex flex-col font-display transition-colors duration-300">
 
