@@ -1,4 +1,4 @@
-import { formatDate } from '@/lib'
+import { formatDate } from '@/lib/shared'
 import { TableRow } from '../general'
 import { FaEye, FaStar, FaWalking } from 'react-icons/fa'
 

@@ -1,14 +1,23 @@
 'use client'
 
-import { redirect } from 'next/navigation'
 import { IoIosLogOut } from 'react-icons/io'
 import { CenterDialog } from '../general'
+import { redirect } from 'next/navigation'
+import { authClient } from '@/lib/auth-client'
 
 export const LogOut = () => {
 
-  const onLogOut = () => [
-    redirect('/login')
-  ]
+  const onLogOut = () => {
+    const logOut = async () => await authClient.signOut({
+      fetchOptions:{
+        onSuccess: () => {
+          redirect('/login')
+        }
+      }
+    })
+
+    logOut()
+  }
 
   return (
     <CenterDialog id='modal-session'>
@@ -26,7 +35,7 @@ export const LogOut = () => {
             Cancelar
           </button>
           <button 
-            onClick={onLogOut}
+            onClick={() => onLogOut()}
             className="bg-blue-03 text-white px-8 py-2 rounded-lg transition-colors cursor-pointer hover:opacity-80"
             popoverTarget="modal-session" popoverTargetAction="hide">
             Salir

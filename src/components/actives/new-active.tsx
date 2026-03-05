@@ -1,5 +1,7 @@
+'use client'
+
 import { CenterDialog, DialogContent, DialogFooterSave, DialogHeader, InputApp } from "../general"
-import { MdAirlineSeatLegroomReduced, MdChair } from "react-icons/md"
+import { MdChair } from "react-icons/md"
 import { IoIosBed } from "react-icons/io"
 import { FaDoorOpen } from "react-icons/fa"
 

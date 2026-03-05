@@ -1,9 +1,7 @@
 import Link from 'next/link'
-import React from 'react'
-import { TbListDetails } from 'react-icons/tb'
 import { TableRow } from '../general'
-import { genRandomColor } from '@/lib'
 import { FaBan, FaEye, FaStar, FaStarHalf } from 'react-icons/fa'
+import { genRandomColor } from '@/lib/shared'
 
 interface Props {
   id: number

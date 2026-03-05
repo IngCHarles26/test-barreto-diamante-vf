@@ -1,5 +1,4 @@
-import { formatDate } from '@/lib'
-import React from 'react'
+import { formatDate } from "@/lib/shared"
 
 interface Props {
   dateStart: Date

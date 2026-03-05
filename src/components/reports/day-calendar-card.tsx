@@ -1,4 +1,4 @@
-import { format0 } from "@/lib"
+import { format0 } from "@/lib/shared"
 import clsx from "clsx"
 import Link from "next/link"
 

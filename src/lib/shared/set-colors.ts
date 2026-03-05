@@ -1,23 +1,3 @@
-export const formatDate = (date:Date) => {
-  return date.toLocaleString('es-ES', {
-    year: '2-digit',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).split(','); 
-}
-
-export const months = () => ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','setiembre','octubre','noviembre','diciembre']
-
-export const years = () => {
-  const startYear = 2026
-  const nowYear = (new Date()).getFullYear()
-  return Array.from({length: 1+nowYear-startYear}, (_,ix) => `${+ix+startYear}`)
-}
-
-
-
 export const genRandomColor = () => {
   const colors = [
     '#1A237E', '#283593', '#303F9F', '#3949AB', '#3F51B5',
@@ -47,10 +27,3 @@ export const genRandomColor = () => {
   const ix = floor(random() * len);
   return colors[ix];
 }
-
-export function format0(number:number,zeros=2){
-    const len = `${+number}`.length
-    const _0 = '0'.repeat(zeros-len)
-
-    return `${_0}${number}` 
-  }

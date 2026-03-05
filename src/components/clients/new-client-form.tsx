@@ -1,4 +1,6 @@
-import { FaAddressBook, FaBlackberry, FaCalendar, FaCalendarAlt, FaFlag, FaPhone, FaUser, FaUserNinja, FaUserPlus } from 'react-icons/fa'
+'use client'
+
+import { FaAddressBook, FaBlackberry, FaCalendarAlt, FaFlag, FaPhone, FaUser, FaUserNinja, FaUserPlus } from 'react-icons/fa'
 import { FaHouse } from 'react-icons/fa6'
 import { CenterDialog, DialogContent, DialogFooterSave, DialogHeader, InputApp } from '../general'
 

@@ -1,5 +1,4 @@
-import { FilterSelect, FilterSelectInput, PageContent, PageHeader, Pagination, SearchButton, TableApp, TableFooter, TableHeader } from "../general"
-import { CiSearch } from "react-icons/ci"
+import { FilterSelect, FilterSelectInput, PageContent, PageHeader, SearchButton, TableApp, TableFooter, TableHeader } from "../general"
 import { ClientsTableRow } from "./clients-table-row";
 import { NewClientForm } from "./new-client-form";
 

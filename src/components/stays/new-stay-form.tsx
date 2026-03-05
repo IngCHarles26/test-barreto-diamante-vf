@@ -1,4 +1,5 @@
-import React from 'react'
+'use client'
+
 import { InputApp } from '../general'
 import { FaCalendar, FaCar, FaClipboardList, FaMapMarkerAlt, FaWallet } from 'react-icons/fa'
 import { FaMountainSun } from 'react-icons/fa6'

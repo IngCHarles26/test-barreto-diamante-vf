@@ -1,11 +1,18 @@
 import { LoginForm } from "@/components";
-import { prisma } from "@/lib";
+import { auth } from "@/lib";
+import { headers } from "next/headers";
+import { redirect } from "next/navigation";
 
-export default function LoginPage() {
+export default async function LoginPage() {
 
-  // const holi = prisma.prueba.findMany()
-  
-  
+ const session  = await auth.api.getSession({
+  headers: await headers()
+ })
+
+ 
+ 
+ if(session) redirect('/dashboard')
+
   return (
     <div className="bg-back-1 text-body  min-h-screen flex flex-col font-display transition-colors duration-300">
 
@@ -47,14 +54,6 @@ export default function LoginPage() {
 
           <LoginForm/>
           
-          <div className="mt-12 flex flex-col items-center gap-8">
-            <p className="text-sm text-danger">Mensaje de error</p>
-            <div className="flex items-center gap-6 text-sm font-bold text-[#617589] ">
-              <a className="hover:text-primary transition-colors underline decoration-2 underline-offset-4 decoration-primary/20" target="_blank" href="#">
-                Contactar al Soporte
-              </a>
-            </div>
-          </div>
         </div>
       </main>
 

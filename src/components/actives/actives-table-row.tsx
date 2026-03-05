@@ -1,10 +1,12 @@
-import { formatDate } from '@/lib'
+'use client'
+
 import { TableRow } from '../general'
 import { FaMoneyBill, FaTrash } from 'react-icons/fa'
 import { IoMdSettings } from 'react-icons/io'
 import { MdDryCleaning } from 'react-icons/md'
 import { ConfigActive } from './config-active'
 import { RemoveActive } from './remove-active'
+import { formatDate } from '@/lib/shared'
 
 interface Props {
   room: number

@@ -1,8 +1,13 @@
+import { auth } from "@/lib";
+import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
 
 
-export default function DashPage() {
+export default async function DashPage() {
+
+
+  // const 
 
   // redirect('/dashboard/stays/register')
   

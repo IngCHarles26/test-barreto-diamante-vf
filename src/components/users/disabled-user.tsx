@@ -1,16 +1,37 @@
-import React from 'react'
+'use client'
+
+import { authClient } from '@/lib/auth-client'
 import { CenterDialog } from '../general'
-import { IoIosLogOut } from 'react-icons/io'
 import clsx from 'clsx'
 import { FaUserCheck, FaUserTimes } from 'react-icons/fa'
+import { closeDialog } from '@/lib/client'
+import { refreshUsers } from '@/lib/server'
+
 
 
 interface Props{
   banned: boolean
   userName: string
+  userId: string
 }
 
-export const DisableUser = ({banned,userName}:Props) => {
+export const DisableUser = ({banned,userName,userId}:Props) => {
+
+  const dialogId = 'disable-user'+userName
+
+  const handleClick = async () => {
+    const togle = !banned ? authClient.admin.banUser : authClient.admin.unbanUser
+
+    togle({
+      userId
+    })
+
+    closeDialog(dialogId)
+
+    await refreshUsers()
+  }
+
+  
   const [Icon,text1,text2] = banned 
                   ? [FaUserCheck,'Habilitar a ','El usuario podra utilizar nuevamente el sistema y sus funciones'] 
                   : [FaUserTimes,'Bloquear a ','El usuario no tendra acceso al sistema hasta que tu lo decidas']
@@ -22,7 +43,7 @@ export const DisableUser = ({banned,userName}:Props) => {
           banned ? 'bg-green-app' : 'bg-body ')}
         />
         
-        <p className="text-xl font-bold">{text1} <span className='font-code text-xl'>{userName}</span></p>
+        <p className="text-xl font-bold">{text1} <span className='font-code text-sm'>{userName}</span></p>
         <p className="text-gray-600 mb-6 text-center">
           {text2}
         </p>
@@ -37,10 +58,12 @@ export const DisableUser = ({banned,userName}:Props) => {
               "text-white px-8 py-2 rounded-lg transition-colors cursor-pointer hover:opacity-80",
               banned ? 'bg-green-app' : 'bg-body '
             )}
-            popoverTarget={'disable-user'+userName} popoverTargetAction="hide">
+            onClick={handleClick}>
             SI
           </button>
         </div>
+
+
       </div>
     </CenterDialog>
   )

@@ -9,7 +9,7 @@ interface CenterDialogProps {
 export const CenterDialog = ({id,children}:CenterDialogProps) => {
   return (
     <dialog 
-      className="p-0 rounded-xl backdrop:bg-black/90 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden outline-0"
+      className="p-0 rounded-xl backdrop:bg-black/90 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden outline-0 "
       id={id} popover="auto" 
     >
       {children}
@@ -21,17 +21,25 @@ export const CenterDialog = ({id,children}:CenterDialogProps) => {
 
 interface DialogFooterSaveProps {
   id:string
+  error:string
+  saveClick: () => void
 }
-export const DialogFooterSave = ({id}:DialogFooterSaveProps) => {
+export const DialogFooterSave = ({id,error,saveClick}:DialogFooterSaveProps) => {
   return (
     <div className='p-3 flex justify-end items-center gap-4 mt-2'>
-      <p className=' mr-auto text-sm text-red-01 font-bold'>Mensaje de error</p>
+      <p className='text-center lowercase mr-auto text-sm text-red-01 font-bold'>{error}</p>
       
-      <button popoverTarget={id} className='px-3 py-1.5 bg-white-02 rounded-lg shadow text-gray-03 hover:opacity-80 transition-all duration-300 cursor-pointer'>
+      <button 
+        popoverTarget={id} 
+        className='px-3 py-1.5 bg-white-02 rounded-lg shadow text-gray-03 hover:opacity-80 transition-all duration-300 cursor-pointer'
+      >
         Cancelar
       </button>
 
-      <button popoverTarget={id} className='px-3 py-1.5 bg-blue-02 rounded-lg shadow text-white hover:opacity-80 transition-all duration-300 cursor-pointer flex gap-3 items-center font-bold'>
+      <button 
+        className='px-3 py-1.5 bg-blue-02 rounded-lg shadow text-white hover:opacity-80 transition-all duration-300 cursor-pointer flex gap-3 items-center font-bold'
+        onClick={saveClick}
+      >
         <FaSave />
         Guardar
       </button>

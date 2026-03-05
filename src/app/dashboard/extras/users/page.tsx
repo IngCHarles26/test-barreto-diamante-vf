@@ -1,7 +1,8 @@
 import { HeaderButton, PageTitle, UsersContent } from "@/components";
 import { FaPlus } from "react-icons/fa";
 
-export default function UsersPage() {
+export default async function UsersPage() {
+  
   return (
     <div className="h-full w-full flex flex-col">
         

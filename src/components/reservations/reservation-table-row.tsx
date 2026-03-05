@@ -1,6 +1,6 @@
-import { formatDate, genRandomColor } from '@/lib'
 import { FaPhoneAlt, FaUser, FaUserCheck, FaUserPlus } from 'react-icons/fa'
 import { TableRow } from '../general'
+import { formatDate, genRandomColor } from '@/lib/shared'
 
 
 interface Props {

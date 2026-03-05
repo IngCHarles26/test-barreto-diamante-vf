@@ -1,9 +1,9 @@
-import { FaTools } from 'react-icons/fa'
-import { FilterSelect, PageContent, PageHeader, Pagination, SearchButton, TableApp, TableFooter, TableHeader, TableRow } from '../general'
+// 'use client'
+
+import { FilterSelect, PageContent, PageHeader, SearchButton, TableApp, TableHeader } from '../general'
 import { MdMeetingRoom } from 'react-icons/md'
 import { ActivesTableRow } from './actives-table-row';
 import { NewActive } from './new-active';
-import { ConfigActive } from './config-active';
 
 const furnitureInventory = [
   {
@@ -73,7 +73,6 @@ export const ActivesContent = () => {
         { 
           furnitureInventory.map( (el,ix) => <ActivesTableRow key={'actives_table_row_'+ix} {...el}/>)
         }
-
 
       </TableApp>
 

@@ -1,3 +1,5 @@
+'use client'
+
 import { CenterDialog, DialogContent, DialogFooterSave, DialogHeader, InputApp } from "../general"
 import { MdChair } from "react-icons/md"
 import { IoIosBed } from "react-icons/io"
@@ -24,7 +26,7 @@ export const ConfigActive = ({id,room,description}:Props) => {
             label="Ingrese la descripcion del activo"
             inputId="new-input-active"
             type="text"
-            value={description}
+            // value={description}
             placeHolder="Mesa marca Dorama"
           />
           <InputApp
@@ -32,7 +34,7 @@ export const ConfigActive = ({id,room,description}:Props) => {
             label="Selecciona la habitacion"
             inputId="new-select-room"
             type="select"
-            value={room.toString()}
+            // value={room.toString()}
             selectData={['101','102','103']}
           />
         </div>

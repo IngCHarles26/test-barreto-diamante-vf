@@ -1,3 +1,5 @@
+'use client'
+
 import { CenterDialog, DialogContent, DialogFooterSave, DialogHeader, InputApp } from '../general'
 import { FaCalendarCheck, FaCalendarTimes, FaPeopleArrows, FaPhoneAlt, FaUser } from 'react-icons/fa'
 import { FaPeopleGroup } from 'react-icons/fa6'

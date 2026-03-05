@@ -2,72 +2,26 @@ import React from 'react'
 import { PageContent, TableApp, TableFooter, TableHeader, TableRow } from '../general'
 import { UserTableRow } from './user-table-row';
 import { NewUser } from './new-user';
-import { DisableUser } from './disabled-user';
+import { headers } from 'next/headers';
+import { auth } from '@/lib/auth';
 
-const users = [
-  {
-    name: "Carlos",
-    lastName: "Mendoza",
-    userName: "carlos_dev",
-    active: true
-  },
-  {
-    name: "Ana",
-    lastName: "Rodríguez",
-    userName: "ana.admin",
-    active: true
-  },
-  {
-    name: "Luis",
-    lastName: "García",
-    userName: "luis_staff",
-    active: false
-  },
-  {
-    name: "Elena",
-    lastName: "Pérez",
-    userName: "elena_view",
-    active: true
-  },
-  {
-    name: "Roberto",
-    lastName: "Sánchez",
-    userName: "robert_s",
-    active: true
-  },
-  {
-    name: "Sofía",
-    lastName: "López",
-    userName: "sofi_muebles",
-    active: false
-  },
-  {
-    name: "Miguel",
-    lastName: "Torres",
-    userName: "mike_t",
-    active: true
-  },
-  {
-    name: "Laura",
-    lastName: "Vargas",
-    userName: "laura_v",
-    active: true
-  },
-  {
-    name: "Diego",
-    lastName: "Castro",
-    userName: "diego_c",
-    active: false
-  },
-  {
-    name: "Lucía",
-    lastName: "Ramos",
-    userName: "lucia.r",
-    active: true
-  }
-];
+export const UsersContent = async () => {
 
-export const UsersContent = () => {
+  const {users} = await auth.api.listUsers({
+    query:{
+      sortBy: 'lastName'
+    },
+    headers: await headers()
+  })
+
+  const adminList = (process.env.ADMIN_IDS || '').split(",")
+
+  const usersChang = users.filter( user => user.role === 'user' && !adminList?.includes(user.id))
+  //@ts-ignore
+                          .map( ({name,email,banned,id,lastName}) => ({
+                            id,name,email,banned,lastName
+                          }))
+  
   return (
     <PageContent>
      
@@ -82,7 +36,7 @@ export const UsersContent = () => {
         </TableHeader>
 
         {
-          users.map((el,ix) => <UserTableRow key={'user_info_row'+ix} {...el}/>)
+          usersChang.map((el,ix) => <UserTableRow key={'user_info_row'+ix} {...el}/>)
         }
 
       </TableApp>

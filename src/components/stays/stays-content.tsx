@@ -1,7 +1,7 @@
-import { months, years } from "@/lib"
+import { months, years } from "@/lib/shared";
 import { FilterSelect, PageContent, PageHeader, SearchButton } from "../general"
 import { DetailStay } from "./detail-stay"
-import { StaysTable, StayTableProps } from "./stays-table"
+import { StaysTable } from "./stays-table"
 import { HistoryRow } from "./stays-table-row";
 
 

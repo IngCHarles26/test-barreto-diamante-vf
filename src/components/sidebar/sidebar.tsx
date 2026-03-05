@@ -1,10 +1,13 @@
-import { FaBed, FaClipboard, FaUserCog, FaUsers } from 'react-icons/fa'
+import { FaBed, FaClipboard, FaUser, FaUsers } from 'react-icons/fa'
 import { LuHotel } from 'react-icons/lu'
 import { SidebarItem } from './sidebar-item'
 import { IoIosLogOut } from 'react-icons/io'
 import { BsDoorOpenFill, BsMotherboardFill } from 'react-icons/bs'
+import { getUserInfo } from '@/lib/server'
+import { filterRoutes } from '@/lib/shared'
+import { protectedRoutes } from '@/proxy'
 
-const sideBarItems= [
+export const baseSideBarItems= [
   {
     title: 'Estadias', 
     Icon: FaBed , 
@@ -46,7 +49,14 @@ const sideBarItems= [
   },
 ]
 
-export const Sidebar = () => {
+export const Sidebar = async () => {
+ 
+  
+  const {name,lastName,role} = await getUserInfo()
+
+  const sideBarItems = role == 'admin' ? baseSideBarItems : filterRoutes(protectedRoutes,baseSideBarItems)
+  
+  
   return (
     <div className='h-dvh flex flex-col sticky bottom-0 bg-bg-1 z-30 bg-bg-sidebar border-r border-border-sidebar'>
 
@@ -55,7 +65,7 @@ export const Sidebar = () => {
 
         <div className="h-full">
           <p className="font-extrabold uppercase text-black-01 text-lg md:text-xl ">Hostal BArreto</p>
-          <p className=" text-gray-02 text-base md:text-lg">Administrador</p>
+          <p className=" text-gray-02 text-base md:text-lg capitalize">{role}</p>
         </div>
 
       </header>
@@ -67,10 +77,10 @@ export const Sidebar = () => {
       <footer className="w-full flex items-center justify-between px-3 py-2 gap-2 border-t border-border-sidebar">
         <div className="flex gap-2 items-center">
           <div className='relative'>
-            <FaUserCog  className="size-7 text-gray-03"/>
+            <FaUser  className="size-5 text-gray-03"/>
           </div>
 
-          <p className="font-bold text-gray-03 text-xl font-code">User_Carlos</p>
+          <p className="font-bold text-gray-03 font-code">{`${name} ${lastName.slice(0,1)}.`}</p>
         </div>
 
         <div className="relative group inline-block ">

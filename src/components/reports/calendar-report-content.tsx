@@ -1,8 +1,8 @@
 import React from 'react'
 import { FilterSelect, PageContent, PageHeader, SearchButton } from '../general'
-import { months, years } from '@/lib'
 import { RoomLegend } from '../room-map/room-legend'
 import { DayCalendarCard } from './day-calendar-card'
+import { months, years } from '@/lib/shared'
 
 const legends = [
   {color: 'bg-in-client', label: 'Aprobado'},
