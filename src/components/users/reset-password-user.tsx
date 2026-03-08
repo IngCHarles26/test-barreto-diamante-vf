@@ -7,18 +7,19 @@ import { GrUserAdmin } from 'react-icons/gr'
 import z from 'zod'
 import { ChangeEvent, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
+import { MdKey } from 'react-icons/md'
+import { closeDialog } from '@/lib/client'
 
 
 interface Props{
-  userName: string
+  dialogId: string
+  name: string
   userId:string
 }
 
-export const ResetPasswordUser = ({userName,userId}:Props) => {
+export const ResetPasswordUser = ({name,userId,dialogId}:Props) => {
   const [passwordValues, setPasswordValues] = useState({password:'',confirmPassword:''});
   const [errorMessage, setErrorMessage] = useState('');
-
-  const dialogId = 'edit-password-user'+userName
 
   const schema = z.object({
     password: zPassword,
@@ -51,11 +52,12 @@ export const ResetPasswordUser = ({userName,userId}:Props) => {
   }
 
   const handleClick = async () => {
-    setErrorMessage('Procesando...')
-
+    
     const result = schema.safeParse(passwordValues)
+    
+    if(result.error) return setErrorMessage('Datos incorrectos');
 
-    if(result.error) return
+    setErrorMessage('Procesando...')
     
     const { error } = await authClient.admin.setUserPassword({
       newPassword: passwordValues.password,
@@ -70,60 +72,63 @@ export const ResetPasswordUser = ({userName,userId}:Props) => {
     }
 
     await authClient.admin.revokeUserSessions({userId})
-
-    setPasswordValues({password:'',confirmPassword:''})
-
-    const centerDialog = document.getElementById(dialogId) as HTMLDialogElement
-    centerDialog.hidePopover()
+    closeDialog(dialogId)
   }
   
   
   return (
-    <CenterDialog id={dialogId}>
-      <DialogContent maxWRem={25}>
-        <DialogHeader
-          Icon={GrUserAdmin}
-          title='Editar Contraseña'
-          subTitle='Ingresa la nueva clave para el usuario'
-        />
-
-
-        <div className='w-full px-3 grid gap-2'>
-          <div className='flex w-full items-center gap-2 justify-between border-b border-done-button-bg pb-3' >
-            <p className='text-xl'>Usuario:</p>
-            <p className='font-code text-xl font-bold'>{userName}</p>
-          </div>
-          <InputApp
-            Icon={FaLock}
-            label="Nueva Contraseña"
-            inputId="input-password-reset"
-            type="text"
-            placeHolder="**********"
-            name='password'
-            value={passwordValues.password}
-            onChange={handleChange}
+    <>
+      <div className='w-[15%] text-center'>
+        <button popoverTarget={dialogId} className='cursor-pointer rounded-md p-1 text-primary hover:opacity-80'>
+          <MdKey className="mx-auto size-6 md:size-8 " /> 
+        </button> 
+      </div>
+      <CenterDialog id={dialogId}>
+        <DialogContent maxWRem={25}>
+          <DialogHeader
+            Icon={GrUserAdmin}
+            title='Editar Contraseña'
+            subTitle='Ingresa la nueva clave para el usuario'
             />
-          <InputApp
-            Icon={FaLock}
-            label="Repite la Contraseña"
-            inputId="input-confirm-password-reset"
-            type="text"
-            placeHolder="**********"
-            className=''
-            name='confirmPassword'
-            value={passwordValues.confirmPassword}
-            onChange={handleChange}
-          />
-        </div>
 
-        <DialogFooterSave 
-          id={'edit-password-user'+userName}
-          error={errorMessage}
-          saveClick={handleClick}
-        />
 
-      </DialogContent>
+          <div className='w-full px-3 grid gap-2'>
+            <div className='flex w-full items-center gap-2 justify-between border-b border-done-button-bg pb-3 text-xl' >
+              <p >Usuario:</p>
+              <p className='font-code'>{name}</p>
+            </div>
+            <InputApp
+              Icon={FaLock}
+              label="Nueva Contraseña"
+              inputId="input-password-reset"
+              type="text"
+              placeHolder="**********"
+              name='password'
+              value={passwordValues.password}
+              onChange={handleChange}
+              />
+            <InputApp
+              Icon={FaLock}
+              label="Repite la Contraseña"
+              inputId="input-confirm-password-reset"
+              type="text"
+              placeHolder="**********"
+              className=''
+              name='confirmPassword'
+              value={passwordValues.confirmPassword}
+              onChange={handleChange}
+              />
+          </div>
 
-    </CenterDialog>
+          <DialogFooterSave 
+            id={dialogId}
+            error={errorMessage}
+            saveClick={handleClick}
+            />
+
+        </DialogContent>
+
+      </CenterDialog>
+    </>
   )
 }

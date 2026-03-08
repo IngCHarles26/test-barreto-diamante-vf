@@ -1,43 +1,36 @@
-import { SideBarDesktop, SideBarMobile } from "@/components";
-import { LogOut } from "@/components/sidebar/log-out";
-import { auth } from "@/lib";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
+import { Loading, LogOut, SideBarDesktop, SideBarMobile } from "@/components";
+import { getUserInfo } from "@/lib/server";
+import { Suspense } from "react";
 
-export default async function DasnboardLayout({
+async function DashboardContent({ children }: { children: React.ReactNode }) {
+
+  await getUserInfo(); 
+  
+  return (
+    <>
+      <SideBarDesktop />
+      <SideBarMobile />
+      <LogOut />
+      
+      <main className="flex-1 overflow-y-auto">
+        {children}
+      </main>
+    </>
+  );
+}
+
+export default function DasnboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-
-  const session = await auth.api.getSession({
-    headers: await headers()
-  })
-
-  if(!session) {
-    redirect("/login")
-  }
-
   return (
     <section className="flex font-display h-dvh w-full">
-
-      <SideBarDesktop/>
-
-      <SideBarMobile/>
-
-      <LogOut/>
-
-      <main className="flex-1 overflow-y-auto">
-
-        {children}
-        
-      </main>
-
+      <Suspense fallback={<Loading />}>
+        <DashboardContent>
+          {children}
+        </DashboardContent>
+      </Suspense>
     </section>
   );
 }
-
-
-
-
-

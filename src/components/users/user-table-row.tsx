@@ -1,23 +1,20 @@
 import { TableRow } from '../general'
 import { FaCheck } from 'react-icons/fa'
 import { IoLockClosed } from 'react-icons/io5'
-import clsx from 'clsx'
 import { DisableUser } from './disabled-user'
 import { MdKey } from 'react-icons/md'
 import { ResetPasswordUser } from './reset-password-user'
+import { User } from '@/generated/prisma/client'
 
 interface Props{
-  id: string
-  name: string
-  lastName: string | undefined
-  email: string
-  banned: boolean | null
+  user:User
 }
 
-export const UserTableRow = ({name,lastName,email,banned,id}:Props) => {
-   const [style,activeText,Icon] = !banned   
-                                ? ['bg-green-app','activo',FaCheck ]
-                                : ['bg-sub-title','inactivo',IoLockClosed ]
+export const UserTableRow = ({user}:Props) => {
+
+  const {banned,name,lastName,email,id} = user
+
+  const fullName = name+' '+lastName
   
   return (
     <TableRow>
@@ -27,22 +24,9 @@ export const UserTableRow = ({name,lastName,email,banned,id}:Props) => {
 
       <p className='w-[30%] text-lg md:text-2xl font-code'>{email}</p>
 
-      <div className='w-[15%] flex items-center justify-center'>
-        <button popoverTarget={'disable-user'+email} className={clsx('flex text-white items-center gap-2 w-auto capitalize px-2 py-1 rounded-md',style)}>
-          <Icon className='size-4 md:size-4'/>
-          <p className='hidden md:block text-xl'>{activeText}</p>
-        </button>
-      </div>
+      <DisableUser name={fullName} userId={id} banned={banned} dialogId={'disable-user'+id} />
 
-      <div className='w-[15%] text-center'>
-        <button popoverTarget={'edit-password-user'+email} className='cursor-pointer rounded-md p-1 text-primary hover:opacity-80'>
-          <MdKey className="mx-auto size-6 md:size-8 " /> 
-        </button> 
-      </div>
-
-      <DisableUser banned={banned || false} userName={email} userId={id} />
-
-      <ResetPasswordUser userName={email} userId={id} />
+      <ResetPasswordUser name={fullName} userId={id} dialogId={'edit-password-user'+id}/>
 
     </TableRow>
   )

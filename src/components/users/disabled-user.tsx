@@ -1,70 +1,83 @@
 'use client'
 
-import { authClient } from '@/lib/auth-client'
 import { CenterDialog } from '../general'
 import clsx from 'clsx'
-import { FaUserCheck, FaUserTimes } from 'react-icons/fa'
+import { FaCheck, FaUserCheck, FaUserTimes } from 'react-icons/fa'
 import { closeDialog } from '@/lib/client'
-import { refreshUsers } from '@/lib/server'
-
+import { startTransition, useOptimistic } from 'react'
+import { ToggleBanUser } from '@/lib/server'
+import { IoLockClosed } from 'react-icons/io5'
 
 
 interface Props{
-  banned: boolean
-  userName: string
-  userId: string
+  dialogId: string
+  banned: boolean | null
+  userId:string
+  name: string
 }
 
-export const DisableUser = ({banned,userName,userId}:Props) => {
+export const DisableUser = ({banned,userId,dialogId,name}:Props) => {
 
-  const dialogId = 'disable-user'+userName
-
-  const handleClick = async () => {
-    const togle = !banned ? authClient.admin.banUser : authClient.admin.unbanUser
-
-    togle({
-      userId
-    })
-
-    closeDialog(dialogId)
-
-    await refreshUsers()
-  }
-
+  const [optimisticBanned, setOptimisticBanned] = useOptimistic(banned)
   
-  const [Icon,text1,text2] = banned 
-                  ? [FaUserCheck,'Habilitar a ','El usuario podra utilizar nuevamente el sistema y sus funciones'] 
-                  : [FaUserTimes,'Bloquear a ','El usuario no tendra acceso al sistema hasta que tu lo decidas']
+  const Icon = optimisticBanned ? FaUserCheck : FaUserTimes;
+  const IconButton = optimisticBanned ? IoLockClosed : FaCheck;
+  const text1 = optimisticBanned ? 'Habilitar a ' : 'Bloquear a ';
+  const text2 = optimisticBanned 
+    ? 'El usuario podra utilizar nuevamente el sistema y sus funciones' 
+    : 'El usuario no tendra acceso al sistema hasta que tu lo decidas';
+  const style = optimisticBanned ? 'bg-sub-title' : 'bg-green-app';
+  const activeText = optimisticBanned ? 'inactivo' : 'activo';
+  
+
+  const handleToggle = async () => {
+    try{
+      startTransition( async () => setOptimisticBanned(!optimisticBanned))
+      closeDialog(dialogId)
+      await ToggleBanUser(banned,userId)
+    }catch(_){
+      startTransition( async () => setOptimisticBanned(!optimisticBanned))
+    }
+  }
+  
   return (
-    <CenterDialog id={'disable-user'+userName}>
-      <div className="p-6 w-100 bg-background-light flex flex-col items-center gap-2">
-        <Icon  className={clsx(
-          "size-18   p-4.5 rounded-full mb-4 text-white",
-          banned ? 'bg-green-app' : 'bg-body ')}
-        />
-        
-        <p className="text-xl font-bold">{text1} <span className='font-code text-sm'>{userName}</span></p>
-        <p className="text-gray-600 mb-6 text-center">
-          {text2}
-        </p>
-        
-        <div className='w-full flex items-center justify-between'>
-          <button className='px-5 py-2 bg-gray-200 rounded-lg cursor-pointer hover:opacity-80' 
-            popoverTarget={'disable-user'+userName} popoverTargetAction="hide" >
-            NO
-          </button>
-          <button 
-            className={clsx(
-              "text-white px-8 py-2 rounded-lg transition-colors cursor-pointer hover:opacity-80",
-              banned ? 'bg-green-app' : 'bg-body '
-            )}
-            onClick={handleClick}>
-            SI
-          </button>
-        </div>
-
-
+    <>
+      <div className='w-[15%] flex items-center justify-center'>
+        <button popoverTarget={dialogId} className={clsx('flex text-white items-center gap-2 w-auto capitalize px-2 py-1 rounded-md',style)}>
+          <IconButton className='size-4 md:size-4'/>
+          <p className='hidden md:block text-xl'>{activeText}</p>
+        </button>
       </div>
-    </CenterDialog>
+    
+      <CenterDialog id={dialogId}>
+        <div className="p-6 w-100 bg-background-light flex flex-col items-center gap-2">
+          <Icon  className={clsx(
+            "size-18   p-4.5 rounded-full mb-4 text-white",
+            optimisticBanned ? 'bg-green-app' : 'bg-body ')}
+            />
+          
+          <p className="text-xl font-bold">{text1} <span className='font-code'>{name}</span></p>
+          <p className="text-gray-600 mb-6 text-center">
+            {text2}
+          </p>
+          
+          <div className='w-full flex items-center justify-between'>
+            <button className='px-5 py-2 bg-gray-200 rounded-lg cursor-pointer hover:opacity-80' 
+              popoverTarget={dialogId} popoverTargetAction="hide" >
+              NO
+            </button>
+            <button 
+              className={clsx(
+                "text-white px-8 py-2 rounded-lg transition-colors cursor-pointer hover:opacity-80",
+                optimisticBanned ? 'bg-green-app' : 'bg-body '
+              )}
+              onClick={handleToggle}>
+              SI
+            </button>
+          </div>
+
+        </div>
+      </CenterDialog>
+    </>
   )
 }

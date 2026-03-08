@@ -9,7 +9,15 @@ export async function getUserInfo(){
     headers: await headers()
   })
 
-  if(!session) return redirect('/login');
+  if(!session) redirect('/login');
 
   return session.user
+}
+
+export async function isAdminUser() {
+  const user = await getUserInfo()
+
+  const {role} = user
+
+  if(role !== 'admin') redirect('/dashboard')
 }

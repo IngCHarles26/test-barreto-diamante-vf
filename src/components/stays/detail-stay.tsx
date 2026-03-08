@@ -1,5 +1,6 @@
+'use client'
 
-import { MdAddAPhoto, MdAttractions, MdLocationPin, MdModeEditOutline } from 'react-icons/md'
+import { MdAddAPhoto, MdAttractions, MdLocationPin } from 'react-icons/md'
 import { CenterDialog, DialogContent, DialogHeader } from '../general'
 import { FaArrowRight, FaBed, FaCarSide, FaDoorClosed, FaFolder, FaGrinStars, FaRegCalendarAlt, FaRegMoneyBillAlt, FaSave } from 'react-icons/fa'
 import { TbZoomMoney } from 'react-icons/tb'

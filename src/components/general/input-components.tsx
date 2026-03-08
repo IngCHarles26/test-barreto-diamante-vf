@@ -13,8 +13,8 @@ interface InputContainerProps {
   name: string
   className?: string
   placeHolder?: string
-  selectData?: string[]
-  value?: string
+  selectData?: string[] | number[]
+  value?: string | number
   onChange?: (e:ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void
 }
 
@@ -41,7 +41,7 @@ export const InputApp = ({Icon,className,label,inputId,placeHolder,type,selectDa
               onChange={onChange}
               className='w-full outline-0 cursor-pointer md:text-lg'
             >
-              {/* <option value="" disabled>-- Cuarto --</option> */}
+              <option value="" disabled>-- {name} --</option>
               {selectData?.map( (el,ix) => <option key={'select_'+inputId+ix} value={el} >{el}</option>)}
             </select>
 

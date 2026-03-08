@@ -1,5 +1,7 @@
 
-export const formatDate = (date:Date) => {
+export const formatDate = (date:Date|null) => {
+  if(!date) return ['']
+
   return date.toLocaleString('es-ES', {
     year: '2-digit',
     month: '2-digit',
@@ -18,9 +20,11 @@ export const years = () => {
 }
 
 export function format0(number:number,zeros=2){
-    const len = `${+number}`.length
-    const _0 = '0'.repeat(zeros-len)
+  const len = `${+number}`.length
+  const _0 = '0'.repeat(zeros-len)
 
-    return `${_0}${number}` 
-  }
+  return `${_0}${number}` 
+ }
 
+
+ export const getNow = () => new Date()

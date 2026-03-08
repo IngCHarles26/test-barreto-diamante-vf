@@ -1,23 +1,17 @@
-'use client'
-
 import { TableRow } from '../general'
-import { FaMoneyBill, FaTrash } from 'react-icons/fa'
-import { IoMdSettings } from 'react-icons/io'
+import { FaMoneyBill } from 'react-icons/fa'
 import { MdDryCleaning } from 'react-icons/md'
 import { ConfigActive } from './config-active'
 import { RemoveActive } from './remove-active'
 import { formatDate } from '@/lib/shared'
+import { RoomActive } from '@/generated/prisma/client'
 
-interface Props {
-  room: number
-  description: string
-  dateMoved: Date
-  dateBuyed: Date
-  id:string
+interface Props extends RoomActive{
+  rooms: number[]
 }
 
-export const ActivesTableRow = ({room,description,dateBuyed,dateMoved,id}:Props) => {
-  const dateBuy = formatDate(dateBuyed)[0]
+export const ActivesTableRow = ({roomNumber,description,dateCreated,dateMoved,id,rooms}:Props) => {
+  const dateBuy = formatDate(dateCreated)[0]
   const dateMove = formatDate(dateMoved)[0]
 
   return (
@@ -43,23 +37,12 @@ export const ActivesTableRow = ({room,description,dateBuyed,dateMoved,id}:Props)
 
       <div className='w-[12.5%] '>
         <p className='py-2 bg-back-1 text-sub-title mr-auto rounded-lg text-xl md:text-2xl w-14 md:w-18 text-center font-bold'>
-          {room}
+          {roomNumber}
         </p> 
       </div>
 
-      <div className='w-[7.5%] text-center'>
-        <button popoverTarget={"form-edit-active"+id} className='cursor-pointer rounded-md p-1 text-primary hover:opacity-80'>
-          <IoMdSettings className="mx-auto size-6 md:size-7 " /> 
-        </button> 
-      </div>
+      <ConfigActive description={description} id={id} room={roomNumber||0} rooms={rooms} />
 
-      <div className='w-[7.5%] text-center'>
-        <button popoverTarget={'confirm-remove-active'+id} className='cursor-pointer rounded-md p-1 text-sub-title hover:opacity-80'>
-          <FaTrash   className="mx-auto size-6 md:size-7 " /> 
-        </button> 
-      </div>
-
-      <ConfigActive description={description} id={id} room={room} />
       <RemoveActive description={description} id={id}/>
       
     </TableRow>

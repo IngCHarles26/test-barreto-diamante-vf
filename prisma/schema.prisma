@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client"
   output   = "../src/generated/prisma"
@@ -13,6 +7,8 @@ datasource db {
   provider = "postgresql"
 }
 
+
+//_____________________________________ Inicio BetterAuth, no tocar
 model User {
   id            String    @id
   name          String
@@ -83,4 +79,43 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+//_____________________________________ Final BetterAuth
+
+
+enum TypeRoom{
+  Personal
+  Doble
+  Doble_Familiar
+  Matrimonial
+  Matrimonial_Simple
+  Triple_Familiar
+}
+
+model Room {
+  number Int @id
+  type TypeRoom
+  active Boolean
+  
+  price Int?
+  floor Int?
+  posW Float?
+  posH Float?
+
+  roomActive RoomActive[]
+  @@map("room")
+}
+
+
+model RoomActive {
+  id Int @id @default(autoincrement())
+  description String
+  dateCreated DateTime
+  active Boolean
+  
+  dateMoved DateTime?
+  roomNumber Int?
+
+  room Room? @relation(fields: [roomNumber], references: [number])
+  @@map("roomActive")
 }

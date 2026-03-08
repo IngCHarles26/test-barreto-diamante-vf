@@ -1,4 +1,4 @@
-import { isAdminUser } from "@/lib/server";
+import { isAdminUser } from '@/lib/server';
 
 export default function RoomsLayout({
  children

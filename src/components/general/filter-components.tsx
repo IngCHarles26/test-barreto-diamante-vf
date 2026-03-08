@@ -1,4 +1,4 @@
-import { ReactNode } from "react"
+import { ChangeEvent, ReactNode } from "react"
 import { FaFilter, FaSearch } from "react-icons/fa"
 
 
@@ -29,16 +29,25 @@ export const FilterInput = ({id,placeholder}:FilterInputProps) => {
 
 interface FilterSelectProps {
   id:string
-  options: string[]
+  options: (string|number)[]
   label:string
+  name:string
+  value?: string|number
+  onChange?: (e:ChangeEvent<HTMLSelectElement>) => void
 }
 
-export const FilterSelect = ({id,options,label}:FilterSelectProps) => {
+export const FilterSelect = ({id,options,label,name,value,onChange}:FilterSelectProps) => {
 
   return (
     <FilterContainer>
       <label htmlFor={id} className='hidden  md:block'>{label}</label>
-      <select id={id} className='h-full px-0 md:px-2 outline-0 font-bold md:text-lg'>
+      <select 
+        className='h-full px-0 md:px-2 outline-0 font-bold md:text-lg' 
+        id={id} 
+        name={name}
+        value={value}
+        onChange={onChange}
+      >
          {options.map( (el,ix) => <option key={'select_'+id+ix} value={el} className="text-xs font-normal" >{el}</option>)}
       </select>
     </FilterContainer>
@@ -63,9 +72,15 @@ export const FilterSelectInput = ({id,options}:FilterSelectInputProps) => {
   )
 }
 
-export const SearchButton = () => {
+interface SearchButtonProps {
+  onCLick: () => void
+}
+
+export const SearchButton = ({onCLick}:SearchButtonProps) => {
   return (
-    <button className="bg-white rounded-lg px-3 py-1.5 md:px-4 md:py-2 text-gray-05 font-bold flex items-center gap-2 hover:opacity-80 cursor-pointer transition-all duration-200 shadow h-full border border-back-1 ">
+    <button 
+      onClick={onCLick}
+      className="bg-white rounded-lg px-3 py-1.5 md:px-4 md:py-2 text-gray-05 font-bold flex items-center gap-2 hover:opacity-80 cursor-pointer transition-all duration-200 shadow h-full border border-back-1 ">
       <FaFilter  className="size-4"/> 
       <p className="hidden md:inline text-xl">Aplicar Filtros</p>
     </button>

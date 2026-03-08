@@ -3,6 +3,7 @@ export * from './general/index'
 export * from './login-form'
 export * from './sidebar/sidebar-pc'
 export * from './sidebar/sidebar-mobile'
+export * from './sidebar/log-out'
 
 export * from './room-map/room-map'
 export * from './room-map/room-legend'
@@ -19,11 +20,14 @@ export * from './clients/clients-content'
 export * from './clients/client-detail'
 export * from './clients/new-client-form'
 
-export * from './rooms/room-content'
+export * from './actives/create-active'
+export * from './actives/actives-table-row'
+export * from './actives/filter-actives'
 
-export * from './actives/actives-content'
+export * from './rooms/room-table-row'
 
-export * from './users/users-content'
+export * from './users/new-user'
+export * from './users/user-table-row'
 
 export * from './reports/select-day'
 export * from './reports/daily-resume-content'

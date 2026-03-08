@@ -1,3 +1,5 @@
+'use client'
+
 import { JSX, ReactNode } from "react"
 import { IconType } from "react-icons"
 import { FaSave } from "react-icons/fa"
