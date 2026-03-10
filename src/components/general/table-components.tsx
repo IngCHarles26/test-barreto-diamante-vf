@@ -8,10 +8,10 @@ interface Props {
 
 export const TableApp = ({children,pagination}:Props) => {
   return (
-    <div className='shadow mb-5 rounded-xl md:rounded-2xl flex flex-col overflow-hidden'>
+    <div className='shadow rounded-xl md:rounded-2xl flex flex-col mb-15 md:mb-5'>
       {children}
       {pagination &&
-        <div className="w-full px-2 py-3 flex justify-between items-center border-t border-t-done-button-bg">
+        <div className="w-full px-2 py-3 flex justify-between items-center border-t border-t-done-button-bg sticky top-0">
           <NumRows/>
           <Pagination/>
         </div>

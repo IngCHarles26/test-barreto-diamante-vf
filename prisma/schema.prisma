@@ -83,7 +83,7 @@ model Verification {
 //_____________________________________ Final BetterAuth
 
 
-enum TypeRoom{
+enum TypeRoom {
   Personal
   Doble
   Doble_Familiar
@@ -114,8 +114,90 @@ model RoomActive {
   active Boolean
   
   dateMoved DateTime?
-  roomNumber Int?
+  room Int?
 
-  room Room? @relation(fields: [roomNumber], references: [number])
+  roomRelation Room? @relation(fields: [room], references: [number])
   @@map("roomActive")
 }
+
+
+model Country{
+  id String @id
+  name String
+  flag String
+
+  cityId City[]
+  clientId Client[]
+
+  @@map("country")
+}
+
+model City{
+  id Int @id @default(autoincrement())
+  name String
+  countryId String
+
+  country Country @relation(fields: [countryId], references: [id])
+
+  @@map("city")
+}
+
+
+enum TypeDocuments {
+  DNI
+  Pasaporte
+  Carnet_Extranjeria
+  Otros
+}
+
+
+model Client{
+  id String @id @default(uuid())
+
+  typeDocument TypeDocuments
+  numberDocument String
+  firstName String
+  lastName String
+  countryId String
+  stars Float @default(0)
+  totalStays Int @default(0)
+  lastStay DateTime?
+  address String?
+  phone String?
+  comments String?
+  born DateTime
+
+  banned Boolean @default(false)
+  banReason String?
+
+  country Country @relation(fields: [countryId], references: [id])
+  // clientInStay ClientInStay[]
+
+  @@unique([typeDocument,numberDocument])
+
+  @@index([countryId])
+  @@index([firstName])
+  @@index([lastName])
+
+  @@map("client")
+}
+
+
+// model ClientInStay{
+//   id Int @id @default(autoincrement())
+//   dateStart DateTime
+//   dateEnd DateTime?
+//   clientId String
+//   stayId String
+
+//   client Client @relation(fields: [clientId],references: [id])
+//   stay Stay @relation(fields: [stayId],references: [id])
+// }
+
+// model Stay{
+//   id String @id @default(uuid())
+
+//   clientInStay ClientInStay[]
+
+//   @@map("stay")
+// }

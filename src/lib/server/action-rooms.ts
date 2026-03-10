@@ -7,97 +7,119 @@ import { redirect } from "next/navigation";
 import { getNow } from "../shared";
 
 //!_____________________________ ROOMS
-const tagCacheRooms = 'all-rooms'
-const path = '/dashboard/rooms/actives'
-export const getCacheRooms = async () => {
-  'use cache'
-  cacheTag(tagCacheRooms)
+  const tagCacheRooms = 'all-rooms'
+  const path = '/dashboard/rooms/actives'
+  export const getCacheRooms = async () => {
+    'use cache'
+    cacheTag(tagCacheRooms)
 
-  return await prisma.room.findMany()
-}
+    return await prisma.room.findMany()
+  }
 
-export const ActionToggleRoomStatus = async (status:boolean, number:number) => {
-  await prisma.room.update({
-    where:{ number },
-    data:{
-      active:!status
-    }
-  });
+  export const ActionToggleRoomStatus = async (status:boolean, number:number) => {
+    await prisma.room.update({
+      where:{ number },
+      data:{
+        active:!status
+      }
+    });
 
-  updateTag(tagCacheRooms)
-}
+    updateTag(tagCacheRooms)
+  }
 
-type DataChange = { price:number, type:TypeRoom }
+  type DataChange = { price:number, type:TypeRoom }
 
-export const ActionConfigRoomInfo = async (number:number,data:DataChange) => {
-  await prisma.room.update({
-    where:{ number },
-    data
-  })
-  
-  updateTag(tagCacheRooms)
-}
+  export const ActionConfigRoomInfo = async (number:number,data:DataChange) => {
+    await prisma.room.update({
+      where:{ number },
+      data
+    })
+    
+    updateTag(tagCacheRooms)
+  }
 
 //!_____________________________ ACTIVES ROOM
-const tagCacheActives = 'all-active-rooms'
-export const getCacheActiveRooms = async (roomNumber?:number) => {
-  'use cache'
-  cacheTag(tagCacheActives+String(roomNumber||''))
+  const tagCacheActives = 'all-active-rooms'
 
-  if(!roomNumber) return await prisma.roomActive.findMany({});
+  export const getCacheActiveOutRooms = async () => {
+    'use cache'
+    cacheTag(tagCacheActives+'out')
 
-  return await prisma.roomActive.findMany({where:{roomNumber}})
-}
-
-export type ParamsActives = { room?: string | undefined }
-export const ActionGetFilteredActives = async (params:ParamsActives,rooms:number[]) => {
-  
-  try{
-    const isEmptyObject = (obj:Object) => Object.keys(obj).length === 0 
-    if( isEmptyObject(params) ) {
-      return getCacheActiveRooms()
-    }
-    
-    const room = Number(params.room)
-    if( isNaN(room) ) throw new Error('El cuarto ingresado no es valido');
-    
-    if( !rooms.includes(room) ) throw new Error('El cuarto no existe');
-    
-    return getCacheActiveRooms(room)
-  }catch(_){
-    redirect(path)
+    return await prisma.roomActive.findMany({where:{room:null}})
   }
-}
-export const  ActionCreateRoomActive = async (description:string,roomNumber:number) => {
-  await prisma.roomActive.create({
-    data:{
-      active:true,
-      dateCreated: getNow(),
-      dateMoved: getNow(),
-      description,
-      roomNumber
+  
+  export const getCacheActiveRooms = async (room?:number) => {
+    'use cache'
+    
+    cacheTag(tagCacheActives)
+    if(!room) return await prisma.roomActive.findMany();
+    
+    cacheTag(tagCacheActives+room)
+    return await prisma.roomActive.findMany({where:{room}})
+  }
+
+
+  
+
+  export type ParamsActives = { room?: string | undefined }
+  export const ActionGetFilteredActives = async (params:ParamsActives,rooms:number[]) => {
+    
+    try{
+      const isEmptyObject = (obj:Object) => Object.keys(obj).length === 0 
+      if( isEmptyObject(params) ) {
+        return getCacheActiveRooms()
+      }
+      
+      const roomInput = params.room
+      if( roomInput === 'afuera' ) return await getCacheActiveOutRooms();
+      
+      const room = Number(roomInput)
+      if( isNaN(room) ) throw new Error('El cuarto ingresado no es valido');
+      
+      if( !rooms.includes(room) ) throw new Error('El cuarto no existe');
+      
+      return await getCacheActiveRooms(room)
+    }catch(_){
+      redirect(path)
     }
-  })
-  
-  updateTag(tagCacheActives)
-}
+  }
 
-export const ActionEditInfoRoomActive = async (description:string,roomNumber:number,id:number) => {
+  export const  ActionCreateRoomActive = async (description:string,_room:string) => {
 
-  await prisma.roomActive.update({
-    where:{id},
-    data:{ description, roomNumber, dateMoved:getNow()}
-  })
-  
-  updateTag(tagCacheActives)
-}
+    const room = _room === '' ? null : Number(_room)
+    
+    await prisma.roomActive.create({
+      data:{
+        active:true,
+        dateCreated: getNow(),
+        dateMoved: getNow(),
+        description,
+        room
+      }
+    })
+    
+    if( _room ) updateTag(tagCacheActives+_room)
+    else updateTag(tagCacheActives+'out')
 
-export const ActionDisableRoomActive = async (id:number) => {
+    updateTag(tagCacheActives)
+  }
 
-  await prisma.roomActive.update({
-    where:{id},
-    data:{active:false}
-  })
-  
-  updateTag(tagCacheActives)
-}
+  export const ActionEditInfoRoomActive = async (description:string,room:number,id:number) => {
+
+    await prisma.roomActive.update({
+      where:{id},
+      data:{ description, room, dateMoved:getNow()}
+    })
+    
+    updateTag(tagCacheActives)
+  }
+
+  export const ActionDisableRoomActive = async (id:number) => {
+
+    await prisma.roomActive.update({
+      where:{id},
+      data:{active:false}
+    })
+    
+    updateTag(tagCacheActives)
+  }

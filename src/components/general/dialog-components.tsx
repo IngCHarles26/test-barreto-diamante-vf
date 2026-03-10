@@ -1,16 +1,17 @@
 'use client'
 
-import { JSX, ReactNode } from "react"
+import { JSX, ReactNode, RefObject } from "react"
 import { IconType } from "react-icons"
 import { FaSave } from "react-icons/fa"
 
 interface CenterDialogProps {
   id: string
   children: JSX.Element
+  ref?: RefObject<HTMLDialogElement | null>
 }
-export const CenterDialog = ({id,children}:CenterDialogProps) => {
+export const CenterDialog = ({id,children,ref}:CenterDialogProps) => {
   return (
-    <dialog 
+    <dialog ref={ref}
       className="p-0 rounded-xl backdrop:bg-black/90 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 overflow-hidden outline-0 "
       id={id} popover="auto" 
     >

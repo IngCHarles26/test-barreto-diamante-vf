@@ -6,7 +6,6 @@ import { FaLock, FaUser, FaUserCircle, FaUserNinja, FaUserPlus } from 'react-ico
 import z from 'zod'
 import { zEmail, zPassword } from '@/lib/shared/zod-schemas'
 import { authClient } from '@/lib/auth-client'
-import { useLoadingStore } from '@/store'
 
 const initialData = {
     name: '',
@@ -33,7 +32,6 @@ export const NewUser = () => {
   const [newUserData, setNewUserData] = useState( initialData );
   const [errorMessage, setErrorMessage] = useState('');
   
-
   const handleChange = (e:ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
 
     const name = e.target.name as keyof typeof newUserData
@@ -41,10 +39,7 @@ export const NewUser = () => {
 
     const input = {...newUserData,[name]:value}
 
-    setNewUserData( prev => ({
-      ...prev,
-      [name]:value
-    }))
+    setNewUserData( prev => ({ ...prev, [name]:value }))
 
     const result = schema.safeParse(input)
     if(result.error){

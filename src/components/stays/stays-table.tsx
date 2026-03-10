@@ -10,7 +10,7 @@ export interface StayTableProps{
 
 export const StaysTable = ({staysInfo}:StayTableProps) => {
   return (
-    <TableApp pagination>  
+    <TableApp>  
       <TableHeader>
         <p className='w-[40%] md:w-[25%] '>Clientes</p>
         <p className='w-[18%] md:w-[17.5%] text-center'>

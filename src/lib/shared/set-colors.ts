@@ -1,25 +1,30 @@
 export const genRandomColor = () => {
   const colors = [
-    '#1A237E', '#283593', '#303F9F', '#3949AB', '#3F51B5',
-    '#1976D2', '#1E88E5', '#2196F3', '#0288D1', '#0277BD',
-    '#00838F', '#0097A7', '#00ACC1', '#00BCD4', '#0097A7',
-    '#00796B', '#00897B', '#009688', '#00695C', '#004D40',
-    '#2E7D32', '#388E3C', '#43A047', '#4CAF50', '#388E3C',
-    '#558B2F', '#689F38', '#7CB342', '#8BC34A', '#689F38',
-    '#9E9D24', '#AFB42B', '#C0CA33', '#827717', '#9E9D24',
-    '#F57F17', '#F9A825', '#FBC02D', '#F57F17', '#E65100',
-    '#EF6C00', '#F57C00', '#FB8C00', '#FF9800', '#EF6C00',
-    '#E64A19', '#F4511E', '#FF5722', '#D84315', '#BF360C',
-    '#6D4C41', '#795548', '#8D6E63', '#5D4037', '#4E342E',
-    '#455A64', '#546E7A', '#607D8B', '#37474F', '#263238',
-    '#424242', '#616161', '#757575', '#424242', '#212121',
-    '#880E4F', '#AD1457', '#C2185B', '#D81B60', '#E91E63',
-    '#6A1B9A', '#7B1FA2', '#8E24AA', '#9C27B0', '#AB47BC',
-    '#4A148C', '#6A1B9A', '#7B1FA2', '#8E24AA', '#9C27B0',
-    '#311B92', '#4527A0', '#512DA8', '#5E35B1', '#673AB7',
-    '#1A237E', '#283593', '#303F9F', '#3949AB', '#5C6BC0',
-    '#0D47A1', '#1565C0', '#1976D2', '#1E88E5', '#2196F3',
-    '#01579B', '#0277BD', '#0288D1', '#039BE5', '#03A9F4'
+'#1A237E', // 0: Azul muy oscuro
+    '#E64A19', // 1: Naranja rojizo
+    '#1B5E20', // 2: Verde bosque
+    '#880E4F', // 3: Rosa fuerte
+    '#FBC02D', // 4: Amarillo
+    '#4A148C', // 5: Púrpura profundo
+    '#006064', // 6: Cian oscuro
+    '#F44336', // 7: Rojo vibrante
+    '#2196F3', // 8: Azul brillante
+    '#795548', // 9: Marrón
+    '#4CAF50', // 10: Verde medio
+    '#E91E63', // 11: Rosa fucsia
+    '#03A9F4', // 12: Celeste
+    '#FF6F00', // 13: Ámbar oscuro
+    '#004D40', // 14: Verde azulado
+    '#9C27B0', // 15: Púrpura
+    '#B71C1C', // 16: Rojo oscuro
+    '#0097A7', // 17: Turquesa
+    '#8BC34A', // 18: Verde lima
+    '#673AB7', // 19: Violeta
+    '#37474F', // 20: Gris azulado
+    '#FF8F00', // 21: Naranja
+    '#009688', // 22: Verde esmeralda
+    '#4E342E', // 23: Marrón oscuro
+    '#3F51B5'  // 24: Índigo
   ];
   const len = colors.length
   

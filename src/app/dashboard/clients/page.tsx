@@ -1,22 +1,30 @@
-import { ClientsContent, HeaderButton, PageTitle } from "@/components";
+import { ClientsContent, HeaderButton, NewClientForm, NewCountryForm, PageTitle } from "@/components";
+import { getCacheCountries } from "@/lib/server";
 import { FaPlus } from "react-icons/fa";
 
-
 // documento, nombre
-export default function ClientsPage() {
+export default async function ClientsPage() {
+
+  const dialogClient = 'form-new-client'
+  const dialogCountry = 'form-new-country'
+
+  const countries = await getCacheCountries()
+  
   return (
     <div className="h-full w-full flex flex-col">
       
       <PageTitle 
-        title="Relacion de Clientes"
+        title="Busqueda de Clientes"
         children={ 
-          <HeaderButton target={"form-new-client"} Icon={FaPlus} textMobile="Nuevo" textDesktop="Cliente" />
+          <HeaderButton target={dialogClient} Icon={FaPlus} textMobile="Nuevo" textDesktop="Cliente" />
           }  
       />
 
-        
       <ClientsContent/>
-        
+
+      <NewClientForm dialogId={dialogClient} dialogNewCountry={dialogCountry} countries={countries} />
+
+      <NewCountryForm dialogId={dialogCountry} dialogClient={dialogClient}/>
       
     </div>
   );

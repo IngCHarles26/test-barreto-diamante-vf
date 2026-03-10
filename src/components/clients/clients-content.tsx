@@ -1,108 +1,97 @@
-import { FilterSelect, FilterSelectInput, PageContent, PageHeader, SearchButton, TableApp, TableFooter, TableHeader } from "../general"
-import { ClientsTableRow } from "./clients-table-row";
-import { NewClientForm } from "./new-client-form";
+'use client'
 
-const usuarios= [
-  {
-    id: 1,
-    firstName: "Ricardo",
-    lastName: "Pérez",
-    typeDocument: "DNI",
-    numberDocument: "72839405",
-    flag: "🇵🇪",
-    country: 'Peru',
-    age: 28,
-    rank: 1.5,
-    banned: true // Este usuario está baneado
-  },
-  {
-    id: 2,
-    firstName: "Sofía",
-    lastName: "Rodríguez",
-    typeDocument: "Pasaporte",
-    numberDocument: "A12345678",
-    flag: "🇦🇷",
-    country:'Argentina',
-    age: 24,
-    rank: 5
-    // banned es opcional, así que aquí no lo incluimos
-  },
-  {
-    id: 3,
-    firstName: "Miguel",
-    lastName: "Santos",
-    typeDocument: "Cédula",
-    numberDocument: "1.085.432-K",
-    flag: "🇨🇴",
-    country:'Colombia',
-    age: 35,
-    rank: 4.3,
-    banned: true
-  },
-  {
-    id: 4,
-    firstName: "Elena",
-    lastName: "García",
-    typeDocument: "NIE",
-    numberDocument: "X9876543Z",
-    flag: "🇪🇸",
-    country:'España',
-    age: 31,
-    rank: 3
-  },
-  {
-    id: 5,
-    firstName: "Yuki",
-    lastName: "Tanaka",
-    typeDocument: "Pasaporte",
-    numberDocument: "TK900211",
-    flag: "🇯🇵",
-    country:'Japon',
-    age: 22,
-    rank: 4.3
-  }
-];
+import { ActionGetClientsByFilters, SearchClientsInterface } from "@/lib/server";
+import { FilterContainer, PageContent, PageHeader, SearchButton, TableApp, TableHeader } from "../general"
+import { ClientsTableRow } from "./clients-table-row";
+import { FaSearch } from "react-icons/fa";
+import { ChangeEvent, useState } from "react";
+import { useClientFoundStore, useLoadingStore } from "@/store";
+
+const msg = 'Por favor selecciona el tipo de busqueda: documento o nombres'
 
 export const ClientsContent = () => {
+  const {clientsFound,setClientList,resetClientList} = useClientFoundStore( st => st )
+  const [mainText, setMainText] = useState(msg);
+  const [searchData, setSearchData] = useState<SearchClientsInterface>({type:'name',input:''});
+  const {togleLoading} = useLoadingStore( st => st );
+
+  const handleChange = (e:ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const name = e.target.name as keyof typeof searchData
+    const value = e.target.value as string
+
+    const valueFiltered = value.replace(/[^a-zA-Z0-9ñÑ\s]/g,'').replace(/\s+/g, ' ')
+    
+    setSearchData(prev => ({...prev,[name]:valueFiltered.toLowerCase()}))
+  }
+ 
+  const handleClick = async () => {
+
+    const { input,type } = searchData
+
+    togleLoading()
+    const data = await ActionGetClientsByFilters({type,input:input.trim()})
+
+    togleLoading()
+    if( data.length === 0 ){
+      resetClientList()
+      return setMainText(`No hay resultados para "${input}"`)
+    }
+    
+    setMainText('')
+    setClientList(data)
+  }
+
   return (
-    <PageContent>
+    <PageContent >
       <PageHeader>
 
-        <FilterSelectInput
-          id='select-type-client-search' 
-          options={['nombre','documento']} 
-        />
-        <FilterSelect 
-          id='select-type-country' 
-          label='Pais:' 
-          options={['Peru','Bolivia','Camerun']} 
-        />
+        <FilterContainer>
+          <label>
+            <FaSearch  className="size-3 md:size-4 text-gray-02 hidden md:block" />
+          </label>
+          <select 
+            className='h-full px-0 md:px-2 outline-0 font-bold text-sm md:text-lg'
+            name='type'
+            value={searchData.type}
+            onChange={handleChange}
+          >
+            <option value='name' className="text-xs md:text-xl font-normal" >Nombre</option>
+            <option value='document' className="text-xs md:text-xl font-normal" >Documento</option>
+          </select>
+          <input 
+            name='input'
+            value={searchData.input}
+            onChange={handleChange}
+            type="text" 
+            placeholder='---------------------' 
+            className='outline-0 text-base md:text-lg  w-45 md:w-55' 
+          />
+        </FilterContainer>
 
-        <SearchButton/>
+        <SearchButton onCLick={handleClick}/>
       </PageHeader>
 
-      <TableApp pagination>
+      {
+        !clientsFound.length 
+          ? <p className="text-gray-04 text-xl">{mainText}</p>
+          : <TableApp>
 
-        <TableHeader>
-          <p className="w-[50%] md:w-[38%]">Nombre</p>
-          <p className="w-[10%] md:w-[15%]"><span className="hidden md:inline">PAIS</span></p>
-          <p className="w-[30%] md:w-[15%]">Documento</p>
-          <p className="md:w-[10%] hidden md:block">Edad</p>
-          <p className="md:w-[12%] text-center hidden md:block">Puntaje</p>
-          <p className='w-[10%] md:w-[10%] text-center'>Info</p>
-        </TableHeader>
+              <TableHeader>
+                <p className="w-[50%] md:w-[38%]">Nombre</p>
+                <p className="w-[10%] md:w-[15%]"><span className="hidden md:inline">PAIS</span></p>
+                <p className="w-[30%] md:w-[15%]">Documento</p>
+                <p className="md:w-[10%] hidden md:block">Edad</p>
+                <p className="md:w-[12%] text-center hidden md:block">Puntaje</p>
+                <p className='w-[10%] md:w-[10%] text-center'>Info</p>
+              </TableHeader>
 
-        {
-          // @ts-ignore
-          usuarios.map((el,ix) => <ClientsTableRow key={'client_relation_row'+ix} {...el}/>)
-        }
+              {
+                clientsFound.map( el => <ClientsTableRow key={'client_relation_row'+el.id} {...el}/>)
+              }
 
-        <TableFooter/>
+            </TableApp>
+      }
 
-      </TableApp>
-
-      <NewClientForm/>
-      
     </PageContent>
   )
 }

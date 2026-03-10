@@ -1,4 +1,4 @@
-import { auth, prisma } from "@/lib/server";
+import { auth, prisma } from "@/lib";
 import { zEmail, zPassword } from "@/lib/shared/zod-schemas";
 import { hashPassword } from "better-auth/crypto";
 import { NextResponse } from "next/server"

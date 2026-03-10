@@ -36,11 +36,11 @@ export const NewActive = ( {rooms}:Props ) => {
     const { description,room } = newRoomActive
 
     if(description.length < 20) return setErrorMessage('La descripcion del articulo es muy pequeña');
-    if(!room) return setErrorMessage('Debes ingresar la habitacion');
 
     setErrorMessage('cargando...')
 
-    await ActionCreateRoomActive(description,+room)
+    await ActionCreateRoomActive(description.replace(/\s+/g, ' '),room)
+    
     setErrorMessage('')
     closeDialog(dialogId)
     setNewRoomActive(initialData)
@@ -66,7 +66,7 @@ export const NewActive = ( {rooms}:Props ) => {
             name="description"
             value={newRoomActive.description}
             onChange={handleChange}
-            />
+          />
 
           <InputApp
             Icon={FaDoorOpen}

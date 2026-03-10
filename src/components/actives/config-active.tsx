@@ -3,7 +3,7 @@
 import { CenterDialog, DialogContent, DialogFooterSave, DialogHeader, InputApp } from "../general"
 import { MdChair } from "react-icons/md"
 import { IoIosBed, IoMdSettings } from "react-icons/io"
-import { FaBan, FaDoorOpen } from "react-icons/fa"
+import { FaDoorOpen } from "react-icons/fa"
 import { ChangeEvent, useState } from "react"
 import { ActionEditInfoRoomActive } from "@/lib/server"
 import { closeDialog } from "@/lib/client"

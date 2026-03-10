@@ -21,7 +21,7 @@ export const baseSideBarItems= [
     title: 'Clientes', 
     Icon: FaUsers , 
     options:[
-      {name:'Relacion',href:'/dashboard/clients'},
+      {name:'Busqueda',href:'/dashboard/clients'},
     ]
   },
   {

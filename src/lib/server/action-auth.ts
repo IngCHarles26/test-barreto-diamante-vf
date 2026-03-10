@@ -19,5 +19,5 @@ export async function isAdminUser() {
 
   const {role} = user
 
-  if(role !== 'admin') redirect('/dashboard')
+  if(role !== 'admin') redirect('/dashboard');
 }

@@ -12,3 +12,10 @@ export const zPassword = z
                 .regex(/[a-z]/, { message: "Debe contener al menos una minúscula" })
                 .regex(/[0-9]/, { message: "Debe contener al menos un número" })
                 .regex(/[^A-Za-z0-9]/, { message: "Debe contener al menos un carácter especial" })
+
+
+export const isValidUuid = (id:string) => {
+  const schema = z.uuid()
+  return schema.safeParse(id).success
+}
+                

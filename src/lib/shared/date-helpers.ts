@@ -27,4 +27,16 @@ export function format0(number:number,zeros=2){
  }
 
 
- export const getNow = () => new Date()
+export const getNow = () => new Date()
+
+
+export const getAge = (_date:Date) => {
+  const date = new Date(_date)
+  const now = getNow()
+  const [ monthNow,yearNow ] = [ now.getMonth(), now.getFullYear() ]
+  const [ monthInput,yearInput ] = [ date.getMonth(), date.getFullYear() ]
+
+  const age = yearNow - yearInput
+  if(monthNow < monthInput) return age-1
+  return age
+}

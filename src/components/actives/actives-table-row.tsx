@@ -10,7 +10,7 @@ interface Props extends RoomActive{
   rooms: number[]
 }
 
-export const ActivesTableRow = ({roomNumber,description,dateCreated,dateMoved,id,rooms}:Props) => {
+export const ActivesTableRow = ({room,description,dateCreated,dateMoved,id,rooms}:Props) => {
   const dateBuy = formatDate(dateCreated)[0]
   const dateMove = formatDate(dateMoved)[0]
 
@@ -37,11 +37,11 @@ export const ActivesTableRow = ({roomNumber,description,dateCreated,dateMoved,id
 
       <div className='w-[12.5%] '>
         <p className='py-2 bg-back-1 text-sub-title mr-auto rounded-lg text-xl md:text-2xl w-14 md:w-18 text-center font-bold'>
-          {roomNumber}
+          {room}
         </p> 
       </div>
 
-      <ConfigActive description={description} id={id} room={roomNumber||0} rooms={rooms} />
+      <ConfigActive description={description} id={id} room={room||0} rooms={rooms} />
 
       <RemoveActive description={description} id={id}/>
       
