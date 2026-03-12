@@ -1,57 +1,11 @@
+'use client'
+
 import Image from "next/image"
-import { Room, RoomProps } from './room';
-import { Fragment } from "react/jsx-runtime";
+import { RoomButton } from './room-button';
 import { RoomLegend } from "./room-legend";
+import { useState } from "react";
+import { Room } from "@/generated/prisma/browser";
 
-interface Floor {
-  id: string
-  src: string
-  name: string,
-  rooms: RoomProps[]
-}
-
-const pisos:Floor[] = [
-  {
-    id: 'piso1',
-    src: '/plano_prueba.jpg',
-    name: 'Piso 1',
-    rooms: [
-      {number: 101, top: 19, left: 29, status: 'free', },
-      {number: 102, top: 36, left: 67, status: 'busy', },
-      {number: 103, top: 57, left: 57, status: 'reserved', disabled: true},
-      {number: 104, top: 74, left: 25, status: 'free', },
-      {number: 105, top: 77, left: 72, status: 'reserved', },
-    ]
-  },
-  {
-    id: 'piso2',
-    src: '/plano_prueba.jpg',
-    name: 'Piso 2',
-    rooms:[
-      {number: 201, top: 19, left: 29, status: 'free', },
-      {number: 202, top: 36, left: 67, status: 'busy', },
-      {number: 203, top: 57, left: 57, status: 'free', },
-      {number: 204, top: 74, left: 25, status: 'reserved', },
-      {number: 205, top: 77, left: 72, status: 'busy', },
-    ]
-  },
-  {
-    id: 'piso3',
-    src: '/plano_prueba.jpg',
-    name: 'Piso 3',
-    rooms:[
-      {number: 201, top: 19, left: 29, status: 'free', },
-      {number: 202, top: 36, left: 67, status: 'free', },
-      {number: 203, top: 57, left: 57, status: 'free', },
-      {number: 204, top: 74, left: 25, status: 'free', },
-      {number: 205, top: 77, left: 72, status: 'free', disabled: true },
-    ]
-  },
-]
-
-const __html = pisos.map( ({id}) => `
-  .peer\\/${id}:checked ~ div.peer-checked\\/${id}\\:block { display: block; } 
-  body:has(#${id}:checked) label[for="${id}"] { background: #fff; color: #0d5caf; font-weight: bold; }`).join('')
 
 const legend = [
   {color: 'bg-green-500' , label: 'Libre' },
@@ -61,51 +15,50 @@ const legend = [
 ]
 
 
-export const RoomMap = () => {
+interface Props {
+  floors: {  number: number
+    name: string
+    src: string
+    rooms: Room[]}[]
+}
+
+
+export const RoomMap = ({ floors }:Props) => {
+
+  const [floorMap, setFloorMap] = useState(0);
+  const {rooms,src} = floors[floorMap]
+  
   return (
-    <div className="w-full h-full md:w-auto md:h-full md:max-h-180 2xl:max-h-230 min-h-150 flex flex-col md:flex-col-reverse items-center justify-between gap-2 md:sticky md:top-10">
+    <div className="w-full h-full md:w-auto md:h-full md:max-h-180 2xl:max-h-250 min-h-150 flex flex-col items-center justify-between gap-4 md:sticky md:top-10 ">
 
       <div className="flex w-full justify-center gap-2">
-        {legend.map( (el,ix) => <RoomLegend key={'room-legend-'+ix} {...el}/>)}
+        { legend.map( (el,ix) => <RoomLegend key={'room-legend-'+ix} {...el}/>) }
       </div>
 
-      <div className="relative h-full aspect-11/20 ">
+      <div className="relative h-full aspect-9/20 ">
 
-          {
-            pisos.map( ({id,rooms,src},ixFloor) => (
-              <Fragment key={'floor_'+ixFloor}>
-                <input type="radio" id={id} name="piso-selector" className={`hidden peer/${id}`} defaultChecked={ixFloor == 0}/>
-                <div className={`hidden peer-checked/${id}:block w-full h-full `}>
-                  <Image 
-                    src={src}
-                    alt={`imagen fondo piso`} 
-                    fill 
-                    className=''
-                  />
+        <div className={` w-full h-full `}>
 
-                  {rooms.map( (data,ixRoom) => (<Room {...data} key={`room_piso_${ixFloor}_${ixRoom}`}/>))}
-                </div>
-              </Fragment>
-            ))
-          }
+          <Image src={src}alt='imagen fondo piso' fill />
+
+          { rooms.map( data => <RoomButton key={`room_piso_${data.number}`} {...data} />) }
+          
+        </div>
 
       </div>
 
-      <div className="flex p-1 bg-back-1 rounded-xl  w-fit">
+      <div className="flex items-center gap-2 p-1 bg-back-1 rounded-xl ">
         {
-          pisos.map(({id,name},ix) => (        
-          <label 
-            className={`px-3 py-1.5 text-lg md:text-base rounded-lg cursor-pointer transition-all hover:opacity-80 text-sub-title`}
-            htmlFor={id} key={'label_'+ix}>
-            {name}
-          </label>))
+          floors.map( ({number,name}) => (
+            <button 
+              key={'floor_button'+number}
+              onClick={() => setFloorMap(number-1)} 
+              className={`px-2 py-1 rounded-lg text-2xl ${floorMap == (number-1) && 'bg-primary/80 text-white font-bold'}`}
+            >{name}</button>
+          ))
         }
       </div>
-
-      <style dangerouslySetInnerHTML={{ __html}} />
 
     </div>
   )
 }
-
-

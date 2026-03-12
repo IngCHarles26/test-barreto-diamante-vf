@@ -49,7 +49,8 @@ export const FilterSelect = ({id,options,label,name,value,onChange}:FilterSelect
         name={name}
         value={value}
         onChange={onChange}
-      >
+      > 
+        <option value=''>----</option>
         {options.map( (el,ix) => 
           <option 
             key={'select_'+id+ix} 

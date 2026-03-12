@@ -24,7 +24,17 @@ export function format0(number:number,zeros=2){
   const _0 = '0'.repeat(zeros-len)
 
   return `${_0}${number}` 
- }
+}
+
+export function penFormat(total:number){
+
+  const formateador = new Intl.NumberFormat('es-PE', {
+    style: 'currency',
+    currency: 'PEN', 
+  });
+
+  return formateador.format(total)
+}
 
 
 export const getNow = () => new Date()

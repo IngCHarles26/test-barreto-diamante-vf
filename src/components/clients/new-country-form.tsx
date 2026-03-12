@@ -1,19 +1,18 @@
 'use client'
 
-import { FaFlag, FaUser, FaUserPlus } from 'react-icons/fa'
+import { FaFlag, FaUserPlus } from 'react-icons/fa'
 import { CenterDialog, DialogContent, DialogFooterSave, DialogHeader, InputApp } from '../general'
 import { addCountry, getRestCountries } from '@/lib/server'
 import { useEffect, useRef, useState } from 'react'
 import { closeDialog, openDialog } from '@/lib/client'
+import { dialogClient } from './new-client-form'
 
 
-interface Props {
-  dialogId: string
-  dialogClient: string
-}
+
+export const dialogCountry = 'form-new-country'
 
 
-export const NewCountryForm = ({dialogId,dialogClient}:Props) => {
+export const NewCountryForm = () => {
 
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [message, setMessage] = useState('');
@@ -48,12 +47,12 @@ export const NewCountryForm = ({dialogId,dialogClient}:Props) => {
     await addCountry({flag,id,name})
     setCountriesData([])
     setCountrySelected('')
-    closeDialog(dialogId)
+    closeDialog(dialogCountry)
     openDialog(dialogClient)
   }
   
   return (
-    <CenterDialog id={dialogId} ref={dialogRef}>
+    <CenterDialog id={dialogCountry} ref={dialogRef}>
       <DialogContent maxWRem={30}>
       
         <DialogHeader
@@ -80,7 +79,7 @@ export const NewCountryForm = ({dialogId,dialogClient}:Props) => {
         </div>
 
         <DialogFooterSave 
-          id={dialogId}
+          id={dialogCountry}
           error={message}
           saveClick={handleClick}
         />

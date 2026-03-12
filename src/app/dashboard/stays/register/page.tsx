@@ -1,6 +1,12 @@
-import {  PageContent, PageTitle, RoomMap, StayRegisterContent } from "@/components";
+import { PageContent, PageTitle, RoomMap, StayRegisterContent } from "@/components";
+import { ActionGetFloors, getCacheCountries } from "@/lib/server";
 
-export default function RegisterPage() {
+export default async function RegisterPage() {
+
+  const floors = await ActionGetFloors()
+  const countries = await getCacheCountries()
+  // TODO: Hacer la peticiond e las estadias activas
+
   return (
     <div className="h-full w-full flex flex-col">
           
@@ -10,11 +16,11 @@ export default function RegisterPage() {
       />
 
       <PageContent>
-        <div className="w-full h-full flex flex-col lg:flex-row pb-5 gap-3 md:gap-5 ">
+        <div className="w-full h-full flex flex-col lg:flex-row pb-5 gap-3">
 
-          <RoomMap/>
+          <RoomMap floors={floors} />
 
-          <StayRegisterContent/>
+          <StayRegisterContent countries={countries} />
 
         </div>
       </PageContent>

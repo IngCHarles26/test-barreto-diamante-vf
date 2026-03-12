@@ -1,7 +1,7 @@
 import { FaPlus, FaSearch } from "react-icons/fa"
-import { FilterSelectInput } from "../general"
-import { NewClientForm } from "../clients/new-client-form"
 import { RoomStayTableRow } from "./room-stay-table-row";
+import { NewClientForm } from "../clients";
+import { FilterSelectInput } from "../general";
 
 const personas = [
   {
@@ -67,7 +67,6 @@ export const RoomStayTable = () => {
             <span className="hidden md:block">Nuevo</span>
           </button>
 
-          <NewClientForm/>
         </div>
         
       </div>
@@ -84,6 +83,10 @@ export const RoomStayTable = () => {
         {personas.map((el,ix) => <RoomStayTableRow key={'row-table-client-data-stay'+el.document} {...el}/>)}
 
       </div>
+
+
+      
+      
 
     </div>
   )

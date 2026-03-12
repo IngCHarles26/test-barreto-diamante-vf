@@ -1,34 +1,65 @@
-import React from 'react'
+'use client'
+
+import { getMonthReport } from '@/lib/server'
 import { FilterSelect, PageContent, PageHeader, SearchButton } from '../general'
-import { RoomLegend } from '../room-map/room-legend'
-import { DayCalendarCard } from './day-calendar-card'
-import { months, years } from '@/lib/shared'
+import { format0, getNow, months, penFormat, years } from '@/lib/shared'
+import { ChangeEvent, useState } from 'react'
+import Link from 'next/link'
+import { FaEye } from 'react-icons/fa'
+import { useReportStore } from '@/store'
 
-const legends = [
-  {color: 'bg-in-client', label: 'Aprobado'},
-  {color: 'bg-orange-1', label: 'Observado'},
-]
+export const dynamic = 'force-dynamic'
 
-const staticDays = [
-  { day: 1, aprobed: true, total: 1200 },
-  { day: 2, aprobed: false, total: 850 },
-  { day: 3, aprobed: true, total: 2100 },
-  { day: 4, aprobed: true, total: 450 },
-  { day: 5, aprobed: false, total: 120 },
-  { day: 6, aprobed: true, total: 3200 },
-  { day: 7, aprobed: true, total: 1500 },
-  { day: 8, aprobed: false, total: 0 },
-  { day: 9, aprobed: true, total: 980 },
-  { day: 10, aprobed: true, total: 2500 },
-  { day: 11, aprobed: false, total: 670 },
-  { day: 12, aprobed: true, total: 1300 },
-  { day: 13, aprobed: true, total: 4100 },
-  { day: 14, aprobed: false, total: 220 },
-  { day: 15, aprobed: true, total: 1750 },
-];
 
+const monthList = months()
+const now = getNow()
+const [nowMonth,nowYear] = [now.getMonth(), now.getFullYear()]
+const filteredMonths = monthList.slice(0,nowMonth+1)
 
 export const CalendarReportContent = () => {
+
+  const [monthSelect, setMonthSelect] = useState(filteredMonths);
+  const [filterData, setFilterData] = useState({ month:'',year:'' });
+  const [message, setMessage] = useState('Seleccione mes y año, y luego haga click en buscar');
+  const [total, setTotal] = useState<number|null>(null);
+  const { dailyReport, setDailyReport} = useReportStore( st => st )
+  
+
+
+  const handleChange = (e:ChangeEvent<HTMLSelectElement>) => {
+    const name = e.target.name as keyof typeof filterData 
+    const value = e.target.value
+
+    if(name == 'year' ) {
+      if(+value < nowYear) setMonthSelect(monthList);
+      else setMonthSelect(filteredMonths)
+    }
+    
+    setFilterData(prev => ({...prev,[name]:value}))
+  }
+  
+  const handleClick = async () => {
+    setMessage('Buscando....')
+    const {month,year} = filterData
+
+    if(!month || !year) return setMessage('Ingrese los el mes y el año para realizar la busqueda')
+
+    const response = await getMonthReport(monthList.indexOf(month),+year)
+
+
+    if(response.data.length === 0) {
+      setMessage(`No hay datos para el periodo ${month}-${year}`)
+      setDailyReport([])
+      setTotal(null)
+      return
+    }
+    
+    setMessage(`Resultados encontrados para el periodo ${month}-${year}`)
+    setDailyReport(response.data)
+    setTotal(response.total)
+  }
+  
+
   return (
     <PageContent>
       <PageHeader>
@@ -36,31 +67,52 @@ export const CalendarReportContent = () => {
           <FilterSelect
             id="select-month-report"
             label="Mes"
-            options={months()}
-            />
+            options={monthSelect}
+            name='month'
+            value={filterData.month}
+            onChange={handleChange}
+          />
           <FilterSelect
             id="select-year-report"
             label="Año"
             options={years()}
-            />
-          <SearchButton/>
+            name='year'
+            value={filterData.year}
+            onChange={handleChange}
+          />
+          <SearchButton onCLick={handleClick} />
         </div>
 
-        <div className="flex flex-col md:flex-row  md:items-center md:gap-4 ml-auto">
-          {legends.map( (el,ix) => <RoomLegend key={'room-legend-'+ix} {...el}/>)}
-        </div>
+        {total &&
+          <div className='flex items-center gap-2 font-bold'>
+            <p className='text-gray-03 text-xl'>TOTAL:</p>
+            <p className='text-money/80 text-3xl'>S/ {total} </p>
+          </div>
+        }
       </PageHeader>
 
+      <p className='text-xl text-gray-04'>{message}</p>
+
       <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
+        
 
-        {staticDays.map( (el,ix) => <DayCalendarCard key={'day-calendar-'+ix} {...el}/>)}
-
+        {dailyReport.map( (el,ix) => 
+          <Link key={'item_card'+ix} href={`/dashboard/reports/daily/${el.year}-${format0(el.month+1)}-${format0(el.day)}`}>
+            <div className="rounded-xl border-border-sidebar shadow-lg px-3 py-2">
+              <div className="flex flex-col items-end 2xl:flex-row 2xl:items-center 2xl:justify-between mb-3">
+                <p className="text-done-button-text text-3xl md:text-5xl  2xl:text-7xl ">{format0(el.day)}</p>
+                {el.observed && <FaEye className="text-orange-1 size-8"/>}
+              </div>
+              <p className="text-gray-10 text-xs md:text-sm 2xl:text-base">
+                INGRESOS <span className="hidden md:inline">TOTALES</span>:
+              </p>
+              <p className="text-primary text-xl font-bold">{penFormat(el.total)}</p>
+            </div>
+          </Link>)
+        }
         
       </div>
 
-      {/* <div className="mt-auto">
-        footer
-      </div> */}
     </PageContent>
   )
 }

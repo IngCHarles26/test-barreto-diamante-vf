@@ -1,12 +1,9 @@
-import { ClientsContent, HeaderButton, NewClientForm, NewCountryForm, PageTitle } from "@/components";
+import { ClientsContent, dialogClient, HeaderButton, NewClientForm, NewCountryForm, PageTitle } from "@/components";
 import { getCacheCountries } from "@/lib/server";
 import { FaPlus } from "react-icons/fa";
 
 // documento, nombre
 export default async function ClientsPage() {
-
-  const dialogClient = 'form-new-client'
-  const dialogCountry = 'form-new-country'
 
   const countries = await getCacheCountries()
   
@@ -22,9 +19,9 @@ export default async function ClientsPage() {
 
       <ClientsContent/>
 
-      <NewClientForm dialogId={dialogClient} dialogNewCountry={dialogCountry} countries={countries} />
+      <NewClientForm countries={countries} />
 
-      <NewCountryForm dialogId={dialogCountry} dialogClient={dialogClient}/>
+      <NewCountryForm/>
       
     </div>
   );

@@ -1,52 +1,44 @@
-import { formatDate } from '@/lib/shared'
-import { TableRow } from '../general'
 import clsx from 'clsx'
+import { TableRow } from '../general'
+import { penFormat } from '@/lib/shared'
 
-type Method = 'efectivo' | 'yape' | 'transfe' | 'plin'
+type Method = 'efectivo' | 'electronico'
 
 export interface DailyTableRowProps{
   hour: string
-  room: number
-  newDateEnd: Date
-  user: string
-  payMethod: Method
-  operation?: number
-  price: number
+  mount: number
+  email: string
+  payType: Method
+  operationNumber: string | null
+  description: string
 }
 
-const methodStyles:Record<Method,string> = {
-  efectivo: 'text-money bg-money/10',
-  plin: 'text-white bg-plin',
-  transfe: 'text-white bg-sub-title',
-  yape: 'text-white bg-yape',
-}
-
-export const DailyTableRow = ({hour,room,newDateEnd,user,payMethod,operation,price}:DailyTableRowProps) => {
-  const [date,hourEnd] = formatDate(newDateEnd)
+export const DailyTableRow = ({hour,mount,email,payType,operationNumber,description}:DailyTableRowProps) => {
   
   return (
     <TableRow>
-      <p className='w-[15%] md:w-[12.5%] text-lg md:text-xl font-bold'>{hour}</p>
+      <p className='w-[15%] md:w-[10%] text-lg md:text-2xl font-bold'>{hour}</p>
       
-      <div className='w-[40%] md:w-[30%]'>
-        <p className='text-xl md:text-2xl font-bold'>Habitacion {room}</p>
-        <p className='text-xs md:text-base  text-done-button-text'>Estadia hasta: {date} {hourEnd}</p>
+      <div className='w-[40%] md:w-[45%]'>
+        <p className='text-xl md:text-2xl font-bold'>{description}</p>
       </div>
       
-      <p className='md:w-[20%] hidden md:block text-done-button-text font-bold font-code text-xl capitalize'>{user}</p>
+      <p className='md:w-[20%] hidden md:block text-done-button-text font-bold font-code text-xl'>{email}</p>
       
-      <div className='w-[30%] md:w-[20%] text-center flex flex-col items-center gap-1'>
+      <div className='w-[30%] md:w-[15%] text-center flex flex-col items-center'>
         <p className={clsx(
-            'px-3 py-1 rounded-lg font-bold text-base md:text-xl capitalize',
-            methodStyles[payMethod])
-          }
+              'px-3 py-1 rounded-lg font-bold text-base md:text-xl ',
+              payType === 'efectivo' ? 'text-money bg-money/10' : 'text-white bg-stars'
+            )}
         >
-          {payMethod}
+          {payType}
         </p>
-        <p className='text-xs md:text-base text-done-button-text'>{operation}</p>
+        <p className='text-xs md:text-base text-done-button-text'>{operationNumber}</p>
       </div>
 
-      <p className='w-[15%] md:w-[12.5%] text-sub-title font-extrabold text-lg md:text-2xl text-center'>s/ {price}</p>
+      <p className='w-[15%] md:w-[10%] text-sub-title font-extrabold text-lg md:text-2xl text-right h-12'>
+        {penFormat(mount)}
+      </p>
     </TableRow>
   )
 }

@@ -8,6 +8,7 @@ import { Country } from '@/generated/prisma/client'
 import { closeDialog, openDialog } from '@/lib/client'
 import { ChangeEvent, useState } from 'react'
 import { ActionCreateClient } from '@/lib/server'
+import { dialogCountry } from './new-country-form'
 
 
 const initialData = {
@@ -22,12 +23,13 @@ const initialData = {
 }
 
 interface Props {
-  dialogId: string
-  dialogNewCountry:string
   countries: Country[]
 }
 
-export const NewClientForm = ({dialogId,dialogNewCountry,countries}:Props) => {
+export const dialogClient = 'form-new-client'
+
+
+export const NewClientForm = ({countries}:Props) => {
 
   const [newClientData, setNewClientData] = useState(initialData);
   const [errorMessage, setErrorMessage] = useState('');
@@ -115,11 +117,11 @@ export const NewClientForm = ({dialogId,dialogNewCountry,countries}:Props) => {
 
     setErrorMessage('')
     setNewClientData(initialData)
-    closeDialog(dialogId)
+    closeDialog(dialogClient)
   }
   
   return (
-    <CenterDialog id={dialogId}>
+    <CenterDialog id={dialogClient}>
       <DialogContent maxWRem={40}>
       
         <DialogHeader
@@ -214,7 +216,7 @@ export const NewClientForm = ({dialogId,dialogNewCountry,countries}:Props) => {
           <div className='flex items-end justify-center'>
             <button 
               className='py-2 w-full  rounded bg-primary/70 text-white font-bold hover:underline tracking-widest'
-              onClick={() => { closeDialog(dialogId); openDialog(dialogNewCountry) }}
+              onClick={() => { closeDialog(dialogClient); openDialog(dialogCountry) }}
               >
               ¿El pais no está?
             </button>
@@ -234,9 +236,8 @@ export const NewClientForm = ({dialogId,dialogNewCountry,countries}:Props) => {
 
         </div>
 
-
         <DialogFooterSave 
-          id={dialogId}
+          id={dialogClient}
           error={errorMessage}
           saveClick={handleClick}
         />

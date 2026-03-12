@@ -119,7 +119,7 @@ export default async function ClientIdPage({params}:Props) {
           </div>
             
         </div>
-        {/* cambiar para tener un text area con los comentarios por cliente y agregar el boton de betar */}
+
         <SetClientComments 
           id={id}
           banReason={banReason} 
@@ -132,8 +132,9 @@ export default async function ClientIdPage({params}:Props) {
         <div className="w-full">
           <StaysTable staysInfo={estadias}/>        
         </div>
-  
+      {/* Pendiente de implementacion */}
         <DetailStay/>
+        
       </PageContent>
       
     </div>

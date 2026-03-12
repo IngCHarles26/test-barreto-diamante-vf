@@ -5,6 +5,7 @@ import { prisma } from "../prisma"
 import { TypeRoom } from "@/generated/prisma/enums";
 import { redirect } from "next/navigation";
 import { getNow } from "../shared";
+import { Room } from "@/generated/prisma/client";
 
 //!_____________________________ ROOMS
   const tagCacheRooms = 'all-rooms'
@@ -15,6 +16,30 @@ import { getNow } from "../shared";
 
     return await prisma.room.findMany()
   }
+
+  interface Floors{
+    number: number
+    name: string
+    src: string
+    rooms: Room[]
+  }
+  
+  export const ActionGetFloors = async () => {
+    const floors:Floors[] = [
+      { number: 1, name: 'Piso 1', src: '/piso_1.jpg', rooms: []}, 
+      { number: 2, name: 'Piso 2', src: '/piso_2_3.jpg', rooms: []}, 
+      { number: 3, name: 'Piso 3', src: '/piso_2_3.jpg', rooms: []}, 
+    ]
+    
+    const rooms = await getCacheRooms()
+
+    for(let room of rooms){
+      const { floor } = room
+      floors[floor-1].rooms.push(room)
+    }
+
+    return floors
+  } 
 
   export const ActionToggleRoomStatus = async (status:boolean, number:number) => {
     await prisma.room.update({
@@ -37,6 +62,7 @@ import { getNow } from "../shared";
     
     updateTag(tagCacheRooms)
   }
+
 
 //!_____________________________ ACTIVES ROOM
   const tagCacheActives = 'all-active-rooms'

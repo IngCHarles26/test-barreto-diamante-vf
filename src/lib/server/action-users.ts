@@ -21,3 +21,15 @@ export const ToggleBanUser = async (banned:boolean|null,userId:string) => {
 
   revalidatePath('/dashboard/extras/users')
 }
+
+
+
+export const getUserEmail = async (inUserId:string) => {
+
+  const user = await auth.api.getUser({
+    query: {id: inUserId},
+    headers: await headers(),
+  })
+
+  return user.email.split('@')[0]
+}

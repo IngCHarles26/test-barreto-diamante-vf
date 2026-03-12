@@ -28,8 +28,10 @@ export const SetClientComments = ({
   const [inputComments, setInputComments] = useState(comments || '');
 
   const handleSubmitBanReason = async() => {
-    if(!canEditBanReason) return setMessage('Debes habilitar la edicion para poder guardar los cambios motivos de beto') 
-
+    if(!canEditBanReason) return setMessage('Debes habilitar la edicion para poder guardar los cambios motivos de beto');
+    
+    if(!inputBanReason) return setMessage('No hay razones de beto para guardar')
+      
     setMessage('Subiendo a la base de datos.....')
 
     const finalBanReason = isAdmin ? inputBanReason : `${startBanReason} __${userName}:_${inputBanReason}`
@@ -44,7 +46,10 @@ export const SetClientComments = ({
   const handleSubmitComments = async() => {
     if(!canEditComment) return setMessage('Debes habilitar la edicion para poder guardar los comentarios') 
     
+      if(!inputComments) return setMessage('No hay nada que guardar')
+        
     setMessage('Subiendo a la base de datos.....')
+    
     const success = await ActionAddCommentsClient(id,inputComments.replace(/\s+/g, ' ').trim())
     if(!success) setMessage('No se pudieron guardar los cambios');
 

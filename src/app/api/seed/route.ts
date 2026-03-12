@@ -1,6 +1,7 @@
-import { Client, Room, RoomActive } from "@/generated/prisma/client";
+import { Client, Pay, Room, RoomActive } from "@/generated/prisma/client";
 import { auth, prisma } from "@/lib";
 import { NextResponse } from "next/server";
+import { DayComment } from '../../../generated/prisma/browser';
 
 
 const seedUsers = [
@@ -38,40 +39,37 @@ const seedUsers = [
 // Triple Familiar 100     206 306
 
 
-const seedRooms:Room[] = [
-  // Personal
-  { number: 103, type: "Personal", active: false, floor: 1, posW: null, posH: null, price: 45 },
-  { number: 201, type: "Personal", active: true, floor: 2, posW: null, posH: null, price: 45 },
-  { number: 202, type: "Personal", active: false, floor: 2, posW: null, posH: null, price: 45 },
-  { number: 208, type: "Personal", active: true, floor: 2, posW: null, posH: null, price: 45 },
-  { number: 301, type: "Personal", active: true, floor: 3, posW: null, posH: null, price: 45 },
-  { number: 302, type: "Personal", active: true, floor: 3, posW: null, posH: null, price: 45 },
-  { number: 308, type: "Personal", active: true, floor: 3, posW: null, posH: null, price: 45 },
+export const seedRooms:Omit<Room,'status'>[] = [
 
-  // Doble
-  { number: 104, type: "Doble", active: true, floor: 1, posW: null, posH: null, price: 65 },
-  { number: 203, type: "Doble", active: true, floor: 2, posW: null, posH: null, price: 65 },
-  { number: 303, type: "Doble", active: true, floor: 3, posW: null, posH: null, price: 65 },
+  { number: 101, floor: 1, posW: 20, posH: 52, price: 60, type: "Matrimonial",active: true,  },
+  { number: 201, floor: 2, posW: 27, posH: 71, price: 45, type: "Personal",active: true,  },
+  { number: 301, floor: 3, posW: 27, posH: 71, price: 45, type: "Personal",active: true,  },
 
-  // Doble Familiar
-  { number: 207, type: "Doble_Familiar", active: true, floor: 2, posW: null, posH: null, price: 75 },
+  { number: 102, floor: 1, posW: 20, posH: 39, price: 60, type: "Matrimonial",active: true,  },
+  { number: 202, floor: 2, posW: 73, posH: 71, price: 45, type: "Personal",active: false,  },
+  { number: 302, floor: 3, posW: 73, posH: 71, price: 45, type: "Personal",active: true,  },
 
-  // Matrimonial
-  { number: 101, type: "Matrimonial", active: true, floor: 1, posW: null, posH: null, price: 60 },
-  { number: 102, type: "Matrimonial", active: true, floor: 1, posW: null, posH: null, price: 60 },
-  { number: 204, type: "Matrimonial", active: true, floor: 2, posW: null, posH: null, price: 60 },
-  { number: 205, type: "Matrimonial", active: true, floor: 2, posW: null, posH: null, price: 60 },
-  { number: 304, type: "Matrimonial", active: false, floor: 3, posW: null, posH: null, price: 60 },
-  { number: 305, type: "Matrimonial", active: true, floor: 3, posW: null, posH: null, price: 60 },
-  { number: 307, type: "Matrimonial", active: true, floor: 3, posW: null, posH: null, price: 60 },
+  { number: 103, floor: 1, posW: 20, posH: 20, price: 45, type: "Personal",active: false,  },
+  { number: 203, floor: 2, posW: 27, posH: 52, price: 65, type: "Doble",active: true,  },
+  { number: 303, floor: 3, posW: 27, posH: 52, price: 65, type: "Doble",active: true,  },
 
-  // Matrimonial Simple
-  { number: 105, type: "Matrimonial_Simple", active: true, floor: 1, posW: null, posH: null, price: 50 },
-  { number: 106, type: "Matrimonial_Simple", active: true, floor: 1, posW: null, posH: null, price: 50 },
+  { number: 104, floor: 1, posW: 75, posH: 21, price: 65, type: "Doble",active: true,  },
+  { number: 204, floor: 2, posW: 73, posH: 52, price: 60, type: "Matrimonial",active: true,  },
+  { number: 304, floor: 3, posW: 73, posH: 52, price: 60, type: "Matrimonial",active: false,  },
 
-  // Triple Familiar
-  { number: 206, type: "Triple_Familiar", active: true, floor: 2, posW: null, posH: null, price: 100 },
-  { number: 306, type: "Triple_Familiar", active: true, floor: 3, posW: null, posH: null, price: 100 }
+  { number: 105, floor: 1, posW: 75, posH: 7,  price: 50, type: "Matrimonial_Simple",active: true,  },
+  { number: 205, floor: 2, posW: 27, posH: 39, price: 60, type: "Matrimonial",active: true,  },
+  { number: 305, floor: 3, posW: 27, posH: 39, price: 60, type: "Matrimonial",active: true,  },
+
+  { number: 106, floor: 1, posW: 20, posH: 7,  price: 50, type: "Matrimonial_Simple",active: true,  },
+  { number: 206, floor: 2, posW: 22, posH: 13, price: 100, type: "Triple_Familiar",active: true,  },
+  { number: 306, floor: 3, posW: 22, posH: 13, price: 100, type: "Triple_Familiar",active: true,  },
+
+  { number: 207, floor: 2, posW: 72, posH: 21.5, price:75, type: "Doble_Familiar",active: true,  },
+  { number: 307, floor: 3, posW: 72, posH: 21.5, price:60, type: "Matrimonial",active: true, },
+
+  { number: 208, floor: 2, posW: 73, posH: 7, price: 45, type: "Personal",active: true,  },
+  { number: 308, floor: 3, posW: 73, posH: 7, price: 45, type: "Personal",active: true,  },
 ];
 
 
@@ -271,6 +269,133 @@ const seedClients: Omit<Client, 'id'>[] = [
 ];
 
 
+const seedPays: Omit<Pay, 'id'|'userId'>[] = [
+  { date: new Date("2026-03-01T08:00:00Z"), description: "Pago Habitación 101", payType: "efectivo", mount: 120.50, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-01T10:30:00Z"), description: "Consumo Minibar", payType: "electronico", mount: 15.00, operationNumber: "BN-1001", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-01T14:00:00Z"), description: "Reserva Suite", payType: "efectivo", mount: 300.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-01T17:15:00Z"), description: "Servicio de Lavandería", payType: "electronico", mount: 25.50, operationNumber: "BN-1002", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-01T20:45:00Z"), description: "Pago Late Check-out", payType: "efectivo", mount: 50.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-02T09:00:00Z"), description: "Pago Habitación 202", payType: "efectivo", mount: 110.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-02T11:20:00Z"), description: "Desayuno Buffet", payType: "electronico", mount: 20.00, operationNumber: "BN-2001", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-02T13:45:00Z"), description: "Pago Cochera", payType: "efectivo", mount: 15.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-02T16:10:00Z"), description: "Reserva Evento", payType: "electronico", mount: 500.00, operationNumber: "BN-2002", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-02T19:30:00Z"), description: "Pago Habitación 105", payType: "efectivo", mount: 95.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-03T08:30:00Z"), description: "Pago Habitación 303", payType: "efectivo", mount: 140.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-03T10:45:00Z"), description: "Consumo Bar", payType: "electronico", mount: 45.50, operationNumber: "BN-3001", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-03T12:00:00Z"), description: "Pago Tour Ciudad", payType: "efectivo", mount: 60.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-03T15:30:00Z"), description: "Pago Habitación 102", payType: "electronico", mount: 120.50, operationNumber: "BN-3002", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-03T18:20:00Z"), description: "Cena Especial", payType: "efectivo", mount: 80.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-04T07:45:00Z"), description: "Reserva Anticipada Mayo", payType: "electronico", mount: 150.00, operationNumber: "BN-4001", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-04T10:15:00Z"), description: "Pago Habitación 401", payType: "efectivo", mount: 180.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-04T13:00:00Z"), description: "Uso de Gimnasio Ext.", payType: "efectivo", mount: 10.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-04T16:40:00Z"), description: "Pago Traslado Aeropuerto", payType: "electronico", mount: 35.00, operationNumber: "BN-4002", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-04T21:00:00Z"), description: "Consumo Cafetería", payType: "efectivo", mount: 12.50, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-05T09:10:00Z"), description: "Pago Habitación 110", payType: "efectivo", mount: 90.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-05T12:25:00Z"), description: "Almuerzo Ejecutivo", payType: "electronico", mount: 22.00, operationNumber: "BN-5001", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-05T14:50:00Z"), description: "Pago Habitación 205", payType: "efectivo", mount: 110.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-05T17:35:00Z"), description: "Servicio de Spa", payType: "electronico", mount: 75.00, operationNumber: "BN-5002", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-03-05T20:15:00Z"), description: "Pago Habitación 301", payType: "efectivo", mount: 130.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-01T09:00:00Z"), description: "Pago Habitación 101",  payType: "efectivo", mount: 120.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-01T13:00:00Z"), description: "Consumo Restaurante",  payType: "electronico", mount: 45.00, operationNumber: "FEB-001", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-01T18:00:00Z"), description: "Servicio de Spa",  payType: "efectivo", mount: 60.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-02T09:00:00Z"), description: "Pago Habitación 202",  payType: "electronico", mount: 110.00, operationNumber: "FEB-002", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-02T13:00:00Z"), description: "Almuerzo Ejecutivo",  payType: "efectivo", mount: 25.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-02T18:00:00Z"), description: "Lavandería",  payType: "electronico", mount: 15.50, operationNumber: "FEB-003", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-03T09:00:00Z"), description: "Pago Habitación 303",  payType: "efectivo", mount: 140.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-03T13:00:00Z"), description: "Consumo Bar",  payType: "electronico", mount: 35.00, operationNumber: "FEB-004", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-03T18:00:00Z"), description: "Cochera",  payType: "efectivo", mount: 10.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-04T09:00:00Z"), description: "Pago Habitación 104",  payType: "electronico", mount: 120.00, operationNumber: "FEB-005", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-04T13:00:00Z"), description: "Cena",  payType: "efectivo", mount: 50.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-04T18:00:00Z"), description: "Minibar",  payType: "electronico", mount: 12.00, operationNumber: "FEB-006", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-05T09:00:00Z"), description: "Pago Habitación 105",  payType: "efectivo", mount: 130.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-05T13:00:00Z"), description: "Tour",  payType: "electronico", mount: 80.00, operationNumber: "FEB-007", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-05T18:00:00Z"), description: "Late Check-out",  payType: "efectivo", mount: 40.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-06T09:00:00Z"), description: "Pago Habitación 106",  payType: "electronico", mount: 115.00, operationNumber: "FEB-008", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-06T13:00:00Z"), description: "Desayuno",  payType: "efectivo", mount: 15.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-06T18:00:00Z"), description: "Gimnasio",  payType: "electronico", mount: 20.00, operationNumber: "FEB-009", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-07T09:00:00Z"), description: "Pago Habitación 107",  payType: "efectivo", mount: 125.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-07T13:00:00Z"), description: "Snacks",  payType: "electronico", mount: 10.50, operationNumber: "FEB-010", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-07T18:00:00Z"), description: "Bebidas",  payType: "efectivo", mount: 18.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-08T09:00:00Z"), description: "Pago Habitación 108",  payType: "electronico", mount: 110.00, operationNumber: "FEB-011", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-08T13:00:00Z"), description: "Almuerzo",  payType: "efectivo", mount: 30.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-08T18:00:00Z"), description: "Transporte",  payType: "electronico", mount: 40.00, operationNumber: "FEB-012", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-09T09:00:00Z"), description: "Pago Habitación 109",  payType: "efectivo", mount: 100.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-09T13:00:00Z"), description: "Consumo Bar",  payType: "electronico", mount: 22.00, operationNumber: "FEB-013", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-09T18:00:00Z"), description: "Servicio Cuarto",  payType: "efectivo", mount: 15.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-10T09:00:00Z"), description: "Pago Habitación 110",  payType: "electronico", mount: 120.00, operationNumber: "FEB-014", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-10T13:00:00Z"), description: "Cena",  payType: "efectivo", mount: 55.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-10T18:00:00Z"), description: "Minibar",  payType: "electronico", mount: 8.50, operationNumber: "FEB-015", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-11T09:00:00Z"), description: "Pago Habitación 111",  payType: "efectivo", mount: 135.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-11T13:00:00Z"), description: "Almuerzo",  payType: "electronico", mount: 28.00, operationNumber: "FEB-016", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-11T18:00:00Z"), description: "Lavandería",  payType: "efectivo", mount: 12.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-12T09:00:00Z"), description: "Pago Habitación 112",  payType: "electronico", mount: 110.00, operationNumber: "FEB-017", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-12T13:00:00Z"), description: "Cafetería",  payType: "efectivo", mount: 14.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-12T18:00:00Z"), description: "Spa",  payType: "electronico", mount: 45.00, operationNumber: "FEB-018", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-13T09:00:00Z"), description: "Pago Habitación 113",  payType: "efectivo", mount: 140.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-13T13:00:00Z"), description: "Comida Bar",  payType: "electronico", mount: 30.00, operationNumber: "FEB-019", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-13T18:00:00Z"), description: "Cochera",  payType: "efectivo", mount: 10.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-14T09:00:00Z"), description: "Especial San Valentín",  payType: "electronico", mount: 250.00, operationNumber: "FEB-020", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-14T13:00:00Z"), description: "Cena Romántica",  payType: "efectivo", mount: 180.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-14T18:00:00Z"), description: "Flores/Vino",  payType: "electronico", mount: 90.00, operationNumber: "FEB-021", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-15T09:00:00Z"), description: "Pago Habitación 115",  payType: "efectivo", mount: 110.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-15T13:00:00Z"), description: "Desayuno Familiar",  payType: "electronico", mount: 65.00, operationNumber: "FEB-022", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-15T18:00:00Z"), description: "Late Check-out",  payType: "efectivo", mount: 35.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-16T09:00:00Z"), description: "Pago Habitación 116",  payType: "electronico", mount: 120.00, operationNumber: "FEB-023", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-16T13:00:00Z"), description: "Almuerzo",  payType: "efectivo", mount: 20.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-16T18:00:00Z"), description: "Minibar",  payType: "electronico", mount: 15.00, operationNumber: "FEB-024", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-17T09:00:00Z"), description: "Pago Habitación 117",  payType: "efectivo", mount: 130.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-17T13:00:00Z"), description: "Cena",  payType: "electronico", mount: 40.00, operationNumber: "FEB-025", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-17T18:00:00Z"), description: "Cochera",  payType: "efectivo", mount: 10.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-18T09:00:00Z"), description: "Pago Habitación 118",  payType: "electronico", mount: 110.00, operationNumber: "FEB-026", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-18T13:00:00Z"), description: "Almuerzo",  payType: "efectivo", mount: 25.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-18T18:00:00Z"), description: "Lavandería",  payType: "electronico", mount: 18.00, operationNumber: "FEB-027", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-19T09:00:00Z"), description: "Pago Habitación 119",  payType: "efectivo", mount: 125.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-19T13:00:00Z"), description: "Café",  payType: "electronico", mount: 6.00, operationNumber: "FEB-028", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-19T18:00:00Z"), description: "Snacks",  payType: "efectivo", mount: 12.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-20T09:00:00Z"), description: "Pago Habitación 120",  payType: "electronico", mount: 140.00, operationNumber: "FEB-029", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-20T13:00:00Z"), description: "Almuerzo",  payType: "efectivo", mount: 32.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-20T18:00:00Z"), description: "Bar",  payType: "electronico", mount: 28.00, operationNumber: "FEB-030", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-21T09:00:00Z"), description: "Pago Habitación 121",  payType: "efectivo", mount: 110.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-21T13:00:00Z"), description: "Servicio Cuarto",  payType: "electronico", mount: 22.00, operationNumber: "FEB-031", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-21T18:00:00Z"), description: "Cochera",  payType: "efectivo", mount: 10.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-22T09:00:00Z"), description: "Pago Habitación 122",  payType: "electronico", mount: 130.00, operationNumber: "FEB-032", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-22T13:00:00Z"), description: "Desayuno",  payType: "efectivo", mount: 18.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-22T18:00:00Z"), description: "Late Check-out",  payType: "electronico", mount: 40.00, operationNumber: "FEB-033", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-23T09:00:00Z"), description: "Pago Habitación 123",  payType: "efectivo", mount: 120.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-23T13:00:00Z"), description: "Almuerzo",  payType: "electronico", mount: 25.00, operationNumber: "FEB-034", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-23T18:00:00Z"), description: "Minibar",  payType: "efectivo", mount: 9.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-24T09:00:00Z"), description: "Pago Habitación 124",  payType: "electronico", mount: 110.00, operationNumber: "FEB-035", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-24T13:00:00Z"), description: "Cena",  payType: "efectivo", mount: 48.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-24T18:00:00Z"), description: "Lavandería",  payType: "electronico", mount: 14.00, operationNumber: "FEB-036", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-25T09:00:00Z"), description: "Pago Habitación 125",  payType: "efectivo", mount: 150.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-25T13:00:00Z"), description: "Tour",  payType: "electronico", mount: 70.00, operationNumber: "FEB-037", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-25T18:00:00Z"), description: "Spa",  payType: "efectivo", mount: 55.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-26T09:00:00Z"), description: "Pago Habitación 126",  payType: "electronico", mount: 130.00, operationNumber: "FEB-038", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-26T13:00:00Z"), description: "Almuerzo",  payType: "efectivo", mount: 22.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-26T18:00:00Z"), description: "Bar",  payType: "electronico", mount: 30.00, operationNumber: "FEB-039", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-27T09:00:00Z"), description: "Pago Habitación 127",  payType: "efectivo", mount: 120.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-27T13:00:00Z"), description: "Cafetería",  payType: "electronico", mount: 12.00, operationNumber: "FEB-040", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-27T18:00:00Z"), description: "Cochera",  payType: "efectivo", mount: 10.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-28T09:00:00Z"), description: "Pago Habitación 128",  payType: "electronico", mount: 140.00, operationNumber: "FEB-041", startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-28T13:00:00Z"), description: "Almuerzo Cierre",  payType: "efectivo", mount: 35.00, operationNumber: null, startDayDate: null, endDayDate: null },
+  { date: new Date("2026-02-28T18:00:00Z"), description: "Servicio Cuarto",  payType: "electronico", mount: 20.00, operationNumber: "FEB-042", startDayDate: null, endDayDate: null }
+];
+
+
+const seedComments:Omit<DayComment,'id'>[] = [
+  { date: new Date("2026-03-01T23:59:59Z"), comment: "Cierre de caja sin novedades, predominio de pagos en efectivo." },
+  { date: new Date("2026-03-02T23:59:59Z"), comment: "Se registró un ingreso elevado por reserva de evento corporativo." },
+  { date: new Date("2026-03-04T23:59:59Z"), comment: "Incremento en servicios adicionales (lavandería y traslados)." },
+  { date: new Date("2026-03-05T23:59:59Z"), comment: "Día con alta rotación de habitaciones, todos los pagos procesados." },
+  { date: new Date("2026-02-01T23:59:59Z"), comment: "Inicio de mes con alta demanda de servicios de spa y restaurante." },
+  { date: new Date("2026-02-05T23:59:59Z"), comment: "Se reportó un incremento en pagos en efectivo durante el turno tarde." },
+  { date: new Date("2026-02-10T23:59:59Z"), comment: "Cierre de caja cuadrado. Sin incidencias en las transacciones electrónicas." },
+  { date: new Date("2026-02-14T23:59:59Z"), comment: "Pico máximo de ingresos por campaña de San Valentín; operatividad al 100%." },
+  { date: new Date("2026-02-18T23:59:59Z"), comment: "Mantenimiento preventivo de terminales de pago realizado exitosamente." },
+  { date: new Date("2026-02-22T23:59:59Z"), comment: "Predominio de servicios de lavandería y traslados al aeropuerto este domingo." },
+  { date: new Date("2026-02-28T23:59:59Z"), comment: "Cierre mensual finalizado. Todos los folios de habitación liquidados correctamente." }
+];
+
 export async function GET(){
 
   try{
@@ -280,21 +405,28 @@ export async function GET(){
 
     const adminIds = (process.env.ADMIN_IDS || '').split(',')
 
+    await prisma.pay.deleteMany()
+    await prisma.roomActive.deleteMany()
+    await prisma.room.deleteMany()
+    await prisma.city.deleteMany()
+    await prisma.client.deleteMany()
+    await prisma.country.deleteMany()
+    await prisma.dayComment.deleteMany()
 
     // ! Users Creation 
     
     // Delete all users that not listed in .env file 
-    await prisma.account.deleteMany({where:{
+    await prisma.account.deleteMany({ where:{
       userId:{notIn: adminIds}
     }})
-    await prisma.session.deleteMany({where:{
+    await prisma.session.deleteMany({ where:{
       userId:{notIn: adminIds}
     }})
-    await prisma.user.deleteMany({where:{
+    await prisma.user.deleteMany({ where:{
       id:{notIn: adminIds}
     }})
 
-    await Promise.all( // Para seeds de mas de 20, se debe usar un bucle for
+    const users = await Promise.all( // Para seeds de mas de 20, se debe usar un bucle for
       seedUsers.map( ({lastName,...user}) => auth.api.createUser({
         body:{
           ...user,
@@ -305,12 +437,6 @@ export async function GET(){
         }
       }))
     )
-
-    await prisma.roomActive.deleteMany()
-    await prisma.room.deleteMany()
-    await prisma.city.deleteMany()
-    await prisma.client.deleteMany()
-    await prisma.country.deleteMany()
    
     // ! Rooms Creation
     await prisma.room.createMany({ data: seedRooms })
@@ -326,6 +452,14 @@ export async function GET(){
 
     // ! Clients Creation
     await prisma.client.createMany({ data: seedClients })
+
+    // ! Pays Creation
+    await prisma.pay.createMany({ 
+      data: seedPays.map( (pay,ix) => ({...pay,userId: users[ix&2].user.id}) ) 
+    })
+
+    // ! Comments Creation
+    await prisma.dayComment.createMany({ data: seedComments })
 
     return NextResponse.json({message: 'Seed created succesfully'})
 
