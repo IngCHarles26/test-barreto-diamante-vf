@@ -1,6 +1,7 @@
 'use client'
 
-import { JSX, ReactNode, RefObject } from "react"
+import { useMessageStore } from "@/store"
+import { JSX, ReactNode, RefObject, useEffect } from "react"
 import { IconType } from "react-icons"
 import { FaSave } from "react-icons/fa"
 
@@ -24,13 +25,19 @@ export const CenterDialog = ({id,children,ref}:CenterDialogProps) => {
 
 interface DialogFooterSaveProps {
   id:string
-  error:string
   saveClick: () => void
 }
-export const DialogFooterSave = ({id,error,saveClick}:DialogFooterSaveProps) => {
+export const DialogFooterSave = ({id,saveClick}:DialogFooterSaveProps) => {
+  const {stMessage,stResetMsg} = useMessageStore()
+
+  useEffect(() => {
+    const timer = setTimeout( () => stResetMsg(), 5000)
+    return () => clearTimeout(timer)
+  }, [stMessage]);
+  
   return (
     <div className='p-3 flex justify-end items-center gap-4 mt-2'>
-      <p className='text-center lowercase mr-auto text-sm text-red-01 font-bold'>{error}</p>
+      <p className='text-center lowercase mr-auto text-sm text-gray-03 font-bold'>{stMessage}</p>
       
       <button 
         popoverTarget={id} 

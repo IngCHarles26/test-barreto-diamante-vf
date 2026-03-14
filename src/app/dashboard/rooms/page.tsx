@@ -19,11 +19,11 @@ export default async function RoomsPage() {
               <MdMeetingRoom className='size-7 block md:hidden'/>
               <p className='hidden md:block'>Habitacion</p>
             </div>
-            <p className='w-[22%]'>Tipo</p>
-            <p className='w-[16%] text-center'>Precio</p>
-            <p className='w-[20%] text-center'>Piso</p>
-            <p className='w-[16%] text-center'>Estado</p>
-            <p className='w-[10%] text-center'><span className="hidden md:inline">Activar</span></p>
+            <p className='w-[29%]'>Tipo</p>
+            <p className='w-[10%] text-center'>Precio</p>
+            <p className='w-[15%] text-center'>Piso</p>
+            <p className='w-[15%] text-center'>Estado</p>
+            <p className='w-[15%] text-center'>config</p>
           </TableHeader>
     
           { 

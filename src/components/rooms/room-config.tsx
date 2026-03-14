@@ -7,8 +7,9 @@ import { IoMdSettings } from "react-icons/io"
 import { roomTypesList } from "@/lib/shared"
 import { ChangeEvent, useState } from "react"
 import { TypeRoom } from "@/generated/prisma/enums"
-import { closeDialog } from "@/lib/client"
-import { ActionConfigRoomInfo } from "@/lib/server"
+import { closeDialog, filterString, onlyNumber, oneSpace } from "@/lib/client"
+import { SAconfigRoomInfo } from "@/lib/server"
+import { useMessageStore } from "@/store"
 
 interface Props {
   room: number
@@ -21,36 +22,46 @@ interface Props {
 export const RoomConfig = ({room,dialogId,type,price}:Props) => {
 
   const [roomData, setRoomData] = useState({type,price});
-  const [errorMessage, setErrorMessage] = useState('');
+  const { stSetLoadingMsg,stSetStaticMsg } = useMessageStore()
 
   
   const handleChange = (e:ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const name = e.target.name as keyof typeof roomData
     const value = e.target.value
 
-    setErrorMessage('')
-    setRoomData({...roomData, [name]:value})
+    let newValue = value
+
+    if(name == 'price') newValue = filterString(newValue,{maxLimit:3,onlyNumber,oneSpace});
+
+    stSetStaticMsg('')
+    setRoomData(prev => ({...prev, [name]:newValue}))
   }
   
   const handleClick = async () => {
-    const {type:newType,price} = roomData
+    const {type:newType,price:newPrice} = roomData
 
-    if(!price) return setErrorMessage('El precio no puede estar vacío o ser 0')
+    if(isNaN(+newPrice) || !newPrice) return stSetStaticMsg('El precio ingresado es invalido');
 
-    setErrorMessage('Cargando')
+    closeDialog(dialogId)
+    stSetLoadingMsg('Cargando')
 
     const data = {
       type: newType.replaceAll(' ','_') as TypeRoom,
-      price: +price,
+      price: +newPrice,
     }
 
-    await ActionConfigRoomInfo(room,data)
-    closeDialog(dialogId)
+    const success = await SAconfigRoomInfo(room,data)
+    const message = success 
+                      ? `Configuracion de la habitacion ${room} actualizada` 
+                      : 'No se pudo realizar el cambio'
+    stSetStaticMsg(message,success)
+    
+    if(!success) setRoomData({type,price})
   }
   
   return (
     <>
-      <div className='w-[10%] text-center'>
+      <div className='w-[15%] text-center'>
         <button popoverTarget={dialogId} className='cursor-pointer rounded-md p-1 text-primary hover:opacity-80'>
           <IoMdSettings className="mx-auto size-6 md:size-7 " /> 
         </button> 
@@ -84,7 +95,7 @@ export const RoomConfig = ({room,dialogId,type,price}:Props) => {
               Icon={FaMoneyBill}
               label="Precio Referencial"
               inputId="input-price"
-              type="number"
+              type="text"
               placeHolder="S/ 50.01"
               name="price"
               value={roomData.price}
@@ -96,7 +107,6 @@ export const RoomConfig = ({room,dialogId,type,price}:Props) => {
 
           <DialogFooterSave 
             id={dialogId}
-            error={errorMessage}
             saveClick={handleClick}
           />
 

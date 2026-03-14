@@ -42,5 +42,10 @@ next-env.d.ts
 
 
 # Alcance
-Funcionalidad
 /src/generated/prisma
+
+
+Funcionalidad.md
+
+
+docker-compose.yml

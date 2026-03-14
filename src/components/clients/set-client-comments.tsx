@@ -3,7 +3,9 @@
 import { useState } from "react"
 import { FaPen, FaSave } from "react-icons/fa"
 import clsx from "clsx";
-import { ActionAddBanReasonClient, ActionAddCommentsClient } from "@/lib/server";
+import { SAaddBanReasonClient, SAaddCommentsClient } from "@/lib/server";
+import { useMessageStore } from "@/store";
+import { filterString, oneSpace } from "@/lib/client";
 
 interface Props {
   userRole: 'admin' | 'user'
@@ -21,39 +23,49 @@ export const SetClientComments = ({
   const startBanReason = banReason || ''
   const isAdmin = userRole === 'admin'
 
-  const [message, setMessage] = useState('');
   const [canEditBanReason, setCanEditBanReason] = useState(false);
   const [canEditComment, setCanEditComment] = useState(false);
   const [inputBanReason, setInputBanReason] = useState(isAdmin ? startBanReason : '');
   const [inputComments, setInputComments] = useState(comments || '');
+  const {stSetLoadingMsg, stSetStaticMsg} = useMessageStore()
+
+  const placeHolderBanReason = isAdmin 
+    ? 'Ingresa las razones para betar a este cliente' 
+    : 'No estas habilitado para borrar informacion del beto'
 
   const handleSubmitBanReason = async() => {
-    if(!canEditBanReason) return setMessage('Debes habilitar la edicion para poder guardar los cambios motivos de beto');
+    if(!canEditBanReason) return stSetStaticMsg('Debes habilitar la edicion para poder guardar los cambios motivos de beto');
     
-    if(!inputBanReason) return setMessage('No hay razones de beto para guardar')
+    if(banned &&!inputBanReason.trim()) {
+      setInputBanReason(startBanReason)
+      return stSetStaticMsg('Debes desbloquear al cliente para borrar las razones de su beto')
+    }
       
-    setMessage('Subiendo a la base de datos.....')
+    stSetLoadingMsg('guardando')
 
-    const finalBanReason = isAdmin ? inputBanReason : `${startBanReason} __${userName}:_${inputBanReason}`
+    const finalBanReason = isAdmin ? inputBanReason : `${startBanReason}__${userName}:_${inputBanReason}`
 
-    const success = await ActionAddBanReasonClient(id,finalBanReason.replace(/\s+/g, ' ').trim())
-    if(!success) setMessage('No se pudieron guardar los cambios');
+    const success = await SAaddBanReasonClient(id,filterString(finalBanReason,{oneSpace}).trim())
 
-    setMessage('Motivos de beto guardados correctamente')
+    const message = success 
+      ? 'Motivos de beto guardados correctamente' 
+      : 'No se pudieron guardar los cambios'
+    stSetStaticMsg(message,success)
     setCanEditBanReason(false)
+    if(success && !isAdmin) setInputBanReason('')
   }
 
   const handleSubmitComments = async() => {
-    if(!canEditComment) return setMessage('Debes habilitar la edicion para poder guardar los comentarios') 
-    
-      if(!inputComments) return setMessage('No hay nada que guardar')
-        
-    setMessage('Subiendo a la base de datos.....')
-    
-    const success = await ActionAddCommentsClient(id,inputComments.replace(/\s+/g, ' ').trim())
-    if(!success) setMessage('No se pudieron guardar los cambios');
+    if(!canEditComment) 
+      return stSetStaticMsg('Debes habilitar la edicion para poder guardar los comentarios');
 
-    setMessage('Comentarios guardados correctamente')
+    const finalComment = filterString(inputComments,{oneSpace}).trim() 
+    
+    stSetLoadingMsg('guardando')
+    const success = await SAaddCommentsClient(id,finalComment)
+
+    const message = success ? 'Comentarios guardados correctamente' : 'No se pudieron guardar los cambios'
+    stSetStaticMsg(message,success)
     setCanEditComment(false)
   }
   
@@ -73,7 +85,7 @@ export const SetClientComments = ({
                 'py-2 px-2 rounded-md flex items-center ml-auto border',
                 canEditBanReason ?  'border-gray-01 text-gray-01' : 'bg-gray-01 text-white border-transparent'
               )}
-              onClick={() => {setMessage('');setCanEditBanReason(!canEditBanReason)}}
+              onClick={() => {stSetStaticMsg('');setCanEditBanReason(!canEditBanReason)}}
             >
               <FaPen className="md:size-7 size-5" />
             </button>
@@ -98,15 +110,15 @@ export const SetClientComments = ({
               'w-full  rounded-xl outline-none  shadow  resize-none p-3 text-lg md:text-xl text-danger border',
               canEditBanReason ? 'border-danger' : 'border-transparent'
             )}
-            rows={2}
-            placeholder={ `Ingresa las razones para betar a este cliente ${!isAdmin&&'(solo los usuarios admin, pueden editar datos guardados)'} `
-            }
-            value={isAdmin || canEditBanReason 
+            rows={ 2 }
+            placeholder={ placeHolderBanReason }
+            value={              
+              isAdmin || canEditBanReason 
               ? inputBanReason 
-              : (startBanReason || inputBanReason) ? `${startBanReason} ${inputBanReason}` : ''
+              : startBanReason ? `${startBanReason}` : ''
             } 
             disabled={!canEditBanReason}
-            onChange={ (e) => { setMessage('');setInputBanReason(e.target.value) } }
+            onChange={ (e) => { stSetStaticMsg('');setInputBanReason(e.target.value) } }
           />
 
         </div> 
@@ -123,7 +135,7 @@ export const SetClientComments = ({
               'py-2 px-2 bg-stars rounded-md  flex items-center ml-auto border ',
               !canEditComment ? 'bg-stars text-white border-transparent' : 'bg-white border-stars text-stars'
             )}
-            onClick={() => {setMessage('');setCanEditComment(!canEditComment)}}
+            onClick={() => {stSetStaticMsg('');setCanEditComment(!canEditComment)}}
           >
             <FaPen className="md:size-7 size-5" />
           </button>
@@ -149,12 +161,11 @@ export const SetClientComments = ({
           placeholder='Ingresa los comentarios a agregar sobre el cliente (p.e. se olvidó algo en la habitación)' 
           value={inputComments} 
           disabled={!canEditComment}
-          onChange={ (e) => {setMessage('');setInputComments(e.target.value)} }
+          onChange={ (e) => {stSetStaticMsg('');setInputComments(e.target.value)} }
         />
 
       </div> 
 
-      <p className="mx-auto text-xl uppercase text-gray-05 font-bold mb-5">{message}</p>
-    </>
+  </>
   )
 }

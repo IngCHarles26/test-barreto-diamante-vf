@@ -1,5 +1,5 @@
 import { DetailStay, PageContent, PageTitle, reservaciones, SetClientComments, StaysTable, ToggleBan } from "@/components";
-import { ActionGetClientById, getUserInfo } from "@/lib/server";
+import { SAgetClientById, getUserInfo } from "@/lib/server";
 import { formatDate, isValidUuid } from "@/lib/shared";
 import clsx from "clsx";
 import { redirect } from "next/navigation";
@@ -18,17 +18,17 @@ export default async function ClientIdPage({params}:Props) {
   const {id} = await params
 
   if( !isValidUuid(id) ) redirect('/dashboard/clients');
-  const user = await getUserInfo()
-
-  const clientData = await ActionGetClientById(id)
+  
+  const clientData = await SAgetClientById(id)
   if(!clientData) redirect('/dashboard/clients');
-
+  
   const {
     banned,firstName,lastName,country,stars,totalStays,lastStay,
     typeDocument,numberDocument,born,address,phone,banReason,comments
   } = clientData
-
   
+  
+  const user = await getUserInfo()
   const role = user.role as Role || 'user'
   const userName = `${user.name} ${user.lastName[0]}.`
   

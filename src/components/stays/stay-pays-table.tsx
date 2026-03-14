@@ -1,6 +1,6 @@
 import clsx from 'clsx'
 import { FaCheck } from 'react-icons/fa'
-import { FaC, FaMoneyBill1 } from 'react-icons/fa6'
+import { FaMoneyBill1 } from 'react-icons/fa6'
 import { PiCashRegisterFill } from 'react-icons/pi'
 import { RxCross1 } from 'react-icons/rx'
 import { PayForm } from './pay-form'

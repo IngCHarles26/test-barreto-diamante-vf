@@ -1,7 +1,7 @@
 'use client'
 
 import { ChangeEvent, startTransition, useOptimistic, useState } from 'react'
-import { FilterSelect, SearchButton } from '../general'
+import { FilterSelect } from '../general'
 import { useRouter, useSearchParams } from 'next/navigation'
 
 interface Props {

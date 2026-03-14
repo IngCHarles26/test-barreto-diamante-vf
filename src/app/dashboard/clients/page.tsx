@@ -1,6 +1,5 @@
-import { ClientsContent, dialogClient, HeaderButton, NewClientForm, NewCountryForm, PageTitle } from "@/components";
+import { ClientsContent,NewClientForm, NewCountryForm, PageTitle } from "@/components";
 import { getCacheCountries } from "@/lib/server";
-import { FaPlus } from "react-icons/fa";
 
 // documento, nombre
 export default async function ClientsPage() {
@@ -12,16 +11,11 @@ export default async function ClientsPage() {
       
       <PageTitle 
         title="Busqueda de Clientes"
-        children={ 
-          <HeaderButton target={dialogClient} Icon={FaPlus} textMobile="Nuevo" textDesktop="Cliente" />
-          }  
+        subTitle="Por favor selecciona el tipo de busqueda: documento o nombres"
+        children={ <NewClientForm countries={countries} /> }  
       />
 
       <ClientsContent/>
-
-      <NewClientForm countries={countries} />
-
-      <NewCountryForm/>
       
     </div>
   );

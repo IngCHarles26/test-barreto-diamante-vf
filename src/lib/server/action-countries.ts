@@ -3,6 +3,7 @@
 import { cacheTag, updateTag } from "next/cache"
 import { prisma } from "../prisma"
 import { Country } from "@/generated/prisma/client"
+import { consoleError } from "./helpers"
 
 //!_____________________________ COUNTRIES
 
@@ -25,14 +26,15 @@ import { Country } from "@/generated/prisma/client"
   }
   
 
-  export const getCacheCities = async (countryId:string) => {
+  export const SAgetCacheCities = async (countryId:string) => {
     'use cache'
     cacheTag(tagCacheCities+countryId)
 
     try{
       isValidCountry(countryId)
       return await prisma.city.findMany({ where:{ countryId } })
-    }catch(_){
+    }catch(err){
+      consoleError(err)
       return []
     }
   }
@@ -43,36 +45,50 @@ import { Country } from "@/generated/prisma/client"
     ans: [string,string,string][]
   }
 
-  export const getRestCountries = async () => {
+  export const SAgetRestCountries = async () => {
+    try{
+      const {API_COUNTRIES} = process.env
 
-    const {API_COUNTRIES} = process.env
-
-    if(!API_COUNTRIES) return []
+      if(!API_COUNTRIES) return []
+        
+      const data:TypeFetchCountries = await (await fetch(API_COUNTRIES,{
+        next: {revalidate: 3600}})).json();
+        
+      const {success, ans} = data
+      if(!success) { 
+        console.log('GoogleScript API is not working')
+        return [] 
+      }
       
-    const data:TypeFetchCountries = await (await fetch(API_COUNTRIES,{
-      next: {revalidate: 3600}})).json();
-      
-    const {success, ans} = data
-    if(!success) { console.log('GoogleScript API is not working'); return [] }
-    
-    const countries = (await getCacheCountries()).map(el => el.id)
-    const filtered = []
+      const countries = (await getCacheCountries()).map(el => el.id)
+      const filtered = []
 
-    for(let i=0; i<ans.length; i++){
-      if(countries.length === 0) { filtered.push(ans[i]); continue }
+      for(let i=0; i<ans.length; i++){
+        if(countries.length === 0) { filtered.push(ans[i]); continue }
 
-      const [id] = ans[i]
-      const ix = countries.indexOf(id)
+        const [id] = ans[i]
+        const ix = countries.indexOf(id)
 
-      if(ix >= 0){ countries.splice(ix,1); continue }
-      
-      filtered.push(ans[i])
+        if(ix >= 0){ countries.splice(ix,1); continue }
+        
+        filtered.push(ans[i])
+      }
+
+      return filtered
+    }catch(err){
+      consoleError(err)
+      return []
     }
-
-    return filtered
+    
   } 
 
-  export const addCountry = async (data:Country) => {
-    await prisma.country.create({data})
-    updateTag(tagCacheCountries)
+  export const SAaddCountry = async (data:Country) => {
+    try{
+      await prisma.country.create({data})
+      updateTag(tagCacheCountries)
+      return true
+    }catch(err){
+      consoleError(err)
+      return false
+    }
   }

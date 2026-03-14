@@ -2,6 +2,7 @@
 
 import { authClient } from "@/lib/auth-client";
 import { zEmail, zPassword } from "@/lib/shared/zod-schemas";
+import { useRouter } from "next/navigation";
 import { ChangeEvent, FormEvent, useState } from "react";
 import { CiLock, CiUser } from "react-icons/ci";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
@@ -15,6 +16,7 @@ export const LoginForm = () => {
   const [hiddePass, setHiddePass] = useState(true);
   const [loginData, setLoginData] = useState(initialLoginData);
   const [errorsMessage, setErrorsMessage] = useState<String[]>([]);
+  const router = useRouter()
 
   const schema = z.object({
       email: zEmail,
@@ -22,7 +24,6 @@ export const LoginForm = () => {
     })
 
   const onSubmit = async (e:FormEvent) => {
-    setErrorsMessage(['Accediendo....'])
     
     e.preventDefault()
 
@@ -33,7 +34,7 @@ export const LoginForm = () => {
     await authClient.signIn.email({
       email: result.data.email,
       password: result.data.password,
-      callbackURL: '/dashboard'
+      callbackURL: '/dashboard/stays/reservations'
     },{
       onError: _ => {
         setErrorsMessage(['Credenciales Incorrectas o Usuario baneado'])
@@ -41,6 +42,9 @@ export const LoginForm = () => {
       onSuccess: _ => {
         setErrorsMessage([''])
         setLoginData(initialLoginData)
+        router.replace('/dashboard/stays/reservations')
+      },onRequest: _ => {
+        setErrorsMessage(['Accediendo....'])
       }
     })
   }

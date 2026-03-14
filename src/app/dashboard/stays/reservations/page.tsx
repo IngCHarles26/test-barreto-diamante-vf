@@ -1,19 +1,46 @@
-import { HeaderButton, PageTitle, ReservationsContent } from "@/components";
-import { FaPlus } from "react-icons/fa";
+import { PageContent, PageTitle, ReservationForm, ReservationsTableRow, TableApp, TableHeader } from "@/components";
+import { getCacheActiveReservations } from "@/lib/server";
 
-export default function ReservationsPage() {
+
+export default async function ReservationsPage() {
+
+  const reservations = await getCacheActiveReservations()
+
+
   return (
     <div className="h-full w-full flex flex-col">
       
       <PageTitle 
         title="Reservaciones"
         subTitle="Registra y administra las reservaciones de los clientes"
-        children={ 
-          <HeaderButton target={"form-create-reservation"} Icon={FaPlus} textMobile="Nueva" textDesktop="Reservacion" />
-          }  
+        children={ <ReservationForm/> }  
       />
 
-      <ReservationsContent/>
+      <PageContent>
+
+        <TableApp>
+
+          <TableHeader>
+            <p className='w-[35%] md:w-[25%] '>Cliente</p>
+            <p className='w-[27%] md:w-[30%] '>Habitaciones</p>
+            <p className='w-[15%] md:w-[10%] '>Llegada</p>
+            <p className='hidden md:block md:w-[10%] text-center'>Adelanto</p>
+            <p className='hidden md:block md:w-[10%] text-center'>Usuario</p>
+            <p className='w-[20%] md:w-[15%] text-center'>Cancelar</p>
+          </TableHeader>
+  
+          {
+            reservations.map( el => 
+              <ReservationsTableRow 
+                key={'item_reservation_row'+el.id} 
+                {...el} 
+                id={el.id}
+              />
+          )}
+  
+        </TableApp>
+        
+      </PageContent>
      
     </div>
   );

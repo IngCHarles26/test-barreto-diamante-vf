@@ -1,9 +1,10 @@
 'use client'
 
-import { ActionDisableRoomActive } from '@/lib/server'
+import { SAdisableRoomActive } from '@/lib/server'
 import { CenterDialog } from '../general'
 import { FaRegTrashAlt, FaTrash } from 'react-icons/fa'
 import { closeDialog } from '@/lib/client'
+import { useMessageStore } from '@/store'
 
 interface Props {
   id: number
@@ -12,12 +13,15 @@ interface Props {
 
 export const RemoveActive = ({id,description}:Props) => {
   const dialogId = 'confirm-remove-active'+id
+  const {stSetLoadingMsg,stSetStaticMsg} = useMessageStore()
   
   const handleClick = async () => {
-
-    await ActionDisableRoomActive(id)
-
     closeDialog(dialogId)
+    stSetLoadingMsg('guardando')
+    const success = await SAdisableRoomActive(id)
+
+    const message = success ? 'Activo retirado correctamente' : 'No se puedo retirar el activo'
+    stSetStaticMsg(message,success)
   }
   
   return (
@@ -38,7 +42,8 @@ export const RemoveActive = ({id,description}:Props) => {
           
           <div className='w-full flex items-center justify-between'>
             <button className='px-5 py-2 bg-gray-200 rounded-lg cursor-pointer ' 
-              popoverTarget={dialogId} >
+              popoverTarget={dialogId} 
+            >
               NO
             </button>
             <button 

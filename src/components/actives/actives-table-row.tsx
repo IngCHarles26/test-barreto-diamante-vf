@@ -7,7 +7,7 @@ import { formatDate } from '@/lib/shared'
 import { RoomActive } from '@/generated/prisma/client'
 
 interface Props extends RoomActive{
-  rooms: number[]
+  rooms: string[]
 }
 
 export const ActivesTableRow = ({room,description,dateCreated,dateMoved,id,rooms}:Props) => {
@@ -41,7 +41,7 @@ export const ActivesTableRow = ({room,description,dateCreated,dateMoved,id,rooms
         </p> 
       </div>
 
-      <ConfigActive description={description} id={id} room={room||0} rooms={rooms} />
+      <ConfigActive description={description} id={id} room={room} rooms={['afuera',...rooms]} />
 
       <RemoveActive description={description} id={id}/>
       

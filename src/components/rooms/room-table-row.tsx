@@ -1,5 +1,5 @@
 import { TableRow } from '../general'
-import { ToggleActiveRoom } from './toggle-active'
+import { ToggleRoomStatus } from './toggle-active'
 import { RoomConfig } from './room-config'
 import { Room } from '@/generated/prisma/client'
 
@@ -16,13 +16,13 @@ export const RoomTableRow = ({number,type,price,active,floor}:Room) => {
         </p> 
       </div>
 
-      <p className='w-[22%] text-left text-lg md:text-2xl'>{type.replaceAll('_',' ')}</p>
+      <p className='w-[29%] text-left text-lg md:text-2xl'>{type.replaceAll('_',' ')}</p>
       
-      <p className='w-[16%] font-bold text-money text-xs md:text-2xl text-center'>S/ {price}.00</p>
+      <p className='w-[10%] font-bold text-money text-xs md:text-2xl text-right'>S/ {price}.00</p>
       
-      <p className='w-[20%] text-center font-bold text-base md:text-xl'>{floor}</p>
+      <p className='w-[15%] text-center font-bold text-base md:text-xl'>{floor}</p>
       
-      <ToggleActiveRoom room={number} active={active} dialogId={'toggle-status-room'+number}/>
+      <ToggleRoomStatus room={number} active={active} dialogId={'toggle-status-room'+number}/>
 
       <RoomConfig room={number}  type={type} price={price || 0} dialogId={"detail-room"+number}/>
 

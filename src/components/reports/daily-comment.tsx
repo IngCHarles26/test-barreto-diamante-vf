@@ -4,7 +4,8 @@ import clsx from 'clsx';
 import { IoShieldCheckmark } from 'react-icons/io5';
 import { FaPen, FaSave } from 'react-icons/fa';
 import { useState } from 'react';
-import { updateComment } from '@/lib/server';
+import { SAupdateComment } from '@/lib/server';
+import { useMessageStore } from '@/store';
 
 
 interface Props {
@@ -17,17 +18,21 @@ interface Props {
 export const EditDayComment = ({comment,dayIsoFormat,idComment}:Props) => {
 
   const [canEdit, setCanEdit] = useState(false);
-  const [message, setMessage] = useState('');
   const [observations, setObservations] = useState(comment);
+  const {stSetLoadingMsg,stSetStaticMsg} = useMessageStore()
 
+
+  console.log(dayIsoFormat)
   const handleClick = async () => {
-    if( !observations ) return setMessage('No hay datos para actualizar')
+    if( !observations ) return stSetStaticMsg('No hay datos para actualizar')
     
-    setMessage('Actualizando')
-    await updateComment(idComment,observations,dayIsoFormat)
+    stSetLoadingMsg('Actualizando')
+    const success = await SAupdateComment(idComment,observations,dayIsoFormat)
 
-    setMessage('Comentarios Actualizados')
+    const message = success ? 'Comentarios actualizados' : 'No se pudo actualizar el comentario'
+    stSetStaticMsg(message,success)
     setCanEdit(false)
+    if(!success) setObservations(comment)
   }
   
 
@@ -43,7 +48,7 @@ export const EditDayComment = ({comment,dayIsoFormat,idComment}:Props) => {
               'py-2 px-2 rounded-md flex items-center ml-auto border',
               canEdit ?  'border-gray-01 text-gray-01' : 'bg-gray-01 text-white border-transparent'
             )}
-            onClick={() => {setMessage('');setCanEdit(!canEdit)}}
+            onClick={() => {setCanEdit(!canEdit)}}
           >
             <FaPen className="md:size-7 size-5" />
           </button>
@@ -69,9 +74,6 @@ export const EditDayComment = ({comment,dayIsoFormat,idComment}:Props) => {
           )}
         />
       </div>
-
-      <p className="mx-auto text-xl text-gray-05 font-bold my-3">{message}</p>
-
     </>
   )
 }

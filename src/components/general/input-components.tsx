@@ -53,7 +53,7 @@ export const InputApp = ({Icon,className,label,inputId,placeHolder,type,selectDa
                 name={name}
                 value={value}
                 onChange={onChange}
-                className='outline-0 text-sm md:text w-full md:text-lg' />
+                className='outline-0 text-sm w-full md:text-base' />
 
               { type == 'password' &&
                 <button

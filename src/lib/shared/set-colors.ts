@@ -1,5 +1,4 @@
-export const genRandomColor = () => {
-  const colors = [
+ const colors = [
 '#1A237E', // 0: Azul muy oscuro
     '#E64A19', // 1: Naranja rojizo
     '#1B5E20', // 2: Verde bosque
@@ -26,9 +25,22 @@ export const genRandomColor = () => {
     '#4E342E', // 23: Marrón oscuro
     '#3F51B5'  // 24: Índigo
   ];
+
+export const genRandomColor = () => {
+ 
   const len = colors.length
   
   const {floor,random} = Math
   const ix = floor(random() * len);
   return colors[ix];
 }
+
+// export const genRandomColor = () => {
+//   let currentIndex = 0;
+
+//   return () => {
+//     const color = colors[currentIndex];
+//     currentIndex = (currentIndex + 1) % colors.length;
+//     return color;
+//   };
+// };

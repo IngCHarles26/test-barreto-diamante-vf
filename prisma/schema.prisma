@@ -27,7 +27,8 @@ datasource db {
 
     lastName   String
 
-    pays       Pay[]
+    pays        Pay[]
+    reservations Reservation[]
 
     @@unique([email])
     @@map("user")
@@ -244,4 +245,22 @@ model DayComment {
   comment String
   
   @@map("report-comments")
+}
+
+
+model Reservation {
+  id          Int @id @default(autoincrement())
+  name        String
+  persons     Int
+  date        DateTime
+  amount      Int
+  typeRooms   TypeRoom[]
+  numberRooms Int[]
+  phone       String?
+  active      Boolean @default(true)
+
+  userId      String
+  user        User @relation(fields: [userId],references: [id])
+
+  @@map("reservation")
 }

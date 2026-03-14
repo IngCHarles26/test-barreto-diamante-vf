@@ -22,7 +22,7 @@ export default async function UsersPage() {
         
       <PageTitle  
         title="Usuarios"
-        children={<HeaderButton target="new-user" Icon={FaPlus} textMobile="Nuevo" textDesktop="Usuario" />}
+        children={ <NewUser/> }
       />
 
        <PageContent>
@@ -42,8 +42,6 @@ export default async function UsersPage() {
             }
     
           </TableApp>
-    
-          <NewUser/>
           
         </PageContent>
         

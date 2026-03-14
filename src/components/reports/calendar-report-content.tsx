@@ -1,12 +1,12 @@
 'use client'
 
-import { getMonthReport } from '@/lib/server'
+import { SAgetMonthReport } from '@/lib/server'
 import { FilterSelect, PageContent, PageHeader, SearchButton } from '../general'
 import { format0, getNow, months, penFormat, years } from '@/lib/shared'
 import { ChangeEvent, useState } from 'react'
 import Link from 'next/link'
 import { FaEye } from 'react-icons/fa'
-import { useReportStore } from '@/store'
+import { useMessageStore, useReportStore } from '@/store'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,9 +20,10 @@ export const CalendarReportContent = () => {
 
   const [monthSelect, setMonthSelect] = useState(filteredMonths);
   const [filterData, setFilterData] = useState({ month:'',year:'' });
-  const [message, setMessage] = useState('Seleccione mes y año, y luego haga click en buscar');
   const [total, setTotal] = useState<number|null>(null);
   const { dailyReport, setDailyReport} = useReportStore( st => st )
+  const { stSetLoadingMsg,stSetStaticMsg} = useMessageStore( st => st )
+
   
 
 
@@ -39,22 +40,20 @@ export const CalendarReportContent = () => {
   }
   
   const handleClick = async () => {
-    setMessage('Buscando....')
     const {month,year} = filterData
-
-    if(!month || !year) return setMessage('Ingrese los el mes y el año para realizar la busqueda')
-
-    const response = await getMonthReport(monthList.indexOf(month),+year)
-
-
-    if(response.data.length === 0) {
-      setMessage(`No hay datos para el periodo ${month}-${year}`)
-      setDailyReport([])
-      setTotal(null)
-      return
-    }
     
-    setMessage(`Resultados encontrados para el periodo ${month}-${year}`)
+    if(!month || !year) 
+      return stSetStaticMsg('Ingrese los el mes y el año para realizar la busqueda');
+      
+    stSetLoadingMsg('buscando')
+    const response = await SAgetMonthReport(monthList.indexOf(month),+year)
+
+    const success = response.data.length > 0
+    const message = success
+      ? `Resultados encontrados para el periodo ${month}-${year}`
+      : `No hay datos para el periodo ${month}-${year}`
+
+    stSetStaticMsg(message,success)
     setDailyReport(response.data)
     setTotal(response.total)
   }
@@ -90,8 +89,6 @@ export const CalendarReportContent = () => {
           </div>
         }
       </PageHeader>
-
-      <p className='text-xl text-gray-04'>{message}</p>
 
       <div className="grid grid-cols-4 md:grid-cols-7 gap-2">
         

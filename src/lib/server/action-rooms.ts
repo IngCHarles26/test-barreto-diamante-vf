@@ -4,8 +4,8 @@ import { cacheTag, updateTag } from "next/cache";
 import { prisma } from "../prisma"
 import { TypeRoom } from "@/generated/prisma/enums";
 import { redirect } from "next/navigation";
-import { getNow } from "../shared";
 import { Room } from "@/generated/prisma/client";
+import { consoleError } from "./helpers";
 
 //!_____________________________ ROOMS
   const tagCacheRooms = 'all-rooms'
@@ -41,44 +41,75 @@ import { Room } from "@/generated/prisma/client";
     return floors
   } 
 
-  export const ActionToggleRoomStatus = async (status:boolean, number:number) => {
-    await prisma.room.update({
-      where:{ number },
-      data:{
-        active:!status
-      }
-    });
+  export const SAtoggleRoomStatus = async (status:boolean, number:number) => {
+    try{
+      await prisma.room.update({
+        where:{ number },
+        data:{
+          active:!status
+        }
+      });
 
-    updateTag(tagCacheRooms)
+      updateTag(tagCacheRooms)
+      
+      return true
+    }catch(err){
+      consoleError(err)
+      return false
+    }
   }
 
   type DataChange = { price:number, type:TypeRoom }
 
-  export const ActionConfigRoomInfo = async (number:number,data:DataChange) => {
-    await prisma.room.update({
-      where:{ number },
-      data
-    })
-    
-    updateTag(tagCacheRooms)
+  export const SAconfigRoomInfo = async (number:number,data:DataChange) => {
+    try{
+      await prisma.room.update({
+        where:{ number },
+        data
+      })
+      
+      updateTag(tagCacheRooms)
+
+      return true
+    }catch(err){
+      consoleError(err)
+
+      return false
+    }
   }
 
+  export const SAgetListRooms = async () => { // sin usos
+    const rooms = await getCacheRooms()
+
+    const ans:Partial< Record< TypeRoom,number > > = {}
+    for(let room of rooms){
+      const { active,type } = room
+      if( !active ) continue;
+
+      if( !ans[type] ) ans[type] = 1;
+      ans[type]++
+    }
+
+    const real_ans = Object.entries(ans).sort( (a,b) => a[0].localeCompare(b[0])) as [TypeRoom,number][]
+    return real_ans
+  }
+  
 
 //!_____________________________ ACTIVES ROOM
   const tagCacheActives = 'all-active-rooms'
 
-  export const getCacheActiveOutRooms = async () => {
+  const getCacheActiveOutRooms = async () => {
     'use cache'
     cacheTag(tagCacheActives+'out')
 
-    return await prisma.roomActive.findMany({where:{room:null}})
+    return await prisma.roomActive.findMany({where:{room:null,active:true}})
   }
   
-  export const getCacheActiveRooms = async (room?:number) => {
+  const getCacheActiveRooms = async (room?:number) => {
     'use cache'
     
     cacheTag(tagCacheActives)
-    if(!room) return await prisma.roomActive.findMany();
+    if(!room) return await prisma.roomActive.findMany({where:{active:true}});
     
     cacheTag(tagCacheActives+room)
     return await prisma.roomActive.findMany({where:{room}})
@@ -88,7 +119,7 @@ import { Room } from "@/generated/prisma/client";
   
 
   export type ParamsActives = { room?: string | undefined }
-  export const ActionGetFilteredActives = async (params:ParamsActives,rooms:number[]) => {
+  export const SAgetFilteredActives = async (params:ParamsActives,rooms:number[]) => {
     
     try{
       const isEmptyObject = (obj:Object) => Object.keys(obj).length === 0 
@@ -105,47 +136,77 @@ import { Room } from "@/generated/prisma/client";
       if( !rooms.includes(room) ) throw new Error('El cuarto no existe');
       
       return await getCacheActiveRooms(room)
-    }catch(_){
+    }catch(err){
+      consoleError(err)
       redirect(path)
     }
   }
 
-  export const  ActionCreateRoomActive = async (description:string,_room:string) => {
-
-    const room = _room === '' ? null : Number(_room)
+  export const  SAcreateRoomActive = async (description:string,inRoom:string,date:Date) => {
+    try{
+      const [room,dateMoved] = inRoom === '' ? [null,null] : [Number(inRoom),date]
     
-    await prisma.roomActive.create({
-      data:{
-        active:true,
-        dateCreated: getNow(),
-        dateMoved: getNow(),
-        description,
-        room
-      }
-    })
-    
-    if( _room ) updateTag(tagCacheActives+_room)
-    else updateTag(tagCacheActives+'out')
+      await prisma.roomActive.create({
+        data:{
+          dateMoved,room,
+          active:true,
+          dateCreated: date,
+          description,
+        }
+      })
+      
+      if( inRoom ) updateTag(tagCacheActives+inRoom)
+      else updateTag(tagCacheActives+'out')
 
-    updateTag(tagCacheActives)
+      updateTag(tagCacheActives)
+
+      return true
+    }catch(err){
+      consoleError(err)
+      return false
+    }
+    
   }
 
-  export const ActionEditInfoRoomActive = async (description:string,room:number,id:number) => {
+  export const SAeditInfoRoomActive = async (description:string,room:number|'afuera',id:number,dateMoved:Date) => {
+    try{
+      let data:{} = {description,dateMoved,room:null}
 
-    await prisma.roomActive.update({
-      where:{id},
-      data:{ description, room, dateMoved:getNow()}
-    })
-    
-    updateTag(tagCacheActives)
+      const isOut = room === 'afuera'
+
+      if( !isOut ) data = {...data,room:+room};
+
+      await prisma.roomActive.update({ where:{ id }, data })
+      
+      const tag = isOut ? 'out' : room
+
+      updateTag(tagCacheActives+tag)
+      updateTag(tagCacheActives)
+      
+      return true
+    }catch(err){
+      consoleError(err)
+      return false
+    }
   }
 
-  export const ActionDisableRoomActive = async (id:number) => {
+  export const SAdisableRoomActive = async (id:number) => {
+    try{
+      const {room} = await prisma.roomActive.update({
+        where:{id},
+        data:{active:false,dateMoved:null}
+      })
+      const tag = !room ? 'out' : room
+       
+      updateTag(tagCacheActives)
+      updateTag(tagCacheActives+tag)
 
-    await prisma.roomActive.update({
-      where:{id},
-      data:{active:false}
-    })
-    
-    updateTag(tagCacheActives)
+      return true
+    }catch(err){
+      consoleError(err)
+      return false
+    }
   }
+
+
+

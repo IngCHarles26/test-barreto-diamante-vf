@@ -5,44 +5,59 @@ import { MdChair } from "react-icons/md"
 import { IoIosBed, IoMdSettings } from "react-icons/io"
 import { FaDoorOpen } from "react-icons/fa"
 import { ChangeEvent, useState } from "react"
-import { ActionEditInfoRoomActive } from "@/lib/server"
-import { closeDialog } from "@/lib/client"
+import { SAeditInfoRoomActive } from "@/lib/server"
+import { closeDialog, filterString, oneSpace } from "@/lib/client"
+import { useMessageStore } from "@/store"
 
 interface Props {
   id: number
-  room: number
+  room: number | null
   description: string
-  rooms: number[]
+  rooms: number[] | string[]
 }
 
+interface NewDataInterface {
+  room: (number | 'afuera')
+  description: string
+}
 
 
 export const ConfigActive = ({id,room,description,rooms}:Props) => {
 
   const dialogId = "form-edit-active"+id
-  const [initialRoom,initialDescription] = [room,description]
-  const [newData, setNewData] = useState({room,description});
-  const [errorMessage, setErrorMessage] = useState('');
+  const validRoom = (room && +room) ? +room : 'afuera' as ('afuera' | number)
+  const [newData, setNewData] = useState<NewDataInterface>({room:validRoom,description});
+  const {stSetLoadingMsg,stSetStaticMsg} = useMessageStore()
 
   
   const handleChange = (e:ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    stSetStaticMsg('')
+
     const name = e.target.name as keyof typeof newData
     const value = e.target.value
 
-    setErrorMessage('')
-    setNewData(prev => ({...prev, [name]:value}))
+    let newValue = value
+    
+    if(name === 'description') newValue = filterString(newValue,{oneSpace})
+    
+    setNewData(prev => ({...prev,[name]:newValue}))
   }
   
   const handleClick = async () => {
-    const {room,description} = newData
+    const newDescription = newData.description.trim()
+    const newRoom = newData.room
 
-    if(!room || !description) return setErrorMessage('Los campos no pueden estar vacios');
-    if(room === initialRoom && description === initialDescription) return closeDialog(dialogId);
-    setErrorMessage('cargando...')
-    
-    await ActionEditInfoRoomActive(description,+room,id)
+    if(newDescription.length < 20) return stSetStaticMsg('La descripcion del articulo es muy pequeña');
+
     closeDialog(dialogId)
-    setErrorMessage('')
+    if(newRoom === room && newDescription === description) return stSetStaticMsg('No hay cambios en los datos');
+
+    stSetLoadingMsg('cargando...')
+    
+    const success = await SAeditInfoRoomActive(newDescription,newRoom,id,new Date())
+    const message = success ? 'Activo actualizado correctamente' : 'no se pudo actualizar'
+    stSetStaticMsg(message,success)
+    setNewData({room:validRoom,description})
   }
 
   return (
@@ -86,7 +101,6 @@ export const ConfigActive = ({id,room,description,rooms}:Props) => {
 
           <DialogFooterSave 
             id={dialogId}
-            error={errorMessage}
             saveClick={handleClick}
           />
 

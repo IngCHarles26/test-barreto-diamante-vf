@@ -1,4 +1,3 @@
-
 export const formatDate = (date:Date|null) => {
   if(!date) return ['']
 
@@ -50,3 +49,11 @@ export const getAge = (_date:Date) => {
   if(monthNow < monthInput) return age-1
   return age
 }
+
+export const transformDate = (date: Date) => {
+
+  const tzOffset = date.getTimezoneOffset() * 60000; // ajuste a la hora de peru
+  const localISOTime = new Date(date.getTime() - tzOffset).toISOString();
+  
+  return localISOTime.slice(0, 16).split('T');
+};

@@ -11,7 +11,7 @@ export default async function LoginPage() {
 
  
  
- if(session) redirect('/dashboard')
+ if(session) redirect('/dashboard/stays/reservations')
 
   return (
     <div className="bg-back-1 text-body  min-h-screen flex flex-col font-display transition-colors duration-300">

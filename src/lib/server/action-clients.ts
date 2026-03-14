@@ -4,6 +4,7 @@ import { cacheTag, updateTag } from "next/cache";
 import { prisma } from "../prisma";
 import { TypeDocuments } from "@/generated/prisma/enums";
 import { getUserInfo, isAdminUser } from "./action-auth";
+import { consoleError } from "./helpers";
 
 
 
@@ -20,7 +21,7 @@ const maxClientsPerPet = 108;
     type: 'name' | 'document'
     input: string
   }
-  export const ActionGetClientsByFilters = async (data:SearchClientsInterface) => {
+  export const SAgetClientsByFilters = async (data:SearchClientsInterface) => {
     const {type,input} = data
     try{
       
@@ -28,7 +29,8 @@ const maxClientsPerPet = 108;
         return await prisma.client.findMany({ 
           where:{ numberDocument:{ contains:input} }, 
           orderBy:{ lastName: 'asc'},
-          include:{ country: {select: { flag: true, name: true }}}
+          include:{ country: {select: { flag: true, name: true }} },
+          take: 12,
         });
 
       const values = input.split(' ')
@@ -41,25 +43,35 @@ const maxClientsPerPet = 108;
             ]
           }))
         },
+        take: 12,
         orderBy:{ lastName: 'asc' },
         include:{ country: {select: { flag: true, name: true }}}
       })
       
-    }catch(_){
+    }catch(err){
+      consoleError(err)
       return []
     }
   }
 
-  export const ActionGetClientById = async (clientId:string) => {
+  export const SAgetClientById = async (clientId:string) => {
     'use cache'
-    cacheTag(tagCacheClients+clientId)
+    try{
+      cacheTag(tagCacheClients+clientId)
+      const client = await prisma.client.findUnique({
+        where:{id:clientId},
+        include:{
+          country:{ select:{flag:true} }
+        }
+      })
+      
+      if(!client) return null
 
-    return await prisma.client.findUnique({
-      where:{id:clientId},
-      include:{
-        country:{ select:{flag:true} }
-      }
-    })
+      return client
+    }catch(err){
+      consoleError(err)
+      return null
+    }
   }
 
   interface CreateClientInterface  {
@@ -73,54 +85,72 @@ const maxClientsPerPet = 108;
     born: Date
   }
   
-  export const ActionCreateClient = async (data:CreateClientInterface) => {
+  export const SAcreateClient = async (data:CreateClientInterface) => {
     try{
+      const {numberDocument,typeDocument} = data
+      const client = await prisma.client.findFirst({where:{typeDocument,numberDocument}})
+      
+      if(client) 
+        return {
+          sucess:false,
+          message:`ya hay un cliente registrado con ${typeDocument}:${numberDocument}`
+        }
+
       await prisma.client.create({data})
-      return true
-    }catch (_){
-      console.log('Cant create')
-      return false
+
+      return {success:true,message:'Cliente creado correctamente'}
+    }catch (err){
+      consoleError(err)
+      return {success:false,message:'No se pudo crear el cliente'}
     }
   }
 
-  export const ActionBanClient = async (userId:string) => {
+  export const SAbanClient = async (userId:string) => {
     try{
       await prisma.client.update({where:{id:userId},data:{banned:true}})
       updateTag(tagCacheClients+userId)
       return true
-    }catch(_){
+    }catch(err){
+      consoleError(err)
       return false
     }
   }
   
-  export const ActionUnBanClient = async (userId:string) => {
+  export const SAunBanClient = async (userId:string) => {
     try{
       await isAdminUser()
       
-      await prisma.client.update({where:{id:userId},data:{banned:false}})
+      await prisma.client.update({where:{id:userId},data:{banned:false,banReason:''}})
       updateTag(tagCacheClients+userId)
+      
       return true
-    }catch(_){
+    }catch(err){
+      consoleError(err)
       return false
     }
   }
 
-  export const ActionAddCommentsClient = async (userId:string,comments:string) => {
+  export const SAaddCommentsClient = async (userId:string,comments:string) => {
     try{
       await prisma.client.update({where:{id:userId},data:{comments}})
       updateTag(tagCacheClients+userId)
       return true
+
     }catch(_){
       return false
     }
   }
   
-  export const ActionAddBanReasonClient = async (userId:string,banReason:string) => {
+  export const SAaddBanReasonClient = async (userId:string,banReason:string) => {
     try{
       await prisma.client.update({where:{id:userId},data:{banReason}})
+
       updateTag(tagCacheClients+userId)
+
       return true
-    }catch(_){
+
+    }catch(err){
+      consoleError(err)
       return false
     }
   }

@@ -6,7 +6,7 @@ export default function NotFound() {
     <div className="flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden bg-white-01">
       <div className="layout-container flex h-full grow flex-col">
         <main className="flex flex-1 items-center justify-center p-6">
-          <div className="layout-content-container flex flex-col max-w-[640px] flex-1 items-center">
+          <div className="layout-content-container flex flex-col max-w-160 flex-1 items-center">
             <div className="flex flex-col items-center w-full gap-6">
               <div className="flex flex-col items-center gap-3">
                 <h1 className="text-black-01 leading-tight tracking-tight text-center text-xl font-semibold">

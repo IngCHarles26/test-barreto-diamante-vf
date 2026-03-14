@@ -1,44 +1,57 @@
 'use client'
 
-import { ActionGetClientsByFilters, SearchClientsInterface } from "@/lib/server";
+import { SAgetClientsByFilters, SearchClientsInterface } from "@/lib/server";
 import { FilterContainer, PageContent, PageHeader, SearchButton, TableApp, TableHeader } from "../general"
 import { ClientsTableRow } from "./clients-table-row";
 import { FaSearch } from "react-icons/fa";
 import { ChangeEvent, useState } from "react";
-import { useClientFoundStore, useLoadingStore } from "@/store";
+import { useClientFoundStore, useMessageStore } from "@/store";
+import { filterString, oneSpace, onlyString, noSpace } from "@/lib/client";
 
-const msg = 'Por favor selecciona el tipo de busqueda: documento o nombres'
 
 export const ClientsContent = () => {
   const {clientsFound,setClientList,resetClientList} = useClientFoundStore( st => st )
-  const [mainText, setMainText] = useState(msg);
   const [searchData, setSearchData] = useState<SearchClientsInterface>({type:'name',input:''});
-  const {togleLoading} = useLoadingStore( st => st );
+  const {stSetLoadingMsg,stSetStaticMsg} = useMessageStore()
 
   const handleChange = (e:ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const name = e.target.name as keyof typeof searchData
     const value = e.target.value as string
 
-    const valueFiltered = value.replace(/[^a-zA-Z0-9ñÑ\s]/g,'').replace(/\s+/g, ' ')
+    stSetStaticMsg('')
+    let newValue = value
+
+    if(name === 'input'){
+      if(searchData.type === 'name') newValue = filterString(newValue,{onlyString,oneSpace});
+      else newValue = filterString(newValue,{noSpace})
+    }
+
+    if(name === 'type' && value === 'name') {
+      setSearchData(prev => ({...prev,
+        input: filterString(prev.input,{onlyString})
+      }))
+    }
     
-    setSearchData(prev => ({...prev,[name]:valueFiltered.toLowerCase()}))
+    setSearchData(prev => ({...prev,[name]:newValue.toLowerCase()}))
   }
  
   const handleClick = async () => {
+    const input = searchData.input.trim()
+    const type = searchData.type
 
-    const { input,type } = searchData
+    if(input.length < 5) return stSetStaticMsg('Por favor ingresa al menos 5 caracteres para la busqueda')
 
-    togleLoading()
-    const data = await ActionGetClientsByFilters({type,input:input.trim()})
+    stSetLoadingMsg('buscando')
+    const data = await SAgetClientsByFilters({type,input})
 
-    togleLoading()
     if( data.length === 0 ){
       resetClientList()
-      return setMainText(`No hay resultados para "${input}"`)
+      const doc = type === 'name' ? 'nombres' : 'documento'
+      return stSetStaticMsg(`No hay resultados para ${doc}:${input}`)
     }
     
-    setMainText('')
     setClientList(data)
+    stSetStaticMsg('Resultados de la busqueda',true)
   }
 
   return (
@@ -71,25 +84,23 @@ export const ClientsContent = () => {
         <SearchButton onCLick={handleClick}/>
       </PageHeader>
 
-      {
-        !clientsFound.length 
-          ? <p className="text-gray-04 text-xl">{mainText}</p>
-          : <TableApp>
+      {clientsFound.length > 0 && 
+        <TableApp>
 
-              <TableHeader>
-                <p className="w-[50%] md:w-[38%]">Nombre</p>
-                <p className="w-[10%] md:w-[15%]"><span className="hidden md:inline">PAIS</span></p>
-                <p className="w-[30%] md:w-[15%]">Documento</p>
-                <p className="md:w-[10%] hidden md:block">Edad</p>
-                <p className="md:w-[12%] text-center hidden md:block">Puntaje</p>
-                <p className='w-[10%] md:w-[10%] text-center'>Info</p>
-              </TableHeader>
+          <TableHeader>
+            <p className="w-[50%] md:w-[38%]">Nombre</p>
+            <p className="w-[10%] md:w-[15%]"><span className="hidden md:inline">NACIONALIDAD</span></p>
+            <p className="w-[30%] md:w-[15%]">Documento</p>
+            <p className="md:w-[10%] hidden md:block">Edad</p>
+            <p className="md:w-[12%] text-center hidden md:block">Puntaje</p>
+            <p className='w-[10%] md:w-[10%] text-center'>Info</p>
+          </TableHeader>
 
-              {
-                clientsFound.map( el => <ClientsTableRow key={'client_relation_row'+el.id} {...el}/>)
-              }
+          {
+            clientsFound.map( el => <ClientsTableRow key={'client_relation_row'+el.id} {...el}/>)
+          }
 
-            </TableApp>
+        </TableApp>
       }
 
     </PageContent>

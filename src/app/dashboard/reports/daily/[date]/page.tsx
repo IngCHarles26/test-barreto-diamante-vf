@@ -1,5 +1,5 @@
 import { CardResume, DailyTableRow, EditDayComment, PageContent, PageTitle, TableApp, TableHeader } from "@/components";
-import { getDayReport } from "@/lib/server";
+import { SAgetDayReport } from "@/lib/server";
 import { penFormat } from "@/lib/shared";
 import { redirect } from "next/navigation";
 import { FaCalendarDay } from "react-icons/fa";
@@ -16,7 +16,7 @@ export default async function DailyPage({params}:Props) {
   
   const [year,month,day] = date.split('-')
 
-  const data = await getDayReport(day,+month-1,year)
+  const data = await SAgetDayReport(day,+month-1,year)
 
   return (
     <div className="h-full w-full flex flex-col">

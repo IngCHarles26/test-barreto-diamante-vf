@@ -1,9 +1,11 @@
 import { ReactNode } from "react"
 import { NumRows, Pagination } from "./pagination"
+import clsx, { ClassValue } from "clsx"
 
 interface Props {
   children: ReactNode
   pagination?: true
+  className?: ClassValue
 }
 
 export const TableApp = ({children,pagination}:Props) => {
@@ -29,9 +31,12 @@ export const TableHeader = ({children}:Props) => {
 }
 
 
-export const TableRow = ({children}:Props) => {
+export const TableRow = ({children,className}:Props) => {
   return (
-    <div className='w-full flex gap-1 border-x px-2 py-1.5 lg:py-2 md:px-3 border-bg-sidebar items-center text-body hover:bg-bg-sidebar'>
+    <div className={clsx(
+        'w-full flex gap-1 border-x px-2 py-1.5 lg:py-2 md:px-3 border-bg-sidebar items-center text-body hover:bg-bg-sidebar my-px',
+        className)}
+    >
       {children}
     </div>
   )

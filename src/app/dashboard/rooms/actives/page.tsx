@@ -1,7 +1,6 @@
-import { PageContent, PageHeader, PageTitle, TableApp, TableHeader, ActivesTableRow, FilterActives, HeaderButton } from "@/components";
+import { PageContent, PageHeader, PageTitle, TableApp, TableHeader, ActivesTableRow, FilterActives } from "@/components";
 import { NewActive } from "@/components/actives/new-active";
-import { ActionGetFilteredActives, getCacheRooms, ParamsActives } from "@/lib/server";
-import { FaPlus } from "react-icons/fa";
+import { SAgetFilteredActives, getCacheRooms, ParamsActives } from "@/lib/server";
 import { MdMeetingRoom } from "react-icons/md";
 
 interface Props {
@@ -11,19 +10,15 @@ interface Props {
 export default async function ActivesPage({searchParams}:Props) {
 
   const params = await searchParams
-  const rooms = (await getCacheRooms()).map(el => el.number)
-  const actives = (await ActionGetFilteredActives(params,rooms)).sort((a,b) => (a.room||0) - (b.room||0))
+  const rooms = (await getCacheRooms()).map(el => el.number).sort((a,b) => a-b)
+  const actives = (await SAgetFilteredActives(params,rooms)).sort((a,b) => (a.room||0) - (b.room||0))
 
   return (
     <div className="h-full w-full flex flex-col">
         
       <PageTitle  
         title="Activos en Habitaciones"
-        children={
-          <HeaderButton   //NewActive Component
-            target="form-create-active" Icon={FaPlus} textMobile="Nuevo" textDesktop="Activo" 
-          />
-        }
+        children={ <NewActive rooms={rooms}/> }
       />
 
       <PageContent>
@@ -46,14 +41,19 @@ export default async function ActivesPage({searchParams}:Props) {
           </TableHeader>
     
           { 
-            actives.map( (el) => <ActivesTableRow key={'actives_table_row_'+el.id} {...el} rooms={rooms}/>)
+            actives.map( (el) => 
+              <ActivesTableRow 
+                key={'actives_table_row_'+el.id} 
+                {...el} 
+                rooms={rooms.map(el => `${el}`)}
+              />)
           }
   
         </TableApp>
   
       </PageContent>
 
-      <NewActive rooms={rooms}/>
+     
 
         
     </div>

@@ -5,8 +5,9 @@ import clsx from 'clsx'
 import { FaCheck, FaUserCheck, FaUserTimes } from 'react-icons/fa'
 import { closeDialog } from '@/lib/client'
 import { startTransition, useOptimistic } from 'react'
-import { ToggleBanUser } from '@/lib/server'
+import { SAtoggleBanUser } from '@/lib/server'
 import { IoLockClosed } from 'react-icons/io5'
+import { useMessageStore } from '@/store'
 
 
 interface Props{
@@ -19,6 +20,8 @@ interface Props{
 export const DisableUser = ({banned,userId,dialogId,name}:Props) => {
 
   const [optimisticBanned, setOptimisticBanned] = useOptimistic(banned)
+  const {stSetLoadingMsg,stSetStaticMsg} = useMessageStore()
+
   
   const Icon = optimisticBanned ? FaUserCheck : FaUserTimes;
   const IconButton = optimisticBanned ? IoLockClosed : FaCheck;
@@ -31,13 +34,17 @@ export const DisableUser = ({banned,userId,dialogId,name}:Props) => {
   
 
   const handleToggle = async () => {
-    try{
-      startTransition( async () => setOptimisticBanned(!optimisticBanned))
-      closeDialog(dialogId)
-      await ToggleBanUser(banned,userId)
-    }catch(_){
-      startTransition( async () => setOptimisticBanned(!optimisticBanned))
-    }
+    closeDialog(dialogId)
+
+    stSetLoadingMsg('Cambiando....')
+
+    startTransition( async () => setOptimisticBanned(!optimisticBanned))
+    const success = await SAtoggleBanUser(banned,userId)
+    const msg = success ? 'Cambio exitoso' : 'No se pudo hacer el cambio'
+    
+    if(!success) startTransition( async () => setOptimisticBanned(!optimisticBanned));
+    
+    stSetStaticMsg(msg,success)
   }
   
   return (
