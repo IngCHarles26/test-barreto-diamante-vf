@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import { persist } from "zustand/middleware";
 
 interface DailyReport{
   day: number
@@ -15,14 +14,9 @@ interface State{
 }
 
 export const useReportStore = create<State>()(
-  persist(
-    (set) => ({
-      dailyReport: [],
+  (set) => ({
+    dailyReport: [],
 
-      setDailyReport: (data) => set({ dailyReport:data }),
-    }),
-    {
-      name: 'report-store'
-    }
-  )
+    setDailyReport: (data) => set({ dailyReport:data }),
+  })
 )

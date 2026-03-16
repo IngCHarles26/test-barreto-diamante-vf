@@ -1,37 +1,32 @@
-import { formatDate } from "@/lib/shared"
+'use client'
 
-interface Props {
-  dateStart: Date
-  dateEnd: Date
-  name: string
-  flag: string
-  age: number
-  document: number
-  typeDocument: string
+import { ClientInStayRelation } from "@/store"
+
+interface Props extends ClientInStayRelation {
+  stayId: number
 }
 
-export const RoomStayTableRow = ({dateEnd,dateStart,name,flag,age,document,typeDocument}:Props) => {
-  const [fechaInicio,horaInicio] = formatDate(dateStart)
-  const [fechaFin,horaFin] = formatDate(dateEnd)
+export const RoomStayTableRow = ({client}:Props) => {
+
+  const {country,firstName,lastName,typeDocument,numberDocument,born} = client
+  const age = new Date().getFullYear() - born.getFullYear()
+  const name = `${firstName} ${lastName}`
+
 
   
   return (
     <div className="w-full flex gap-1 items-center text-body hover:bg-bg-sidebar px-3 md:px-4 ">
       <div className="w-[17%]">
-        <p className="font-bold">{fechaInicio}</p>
-        <p className="text-done-button-text">{horaInicio}</p>
+        <p className="text-done-button-text">{age} Años</p>
       </div>
       <div className="w-[43%]">
-        <p className="text-lg font-bold"> {name} <span className="hidden md:inline">{age < 18 && '👶'}</span></p>
-        <p className="text-done-button-text">{flag} {age} Años</p>
+        <p className="text-lg font-bold uppercase">{country?.flag}  {name} <span className="hidden md:inline">{age < 18 && '👶'}</span></p>
       </div>
       <div className="w-[25%]">
-        <p className="text-lg font-bold">{document}</p>
         <p className="text-done-button-text">{typeDocument}</p>
       </div>
-      <div className="w-[15%]">
-        <p className="font-bold">{fechaFin}</p>
-        <p className="text-done-button-text">{horaFin}</p>
+      <div className="w-[15%] text-center">
+        <p className="text-lg font-bold">{numberDocument}</p>
       </div>
     </div>
 

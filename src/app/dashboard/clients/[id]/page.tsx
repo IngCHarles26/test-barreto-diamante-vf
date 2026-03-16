@@ -1,5 +1,5 @@
-import { DetailStay, PageContent, PageTitle, reservaciones, SetClientComments, StaysTable, ToggleBan } from "@/components";
-import { SAgetClientById, getUserInfo } from "@/lib/server";
+import { DetailStay, PageContent, PageTitle, SetClientComments, StaysTable, ToggleBan } from "@/components";
+import { SAgetClientById, SAgetStaysByClient, getUserInfo } from "@/lib/server";
 import { formatDate, isValidUuid } from "@/lib/shared";
 import clsx from "clsx";
 import { redirect } from "next/navigation";
@@ -12,15 +12,15 @@ interface Props {
 
 type Role = 'user' | 'admin'
 
-const estadias = reservaciones
 
 export default async function ClientIdPage({params}:Props) {
+  
   const {id} = await params
-
   if( !isValidUuid(id) ) redirect('/dashboard/clients');
   
   const clientData = await SAgetClientById(id)
   if(!clientData) redirect('/dashboard/clients');
+  const stays = await SAgetStaysByClient(id)
   
   const {
     banned,firstName,lastName,country,stars,totalStays,lastStay,
@@ -91,7 +91,7 @@ export default async function ClientIdPage({params}:Props) {
           </div>
           
         </div>   
-  
+
         <div className='w-full px-3 grid grid-cols-3 md:grid-cols-5 gap-2 mb-5 md:mb-7 items-center'>
         
           <div className='text-center flex flex-col gap-1 md:gap-2 md:col-span-1 col-span-2 '>
@@ -129,11 +129,12 @@ export default async function ClientIdPage({params}:Props) {
           userName={userName}
         />
   
+        <p className="mb-4 text-gray-03 font-bold">HISTORIAL DE ESTADIAS</p>
+  
         <div className="w-full">
-          <StaysTable staysInfo={estadias}/>        
+          <StaysTable staysInfo={stays}/>        
         </div>
       {/* Pendiente de implementacion */}
-        <DetailStay/>
         
       </PageContent>
       

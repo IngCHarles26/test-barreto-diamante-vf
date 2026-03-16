@@ -1,11 +1,12 @@
 import { MdCalendarMonth, MdMeetingRoom } from 'react-icons/md'
 import { TableApp, TableFooter, TableHeader } from '../general'
-import { HistoryRow, StaysTableRow } from './stays-table-row'
+import { StaysTableRow } from './stays-table-row'
+import { FoundStay } from '@/store'
 
 
 
 export interface StayTableProps{
-  staysInfo: HistoryRow[]
+  staysInfo: FoundStay[]
 }
 
 export const StaysTable = ({staysInfo}:StayTableProps) => {
@@ -28,7 +29,7 @@ export const StaysTable = ({staysInfo}:StayTableProps) => {
       </TableHeader>
 
       { 
-        staysInfo.map( (el,ix) => <StaysTableRow key={'stays_history_row_'+ix} {...el}/>)
+        staysInfo.map( el => <StaysTableRow key={'stays_history_row_'+el.id} data={el}/>)
       }
 
       <TableFooter/>

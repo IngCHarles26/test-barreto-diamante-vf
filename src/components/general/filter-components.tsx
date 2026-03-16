@@ -10,7 +10,7 @@ interface FilterContainerProps {
 }
 export const FilterContainer = ({children}:FilterContainerProps) => {
   return (
-    <div className='flex justify-start items-center py-2 px-2 md:px-4 gap-1.5 mdgap-2 rounded-xl overflow-hidden focus-within:ring-1 focus-within:ring-blue-02 h-auto bg-white shadow border border-white-02'>
+    <div className='flex justify-start items-center py-1.5 px-2 md:px-3 gap-1.5 mdgap-2 rounded-lg overflow-hidden focus-within:ring-1 focus-within:ring-blue-02 h-auto bg-white shadow border border-white-02'>
       {children}
     </div>
   )
@@ -80,12 +80,9 @@ export const FilterSelectInput = ({
 
   return (
     <FilterContainer>
-      <label htmlFor={id}>
-        <FaSearch  className="size-3 md:size-4 text-gray-02 hidden md:block" />
-      </label>
       <select 
         id={id} 
-        className='h-full px-0 md:px-2 outline-0 font-bold text-sm md:text-base'
+        className='h-full px-0 md:px-1 outline-0 font-bold text-sm md:text-base'
         name={nameSelect}
         value={valueSelect}
         onChange={onChangeSelect}

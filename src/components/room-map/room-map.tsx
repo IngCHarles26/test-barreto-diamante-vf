@@ -3,49 +3,63 @@
 import Image from "next/image"
 import { RoomButton } from './room-button';
 import { RoomLegend } from "./room-legend";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Room } from "@/generated/prisma/browser";
+import { ActiveStay, useStayStore } from "@/store";
 
 
 const legend = [
-  {color: 'bg-green-500' , label: 'Libre' },
-  {color: 'bg-blue-500' , label: 'Separado' },
-  {color: 'bg-orange-500' , label: 'Ocupado' },
-  {color: 'bg-background-dark' , label: 'No Disponible' },
+  {style: 'border-3 border-green-500' , label: 'Libre' },
+  {style: 'bg-green-500' , label: 'Ocupado' },
+  {style: 'bg-background-dark' , label: 'No Disponible' },
+  {style: 'bg-orange-1' , label: 'Seleccionado' },
 ]
 
 
 interface Props {
-  floors: {  number: number
+  floors: {  
+    number: number
     name: string
     src: string
-    rooms: Room[]}[]
+    rooms: Room[]
+  }[],
+  stays: ActiveStay[]
 }
 
 
-export const RoomMap = ({ floors }:Props) => {
+export const RoomMap = ({ floors,stays }:Props) => {
 
   const [floorMap, setFloorMap] = useState(0);
   const {rooms,src} = floors[floorMap]
+  const {setStayData} = useStayStore()
+
+  useEffect(() => {
+    let allStore:Record<number,ActiveStay> = {} 
+    for(let stay of stays){
+      const room = stay.roomId
+
+      allStore[room] = stay
+    }
+    setStayData(allStore)
+  }, [floors]);
+  
   
   return (
-    <div className="w-full h-full md:w-auto md:h-full md:max-h-180 2xl:max-h-250 min-h-150 flex flex-col items-center justify-between gap-4 md:sticky md:top-10 ">
+    <div className="w-full h-full md:w-auto md:h-full md:max-h-180 2xl:max-h-250 min-h-150 flex flex-col items-center justify-between gap-2 md:sticky md:top-10 ">
 
       <div className="flex w-full justify-center gap-2">
         { legend.map( (el,ix) => <RoomLegend key={'room-legend-'+ix} {...el}/>) }
       </div>
 
-      <div className="relative h-full aspect-9/20 ">
 
-        <div className={` w-full h-full `}>
+      <div className={`relative h-full aspect-1/2`}>
 
-          <Image src={src}alt='imagen fondo piso' fill />
+        <Image src={src}alt='imagen fondo piso' fill />
 
-          { rooms.map( data => <RoomButton key={`room_piso_${data.number}`} {...data} />) }
-          
-        </div>
-
+        { rooms.map( data => <RoomButton key={`room_piso_${data.number}`} {...data} />) }
+        
       </div>
+
 
       <div className="flex items-center gap-2 p-1 bg-back-1 rounded-xl ">
         {

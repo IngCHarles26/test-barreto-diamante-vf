@@ -1,6 +1,6 @@
 'use server'
 
-import { cacheTag, updateTag } from "next/cache";
+import { cacheLife, cacheTag, updateTag } from "next/cache";
 import { prisma } from "../prisma"
 import { TypeRoom } from "@/generated/prisma/enums";
 import { redirect } from "next/navigation";
@@ -12,9 +12,10 @@ import { consoleError } from "./helpers";
   const path = '/dashboard/rooms/actives'
   export const getCacheRooms = async () => {
     'use cache'
+    cacheLife('hours')
     cacheTag(tagCacheRooms)
 
-    return await prisma.room.findMany()
+    return await prisma.room.findMany({orderBy:{number:'asc'}})
   }
 
   interface Floors{
@@ -100,6 +101,7 @@ import { consoleError } from "./helpers";
 
   const getCacheActiveOutRooms = async () => {
     'use cache'
+    cacheLife('hours')
     cacheTag(tagCacheActives+'out')
 
     return await prisma.roomActive.findMany({where:{room:null,active:true}})
@@ -107,12 +109,18 @@ import { consoleError } from "./helpers";
   
   const getCacheActiveRooms = async (room?:number) => {
     'use cache'
+    cacheLife('hours')
     
-    cacheTag(tagCacheActives)
-    if(!room) return await prisma.roomActive.findMany({where:{active:true}});
-    
-    cacheTag(tagCacheActives+room)
-    return await prisma.roomActive.findMany({where:{room}})
+    if(room){
+      cacheTag(tagCacheActives+room)
+      return await prisma.roomActive.findMany({
+        where:{ room, active:true },
+        orderBy:{room:'asc'}
+      })
+    }else{
+      cacheTag(tagCacheActives)
+      return await prisma.roomActive.findMany({where:{active:true}});
+    }
   }
 
 
@@ -134,7 +142,7 @@ import { consoleError } from "./helpers";
       if( isNaN(room) ) throw new Error('El cuarto ingresado no es valido');
       
       if( !rooms.includes(room) ) throw new Error('El cuarto no existe');
-      
+
       return await getCacheActiveRooms(room)
     }catch(err){
       consoleError(err)
@@ -181,6 +189,7 @@ import { consoleError } from "./helpers";
       const tag = isOut ? 'out' : room
 
       updateTag(tagCacheActives+tag)
+      if(tag !== 'out') updateTag(tagCacheActives+'out')
       updateTag(tagCacheActives)
       
       return true
@@ -197,7 +206,7 @@ import { consoleError } from "./helpers";
         data:{active:false,dateMoved:null}
       })
       const tag = !room ? 'out' : room
-       
+      
       updateTag(tagCacheActives)
       updateTag(tagCacheActives+tag)
 

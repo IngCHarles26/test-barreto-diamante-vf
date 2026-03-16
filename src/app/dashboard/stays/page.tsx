@@ -1,6 +1,10 @@
 import { PageTitle, StaysContent } from "@/components";
+import { getCacheRooms } from "@/lib/server";
 
-export default function HistoryStaysPage() {
+export default async function HistoryStaysPage() {
+
+  const rooms = await getCacheRooms()
+
   return (
     <div className="h-full w-full flex flex-col">
       
@@ -9,7 +13,7 @@ export default function HistoryStaysPage() {
         subTitle="Visualice y filtre las estadias del hotel"
       />
 
-      <StaysContent/>
+      <StaysContent rooms={rooms.map(el => el.number)}/>
         
     </div>
   );

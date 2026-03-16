@@ -19,12 +19,10 @@ const filteredMonths = monthList.slice(0,nowMonth+1)
 export const CalendarReportContent = () => {
 
   const [monthSelect, setMonthSelect] = useState(filteredMonths);
-  const [filterData, setFilterData] = useState({ month:'',year:'' });
+  const [filterData, setFilterData] = useState({ month:monthList[nowMonth],year:nowYear });
   const [total, setTotal] = useState<number|null>(null);
-  const { dailyReport, setDailyReport} = useReportStore( st => st )
-  const { stSetLoadingMsg,stSetStaticMsg} = useMessageStore( st => st )
-
-  
+  const { dailyReport, setDailyReport } = useReportStore()
+  const { stSetLoadingMsg,stSetStaticMsg } = useMessageStore()
 
 
   const handleChange = (e:ChangeEvent<HTMLSelectElement>) => {
@@ -96,7 +94,7 @@ export const CalendarReportContent = () => {
         {dailyReport.map( (el,ix) => 
           <Link key={'item_card'+ix} href={`/dashboard/reports/daily/${el.year}-${format0(el.month+1)}-${format0(el.day)}`}>
             <div className="rounded-xl border-border-sidebar shadow-lg px-3 py-2">
-              <div className="flex flex-col items-end 2xl:flex-row 2xl:items-center 2xl:justify-between mb-3">
+              <div className="flex flex-row items-center justify-between mb-3">
                 <p className="text-done-button-text text-3xl md:text-5xl  2xl:text-7xl ">{format0(el.day)}</p>
                 {el.observed && <FaEye className="text-orange-1 size-8"/>}
               </div>

@@ -5,7 +5,6 @@ import { CenterDialog, DialogContent, DialogFooterSave, DialogHeader, InputApp }
 import { SAaddCountry, SAgetRestCountries } from '@/lib/server'
 import { useEffect, useRef, useState } from 'react'
 import { closeDialog, openDialog } from '@/lib/client'
-import { dialogClient } from './new-client-form'
 import { useMessageStore } from '@/store'
 
 
@@ -56,7 +55,7 @@ export const NewCountryForm = () => {
     setCountriesData([])
     setCountrySelected('')
     closeDialog(dialogCountry)
-    openDialog(dialogClient)
+    stSetStaticMsg('')
   }
   
   return (
@@ -64,7 +63,7 @@ export const NewCountryForm = () => {
       <div className='flex items-end justify-center'>
         <button 
           className='py-2 w-full  rounded bg-primary/70 text-white font-bold hover:underline tracking-widest'
-          onClick={() => { closeDialog(dialogClient); openDialog(dialogCountry) }}
+          onClick={() => { openDialog(dialogCountry) }}
           >
           ¿El pais no está?
         </button>

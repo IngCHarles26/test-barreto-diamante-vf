@@ -28,7 +28,6 @@ const dialogId = 'form-create-reservation'
 
 export const ReservationForm = () => {
   const [reservationData, setReservationData] = useState(initialData);
-  const [errorMessage, setErrorMessage] = useState('');
   const {stSetLoadingMsg,stSetStaticMsg} = useMessageStore()
   
 
@@ -72,7 +71,7 @@ export const ReservationForm = () => {
     
     const diff = (+reservDate - +nowDate)/86400000
     if( diff > 30 ) return stSetStaticMsg('La fecha de reservacion no debe superar los 30 dias desde hoy');
-    ans.date = nowDate
+    ans.date = reservDate
 
     if( phone !== '' && phone.length !==9 ) return stSetStaticMsg('Debes ingresar un telefono de 9 digitos');
     ans.phone = phone
@@ -80,25 +79,26 @@ export const ReservationForm = () => {
     if( !persons ) return stSetStaticMsg('Debes ingresar la cantidad de personas');
     ans.persons = +persons
 
-    if( !amount ) return stSetStaticMsg('Debes ingresar el monto en soles');
+    if( !Number(amount) ) return stSetStaticMsg('Debes ingresar el monto en soles');
     ans.amount = +amount
 
     const typeRooms:TypeRoom[] = [] 
     const numberRooms:number[] = []
     let anyFilled = false
     for(let [type,number] of Object.entries(rooms)){
-      if( number ){
+      if( +number ){
         anyFilled = true
         numberRooms.push(+number)
         typeRooms.push(type as TypeRoom)
       }
     }
-    if( !anyFilled ) return setErrorMessage('Debes seleccionar al menos una habitacion');
+    if( !anyFilled ) return stSetStaticMsg('Debes seleccionar al menos una habitacion');
     ans.typeRooms = typeRooms
     ans.numberRooms = numberRooms
 
     closeDialog(dialogId)
     stSetLoadingMsg('Creando')
+    
     
     const success = await SAcreateReservation(ans)
     if(success) setReservationData(initialData)
@@ -194,7 +194,7 @@ export const ReservationForm = () => {
                 name='Doble'
                 value={reservationData.Doble}
                 onChange={handleChange}
-                selectData={[1,2,3,4]}
+                selectData={[0,1,2,3,4]}
               />
 
               <InputApp
@@ -205,7 +205,7 @@ export const ReservationForm = () => {
                 name='Doble_Familiar'
                 value={reservationData.Doble_Familiar}
                 onChange={handleChange}
-                selectData={[1,2]}
+                selectData={[0,1,2]}
               />
 
               <InputApp
@@ -216,7 +216,7 @@ export const ReservationForm = () => {
                 name='Matrimonial'
                 value={reservationData.Matrimonial}
                 onChange={handleChange}
-                selectData={[1,2,3,4,5,6,7]}
+                selectData={[0,1,2,3,4,5,6,7]}
               />
 
               <InputApp
@@ -227,7 +227,7 @@ export const ReservationForm = () => {
                 name='Matrimonial_Simple'
                 value={reservationData.Matrimonial_Simple}
                 onChange={handleChange}
-                selectData={[1,2,3]}
+                selectData={[0,1,2,3]}
               />
 
               <InputApp

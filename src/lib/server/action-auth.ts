@@ -7,11 +7,12 @@ import { consoleError } from "./helpers"
 
 export async function getUserInfo(){
   try{
-    const session = await auth.api.getSession({
-      headers: await headers()
-    })
+    const userHeaders = await headers()
+    const session = await auth.api.getSession(
+      { headers: userHeaders }
+    )
 
-    if(!session) redirect('/login');
+    if(!session) throw new Error('Session doesnt exist')
 
     return session.user
   }catch(err){
@@ -26,7 +27,7 @@ export async function isAdminUser() {
 
     const {role} = user
 
-    if(role !== 'admin') redirect('/dashboard');
+    if(role !== 'admin') throw new Error('Is not admin user');
   }catch(err){
     consoleError(err)
     redirect('/dashboard');

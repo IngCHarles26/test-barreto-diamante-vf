@@ -25,15 +25,16 @@ const initialData = {
 
 interface Props {
   countries: Country[]
+  showButton?: boolean
+  cancelDialog?:string
 }
 
 export const dialogClient = 'form-new-client'
 
 
-export const NewClientForm = ({countries}:Props) => {
+export const NewClientForm = ({countries,showButton=true,cancelDialog}:Props) => {
 
   const [newClientData, setNewClientData] = useState(initialData);
-  const [errorMessage, setErrorMessage] = useState('');
   const {stSetLoadingMsg,stSetStaticMsg,stMessage} = useMessageStore()
 
 
@@ -141,7 +142,7 @@ export const NewClientForm = ({countries}:Props) => {
   
   return (
     <>
-      <HeaderButton target={dialogClient} Icon={FaPlus} textMobile="Nuevo" textDesktop="Cliente" />
+      { showButton &&  <HeaderButton target={dialogClient} Icon={FaPlus} textMobile="Nuevo" textDesktop="Cliente" />}
     
       <CenterDialog id={dialogClient}>
         <DialogContent maxWRem={40}>
@@ -254,6 +255,7 @@ export const NewClientForm = ({countries}:Props) => {
           <DialogFooterSave 
             id={dialogClient}
             saveClick={handleClick}
+            cancelDialog={cancelDialog}
           />
 
         </DialogContent> 

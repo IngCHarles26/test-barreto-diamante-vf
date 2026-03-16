@@ -20,8 +20,9 @@ for (const { route, subRoutes } of dataRoutes) {
 }
 
 export async function proxy(request: NextRequest) {
+		const proxyHeaders = await headers()
 		const session = await auth.api.getSession({
-			headers: await headers()
+			headers: proxyHeaders
 		})
 		
 		if(!session) return NextResponse.redirect(new URL("/login", request.url));

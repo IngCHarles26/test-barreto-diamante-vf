@@ -1,80 +1,96 @@
-import { months, years } from "@/lib/shared";
+'use client'
+
+import { getNow, months, years } from "@/lib/shared";
 import { FilterSelect, PageContent, PageHeader, SearchButton } from "../general"
-import { DetailStay } from "./detail-stay"
 import { StaysTable } from "./stays-table"
-import { HistoryRow } from "./stays-table-row";
+import { ChangeEvent, useState } from "react";
+import { useMessageStore, useStayStore } from "@/store";
+import { SAgetStaysByFilters } from "@/lib/server";
 
 
-export const reservaciones:HistoryRow[] = [
-  {
-    names: [["Ricardo Guarino", "🇵🇪"], ["Sofía Across Teller", "🇦🇷"]],
-    room: 102,
-    start: new Date('2026-05-10T14:00:00'),
-    end: new Date('2026-05-15T11:00:00'),
-    price: 50,
-    user: "admin_user",
-    stars: 5
-  },
-  {
-    names: [["Elena Benfica T. 👶", "🇪🇸"]],
-    room: 205,
-    start: new Date('2026-06-01T15:00:00'),
-    end: new Date('2026-06-07T10:00:00'),
-    price: 80,
-    user: "travel_fan",
-    stars: 4
-  },
-  {
-    names: [["Mateo Pumacahua", "🇲🇽"], ["Carla Tarazona", "🇨🇴"]],
-    room: 310,
-    start: new Date('2026-07-20T12:00:00'),
-    end: new Date('2026-07-25T10:00:00'),
-    price: 40,
-    user: "guest_99",
-    stars: 5
-  },
-  {
-    names: [["Yuki Stary Twich", "🇯🇵"]],
-    room: 401,
-    start: new Date('2026-08-12T14:00:00'),
-    end: new Date('2026-08-18T11:00:00'),
-    price: 25,
-    user: "global_nomad",
-    stars: 5
-  }
-];
+const initialData = {
+  room:'',
+  month: '',
+  year: `${new Date().getFullYear()}`,
+}
 
+interface Props{
+  rooms: number[]
+}
 
+const monthList = months()
+const now = getNow()
+const [nowMonth,nowYear] = [now.getMonth(), now.getFullYear()]
+const filteredMonths = monthList.slice(0,nowMonth+1)
 
-export const StaysContent = () => {
+export const StaysContent = ({rooms}:Props) => {
   const meses = months()
   const anios = years()
+
+  const [monthSelect, setMonthSelect] = useState(filteredMonths);
+  const [searchData, setSearchData] = useState(initialData);
+  const { stSetLoadingMsg, stSetStaticMsg } = useMessageStore()
+  const {foundData,setFoundData} = useStayStore()
+
+  const handleChange = (e:ChangeEvent<HTMLSelectElement>) => {
+    const name = e.target.name as keyof typeof  searchData
+    const value = e.target.value
+
+    if(name == 'year' ) {
+      if(+value < nowYear) setMonthSelect(monthList);
+      else setMonthSelect(filteredMonths)
+    }
+
+    setSearchData(prev => ({...prev,[name]:value}))
+  }
+
+  const handleSearch = async () => {
+    const {month,room,year} = searchData
+
+    if(!month || !room || !year) return stSetStaticMsg('Debes seleccionar todos los campos');
+    
+    stSetLoadingMsg('buscando')
+    const ixMonth = meses.indexOf(month)
+    const data = await SAgetStaysByFilters(+year,ixMonth,+room)
+    const success = data.length > 0
+    const message = success ? 'Datos encontrados' : 'No hay datos para esos parametros'
+    stSetStaticMsg(message,success)
+    setFoundData(data)
+  }
+  
+  
   return (
     <PageContent maxWRem={110}>
       <PageHeader>
         <FilterSelect
           id='select-stays-room' 
           label='Habitacion:' 
-          options={['101','102','103']} 
-        />
+          options={rooms} 
+          name="room"
+          value={searchData.room}
+          onChange={handleChange}
+          />
         <FilterSelect
           id='select-stays-month' 
           label='Mes:' 
-          options={meses} 
-        />
+          options={monthSelect} 
+          name="month"
+          value={searchData.month}
+          onChange={handleChange}
+          />
         <FilterSelect
           id='select-stays-year' 
           label='Año:' 
           options={anios} 
+          name="year"
+          value={searchData.year}
+          onChange={handleChange}
         />
 
-
-        <SearchButton/>
+        <SearchButton onCLick={handleSearch}/>
       </PageHeader>
 
-      <StaysTable staysInfo={reservaciones}/>
-      
-      <DetailStay/>
+      <StaysTable staysInfo={foundData}/>
       
     </PageContent>
   )

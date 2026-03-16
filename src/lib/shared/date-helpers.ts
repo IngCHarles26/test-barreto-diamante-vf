@@ -50,10 +50,20 @@ export const getAge = (_date:Date) => {
   return age
 }
 
-export const transformDate = (date: Date) => {
+export const transformDate = (date: Date,desface=60000) => {
 
-  const tzOffset = date.getTimezoneOffset() * 60000; // ajuste a la hora de peru
+  const tzOffset = date.getTimezoneOffset() * desface; // ajuste a la hora de peru
   const localISOTime = new Date(date.getTime() - tzOffset).toISOString();
   
   return localISOTime.slice(0, 16).split('T');
+};
+
+
+export const genVisualDate = (inDate: Date) => {
+  if(!inDate) return ['',''] 
+  const [date, time] = transformDate(inDate);
+  
+  const [year, month, day] = date.split('-');
+  
+  return [`${day}-${month}-${year}`, time];
 };

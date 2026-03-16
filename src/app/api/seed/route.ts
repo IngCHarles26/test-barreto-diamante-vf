@@ -1,6 +1,7 @@
 import { auth, prisma } from "@/lib";
 import { NextResponse } from "next/server";
-import { seedCities, seedClients, seedComments, seedCountries, seedPays, seedReservations, seedRoomActives, seedRooms, seedUsers } from "@/lib/shared";
+import { seedClients, seedComments, seedCountries, seedPays, seedReservations, seedRoomActives, seedRooms, seedUsers } from "@/lib/shared";
+import { consoleError } from "@/lib/server/helpers";
 
 
 
@@ -16,7 +17,7 @@ export async function GET(){
     await prisma.pay.deleteMany()
     await prisma.roomActive.deleteMany()
     await prisma.room.deleteMany()
-    await prisma.city.deleteMany()
+    // await prisma.city.deleteMany()
     await prisma.client.deleteMany()
     await prisma.country.deleteMany()
     await prisma.dayComment.deleteMany()
@@ -35,50 +36,50 @@ export async function GET(){
       id:{notIn: adminIds}
     }})
 
-    const users = await Promise.all( // Para seeds de mas de 20, se debe usar un bucle for
-      seedUsers.map( ({lastName,...user}) => auth.api.createUser({
-        body:{
-          ...user,
-          role: 'user',
-          data:{
-            lastName
-          }
-        }
-      }))
-    )
+    // const users = await Promise.all( // Para seeds de mas de 20, se debe usar un bucle for
+    //   seedUsers.map( ({lastName,...user}) => auth.api.createUser({
+    //     body:{
+    //       ...user,
+    //       role: 'user',
+    //       data:{
+    //         lastName
+    //       }
+    //     }
+    //   }))
+    // )
    
     // Rooms Creation
     await prisma.room.createMany({ data: seedRooms })
 
     // Actives Creation
-    await prisma.roomActive.createMany({ data: seedRoomActives })
+    // await prisma.roomActive.createMany({ data: seedRoomActives })
 
     // Country Creation
     await prisma.country.createMany({ data: seedCountries })
 
     // City Creation
-    await prisma.city.createMany({ data: seedCities })
+    // await prisma.city.createMany({ data: seedCities })
 
     // Clients Creation
-    await prisma.client.createMany({ data: seedClients })
+    // await prisma.client.createMany({ data: seedClients })
 
     // Pays Creation
-    await prisma.pay.createMany({ 
-      data: seedPays.map( (pay,ix) => ({...pay,userId: users[ix&2].user.id}) ) 
-    })
+    // await prisma.pay.createMany({ 
+    //   data: seedPays.map( (pay,ix) => ({...pay,userId: users[ix&2].user.id}) ) 
+    // })
 
-    // Comments Creation
-    await prisma.dayComment.createMany({ data: seedComments })
+    // // Comments Creation
+    // await prisma.dayComment.createMany({ data: seedComments })
 
     // Reservations Creation
-    await prisma.reservation.createMany({ 
-      data: seedReservations.map( (reservation,ix) => ({...reservation,userId: users[ix&2].user.id}) )
-    })
+    // await prisma.reservation.createMany({ 
+    //   data: seedReservations.map( (reservation,ix) => ({...reservation,userId: users[ix&2].user.id}) )
+    // })
 
     return NextResponse.json({message: 'Seed created succesfully'})
 
   }catch(err){
-
+    consoleError(err)
     return NextResponse.json(err,{status:400})
 
   }

@@ -1,17 +1,18 @@
 'use server'
 
-import { cacheTag, revalidateTag, updateTag } from "next/cache"
+import { cacheLife, cacheTag, revalidateTag, updateTag } from "next/cache"
 import { prisma } from "../prisma"
 import { transformDate } from "../shared"
 import { getUserInfo } from "./action-auth"
 import { Reservation } from "@/generated/prisma/client"
 import { consoleError } from "./helpers"
+import { headers } from "next/headers"
 
 const tagCacheReservations = 'all-reservations'
 
 export const getCacheActiveReservations = async () => {
   'use cache'
-
+  cacheLife('hours')
   cacheTag(tagCacheReservations)
 
   return await prisma.reservation.findMany({ 
@@ -23,15 +24,6 @@ export const getCacheActiveReservations = async () => {
       }
     } 
   })
-}
-
-
-export const getNowDayReservations = async () => { // por ahora sin usos
-  const reservations = await getCacheActiveReservations()
-
-  const [compareDate] = transformDate(new Date())
-
-  return reservations.filter( el => transformDate(el.date)[0] === compareDate)
 }
 
 
@@ -49,7 +41,7 @@ export const SAdesactivateReservation = async (id:number) => {
 
     await prisma.reservation.update({ where:{id}, data:{ active:false } })
 
-    revalidateTag(tagCacheReservations,'max')
+    updateTag(tagCacheReservations)
 
     return {success:true, msg: 'Reservacion cancelada con exito'};
   }catch(err){
@@ -69,7 +61,7 @@ export const SAcreateReservation = async (inReservation:Omit<Reservation,'id' | 
     
     await prisma.pay.create({data:{
       date: new Date(),
-      description: `Reservacion cliente: ${name}, ${totalRooms} habitaciones`,
+      description: `Reservacion: ${name}, ${totalRooms} habitaciones`,
       mount: amount,
       userId,
       payType: 'efectivo',

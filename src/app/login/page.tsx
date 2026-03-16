@@ -5,8 +5,9 @@ import { redirect } from "next/navigation";
 
 export default async function LoginPage() {
 
- const session  = await auth.api.getSession({
-  headers: await headers()
+  const loginHeaders = await headers()
+  const session  = await auth.api.getSession({
+    headers: loginHeaders
  })
 
  

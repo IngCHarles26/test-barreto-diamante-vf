@@ -1,5 +1,6 @@
 'use client'
 
+import { closeDialog, openDialog } from "@/lib/client"
 import { useMessageStore } from "@/store"
 import { JSX, ReactNode, RefObject, useEffect } from "react"
 import { IconType } from "react-icons"
@@ -26,22 +27,29 @@ export const CenterDialog = ({id,children,ref}:CenterDialogProps) => {
 interface DialogFooterSaveProps {
   id:string
   saveClick: () => void
+  cancelDialog?: string
 }
-export const DialogFooterSave = ({id,saveClick}:DialogFooterSaveProps) => {
+export const DialogFooterSave = ({id,saveClick,cancelDialog}:DialogFooterSaveProps) => {
   const {stMessage,stResetMsg} = useMessageStore()
 
   useEffect(() => {
     const timer = setTimeout( () => stResetMsg(), 5000)
     return () => clearTimeout(timer)
   }, [stMessage]);
+
+  const handleClick = () => {
+    closeDialog(id)
+    if(cancelDialog) openDialog(cancelDialog)
+  }
+  
   
   return (
     <div className='p-3 flex justify-end items-center gap-4 mt-2'>
-      <p className='text-center lowercase mr-auto text-sm text-gray-03 font-bold'>{stMessage}</p>
+      <p className='text-center lowercase mr-auto text-sm text-gray-03 font-bold uppercase'>{stMessage}</p>
       
       <button 
-        popoverTarget={id} 
         className='px-3 py-1.5 bg-white-02 rounded-lg shadow text-gray-03 hover:opacity-80 transition-all duration-300 cursor-pointer'
+        onClick={handleClick}
       >
         Cancelar
       </button>
@@ -83,7 +91,7 @@ interface DialogHeaderProps {
 export const DialogHeader = ({Icon,title,subTitle,children}:DialogHeaderProps) => {
   return (
     <div className='bg-primary w-full px-3 pt-3 pb-2 flex items-center gap-3 text-white mb-2'>
-      <Icon  className='size-10 md:size-13 bg-white text-primary px-2 rounded-lg'/>
+      <Icon  className='size-10 md:size-13 bg-white text-primary p-2 rounded-lg'/>
       <div>
         <p className='text-xl md:text-2xl font-bold '>{title}</p>
         <p className='hidden md:block text-sm text-white-04'>{subTitle}</p>

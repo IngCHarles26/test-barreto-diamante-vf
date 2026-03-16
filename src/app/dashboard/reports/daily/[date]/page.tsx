@@ -18,6 +18,7 @@ export default async function DailyPage({params}:Props) {
 
   const data = await SAgetDayReport(day,+month-1,year)
 
+
   return (
     <div className="h-full w-full flex flex-col">
       

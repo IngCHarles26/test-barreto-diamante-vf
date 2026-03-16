@@ -1,35 +1,36 @@
-import { formatDate } from '@/lib/shared'
+import { genVisualDate, penFormat } from '@/lib/shared'
 import { TableRow } from '../general'
-import { FaEye, FaStar, FaWalking } from 'react-icons/fa'
+import { FaStar, FaWalking } from 'react-icons/fa'
+import { FoundStay } from '@/store'
+import { DetailStay } from './detail-stay'
 
-export interface HistoryRow {
-  names: [string,string][]
-  room: number
-  start: Date
-  end: Date
-  price: number
-  user: string
-  stars: number
+interface Props{
+  data: FoundStay
 }
 
-export const StaysTableRow = ({names,room,stars,start,end,price,user}:HistoryRow) => {
-  const [startDate,startTime] = formatDate(start)
-  const [endDate,endTime] = formatDate(end)
+
+export const StaysTableRow = ({data}:Props) => {
+  const {clientInStay,roomId,stars,dateStart,dateEnd,totalCost,user,id} = data
+  const [startDate,startTime] = genVisualDate(new Date(dateStart))
+  const [endDate,endTime] = genVisualDate(new Date(dateEnd || 0))
+
   return (
     <TableRow>
 
       <div className='w-[40%] md:w-[25%]'>
         {
-          names.map( ([name,flag],ix) =>  
-            <p key={'name_row_history_stay_'+name+ix} className="-my-1.5 md:text-xl font-bold ml-2">
-              {flag} {name}
+          clientInStay.map( ({client},ix) =>  
+            <p key={'name_row_history_stay_'+client.numberDocument+ix} 
+              className="-my-1.5 md:text-xl font-bold ml-2 capitalize"
+            >
+              {client.country.flag} {client.firstName} {client.lastName}
             </p>)
         }
       </div>
 
       <div className='w-[18%] md:w-[17.5%] '> 
         <p className='py-2 bg-back-1 text-sub-title mr-auto md:mx-auto rounded-lg w-12 md:w-14 text-center font-bold'>
-          {room}
+          {roomId}
         </p> 
       </div>
 
@@ -46,19 +47,15 @@ export const StaysTableRow = ({names,room,stars,start,end,price,user}:HistoryRow
         </div>
       </div>
 
-      <p className='md:w-[10%] hidden md:block text-money font-bold'>S/ {price}.00</p>
+      <p className='md:w-[10%] hidden md:block text-money font-bold'>{penFormat(totalCost || 0)}</p>
 
-      <p className='md:w-[10%] hidden md:block'>{user}</p>
+      <p className='md:w-[10%] hidden md:block font-code'>{user.email.split('@')[0]}</p>
 
       <div className='md:w-[10%] hidden md:flex justify-center '>
-        {Array.from({length:stars}, (_,ix) => <FaStar key={'star_'+ix} className='text-stars'/>)}
+        {Array.from({length:(stars||0)}, (_,ix) => <FaStar key={'star_'+ix} className='text-stars'/>)}
       </div>
 
-      <div className='w-[10%] md:w-[10%] text-center '>
-        <button popoverTarget="detail-stay" className='cursor-pointer rounded-md p-1.5 bg-primary text-white hover:opacity-80'>
-          <FaEye className="mx-auto size-4 md:size-4.5" /> 
-        </button> 
-      </div>
+      <DetailStay {...data}/>
 
     </TableRow>
   )

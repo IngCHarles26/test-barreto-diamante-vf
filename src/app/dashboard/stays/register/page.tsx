@@ -1,10 +1,12 @@
-import { PageContent, PageTitle, RoomMap, StayRegisterContent } from "@/components";
-import { ActionGetFloors, getCacheCountries } from "@/lib/server";
+import { NewClientForm, NewCountryForm, PageContent, PageTitle, ReservationToday, RoomMap, StayRegisterContent } from "@/components";
+import { ActionGetFloors, getCacheActiveReservations, getCacheCountries, SAgetActiveStays } from "@/lib/server";
 
 export default async function RegisterPage() {
 
   const floors = await ActionGetFloors()
   const countries = await getCacheCountries()
+  const reservations = await getCacheActiveReservations()
+  const activeStays = await SAgetActiveStays()
   // TODO: Hacer la peticiond e las estadias activas
 
   return (
@@ -13,15 +15,26 @@ export default async function RegisterPage() {
       <PageTitle 
         title="Registro de Estadia"
         subTitle="Administra las estadias de las habitaciones ocupadas actualmente"
+        children={ <ReservationToday reservations={reservations}/> }
       />
 
       <PageContent>
         <div className="w-full h-full flex flex-col lg:flex-row pb-5 gap-3">
 
-          <RoomMap floors={floors} />
+          <RoomMap 
+            floors={floors} 
+            stays={activeStays}
+          />
 
-          <StayRegisterContent countries={countries} />
+          <StayRegisterContent 
+            rooms={floors.map(el => el.rooms).flat()}
+          />
 
+          <NewClientForm 
+            countries={countries} 
+            showButton={false}
+            cancelDialog="new-stay-dialog"
+          />
         </div>
       </PageContent>
       

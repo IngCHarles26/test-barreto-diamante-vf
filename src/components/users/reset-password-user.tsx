@@ -122,9 +122,8 @@ export const ResetPasswordUser = ({name,userId,dialogId}:Props) => {
 
           <DialogFooterSave 
             id={dialogId}
-            error={errorMessage}
             saveClick={handleClick}
-            />
+          />
 
         </DialogContent>
 

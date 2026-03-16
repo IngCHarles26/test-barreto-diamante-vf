@@ -29,6 +29,7 @@ datasource db {
 
     pays        Pay[]
     reservations Reservation[]
+    stays        Stay[]
 
     @@unique([email])
     @@map("user")
@@ -98,7 +99,6 @@ enum TypeRoom {
 enum TypeStatus {
   free
   busy
-  reserved
 }
 
 model Room {
@@ -112,6 +112,7 @@ model Room {
   posW     Float?
   posH     Float?
 
+  stays Stay[]
   roomActive RoomActive[]
   @@map("room")
 }
@@ -137,21 +138,23 @@ model Country{
   name      String
   flag      String
 
-  cities    City[]
+  // cities    City[]
   clients   Client[]
 
   @@map("country")
 }
 
-model City{
-  id          Int @id @default(autoincrement())
-  name        String
-  countryId   String
+// model City{
+//   id          Int @id @default(autoincrement())
+//   name        String
+//   countryId   String
 
-  country     Country @relation(fields: [countryId], references: [id])
+//   country     Country @relation(fields: [countryId], references: [id])
 
-  @@map("city")
-}
+//   stays       Stay[]
+
+//   @@map("city")
+// }
 
 
 enum TypeDocuments {
@@ -181,7 +184,7 @@ model Client{
   banReason       String?
 
   country         Country @relation(fields: [countryId], references: [id])
-  // clientInStay ClientInStay[] //! CAMBIAR AL IMPLEMENTAR EESTADIAS
+  clientInStay ClientInStay[] //! CAMBIAR AL IMPLEMENTAR EESTADIAS
 
   @@unique([typeDocument,numberDocument])
 
@@ -193,27 +196,48 @@ model Client{
 }
 
 
-// model ClientInStay{
-//   id Int @id @default(autoincrement())
-//   dateStart DateTime
-//   dateEnd DateTime?
-//   clientId String
-//   stayId String
+model ClientInStay{
+  id Int @id @default(autoincrement())
+  clientId String
+  stayId Int
 
-//   client Client @relation(fields: [clientId],references: [id])
-//   stay Stay @relation(fields: [stayId],references: [id])
-// }
+  client Client @relation(fields: [clientId],references: [id])
+  stay Stay @relation(fields: [stayId],references: [id])
 
-// model Stay{
-//   id Int @id @default(autoincrement())
+  @@unique([clientId,stayId])
+  @@map("client-stay")
+}
 
-//   // clientInStay ClientInStay[]
 
-//   pays Pay[]
-  
+enum Reason {
+  Trabajo
+  Turismo
+}
 
-//   @@map("stay")
-// }
+model Stay{
+  id Int @id @default(autoincrement())
+  dateStart DateTime
+  paidUntil DateTime
+  dateEnd DateTime? // si la fecha de salida es null, se asume que la estadia esta activa
+  userId String
+  roomId Int
+  totalCost Float?
+  stars Int? @default(0)
+  reason Reason?
+  origin String
+  carPlate String?
+  comments String?
+  images String?
+
+  room Room @relation(fields: [roomId],references: [number])
+  user User @relation(fields: [userId],references: [id])
+  // city City? @relation(fields: [cityId],references: [id])
+
+  pays Pay[]
+  clientInStay ClientInStay[]
+
+  @@map("stay")
+}
 
 enum PayType {
   efectivo
@@ -229,11 +253,11 @@ model Pay {
   mount             Float
 
   operationNumber   String?
-  // stayId            Int?
+  stayId            Int?
   startDayDate      DateTime?
   endDayDate        DateTime?
   
-  // stay              Stay? @relation(fields: [stayId], references: [id])
+  stay              Stay? @relation(fields: [stayId], references: [id])
   user              User @relation(fields: [userId], references: [id])
 
   @@map("pay")

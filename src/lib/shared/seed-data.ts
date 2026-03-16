@@ -264,7 +264,7 @@ export const seedClients: Omit<Client, 'id'>[] = [
 ];
 
 
-export const seedPays: Omit<Pay, 'id'|'userId'>[] = [
+export const seedPays: Omit<Pay, 'id'|'userId' | 'stayId'>[] = [
   { date: new Date("2026-03-01T08:00:00Z"), description: "Pago Habitación 101", payType: "efectivo", mount: 120.50, operationNumber: null, startDayDate: null, endDayDate: null },
   { date: new Date("2026-03-01T10:30:00Z"), description: "Consumo Minibar", payType: "electronico", mount: 15.00, operationNumber: "BN-1001", startDayDate: null, endDayDate: null },
   { date: new Date("2026-03-01T14:00:00Z"), description: "Reserva Suite", payType: "efectivo", mount: 300.00, operationNumber: null, startDayDate: null, endDayDate: null },

@@ -14,11 +14,12 @@ export const SAtoggleBanUser = async (banned:boolean|null,userId:string) => {
 
     const toggleBan = !banned ? banUser : unbanUser
 
+    const userHeaders = await headers()
     await toggleBan({
       body:{
         userId
       },
-      headers: await headers()
+      headers: userHeaders
     });
 
     revalidatePath('/dashboard/extras/users')
@@ -33,9 +34,10 @@ export const SAtoggleBanUser = async (banned:boolean|null,userId:string) => {
 
 export const SAgetUserEmail = async (inUserId:string) => {
 
+  const userHeaders = await headers()
   const user = await auth.api.getUser({
     query: { id: inUserId },
-    headers: await headers(),
+    headers: userHeaders,
   })
 
   return user.email.split('@')[0]

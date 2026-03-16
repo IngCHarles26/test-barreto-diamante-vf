@@ -4,7 +4,7 @@ import { MdMeetingRoom } from "react-icons/md";
 
 export default async function RoomsPage() {
 
-  const rooms = (await getCacheRooms()).sort((a,b) => a.number - b.number)
+  const rooms = await getCacheRooms()
   
   return (
     <div className="h-full w-full flex flex-col">

@@ -20,7 +20,7 @@ export const DailyTableRow = ({hour,mount,email,payType,operationNumber,descript
       <p className='w-[15%] md:w-[10%] text-lg md:text-2xl font-bold'>{hour}</p>
       
       <div className='w-[40%] md:w-[45%]'>
-        <p className='text-xl md:text-2xl font-bold'>{description}</p>
+        <p className='text-xl font-bold'>{description}</p>
       </div>
       
       <p className='md:w-[20%] hidden md:block text-done-button-text font-bold font-code text-xl'>{email}</p>

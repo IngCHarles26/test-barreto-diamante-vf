@@ -84,6 +84,8 @@ export const ClientsContent = () => {
         <SearchButton onCLick={handleClick}/>
       </PageHeader>
 
+
+      
       {clientsFound.length > 0 && 
         <TableApp>
 

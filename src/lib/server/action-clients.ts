@@ -1,18 +1,15 @@
 'use server'
 
-import { cacheTag, updateTag } from "next/cache";
+import { cacheLife, cacheTag, updateTag } from "next/cache";
 import { prisma } from "../prisma";
 import { TypeDocuments } from "@/generated/prisma/enums";
-import { getUserInfo, isAdminUser } from "./action-auth";
+import { isAdminUser } from "./action-auth";
 import { consoleError } from "./helpers";
 
 
 
 
 const tagCacheClients = 'all-clients'
-const path = '/dashboard/clients'
-
-const maxClientsPerPet = 108;
 
 // //!_____________________________ Clients
   // Se va a guardar el cache por la primera letra del nombre
@@ -56,8 +53,10 @@ const maxClientsPerPet = 108;
 
   export const SAgetClientById = async (clientId:string) => {
     'use cache'
+    
+    cacheLife('hours')
+    cacheTag(tagCacheClients+clientId)
     try{
-      cacheTag(tagCacheClients+clientId)
       const client = await prisma.client.findUnique({
         where:{id:clientId},
         include:{
@@ -121,7 +120,7 @@ const maxClientsPerPet = 108;
       await isAdminUser()
       
       await prisma.client.update({where:{id:userId},data:{banned:false,banReason:''}})
-      updateTag(tagCacheClients+userId)
+      //updateTag(tagCacheClients+userId)
       
       return true
     }catch(err){
@@ -152,6 +151,47 @@ const maxClientsPerPet = 108;
     }catch(err){
       consoleError(err)
       return false
+    }
+  }
+
+  export const SAgetClientByDocument = async (typeDocument:TypeDocuments,numberDocument:string) => {
+
+    try{
+      const client =  await prisma.client.findFirst({
+        where:{ typeDocument,numberDocument },
+        select:{ 
+          id:true,
+          firstName:true,
+          lastName:true,
+          born:true,
+          banned:true,
+          country: {select: { flag: true }},
+        },
+      })
+
+      if(!client) return {success:false,message:'El cliente no esta registrado'}
+
+      const name = `${client.firstName} ${client.lastName}`
+      if(client.banned)  return { success:false,message:`${name} no puede ingresar al hotel` }
+
+      const clientInStay = await prisma.stay.findFirst({ 
+        where:{ AND:{
+          dateEnd: null,
+          clientInStay: { 
+            some: { clientId: client.id }
+          }
+        }},
+        include:{
+          room: { select: { number: true} }
+        }
+      })
+      
+      if(clientInStay) return {success:false, message:`El cliente ${name} esta actualmente en la habitacion ${clientInStay.room.number}`}
+
+      return  {success:true, message:'Cliente encontrado',client}
+    }catch(err){
+      consoleError(err)
+      return {success:false,message:'No se pudo realizar la busqueda'}
     }
   }
 

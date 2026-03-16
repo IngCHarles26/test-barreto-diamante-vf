@@ -10,8 +10,8 @@ interface Props {
 export default async function ActivesPage({searchParams}:Props) {
 
   const params = await searchParams
-  const rooms = (await getCacheRooms()).map(el => el.number).sort((a,b) => a-b)
-  const actives = (await SAgetFilteredActives(params,rooms)).sort((a,b) => (a.room||0) - (b.room||0))
+  const rooms = (await getCacheRooms()).map(el => el.number)
+  const actives = await SAgetFilteredActives(params,rooms)
 
   return (
     <div className="h-full w-full flex flex-col">

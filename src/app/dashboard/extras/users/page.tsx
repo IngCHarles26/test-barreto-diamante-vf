@@ -5,12 +5,12 @@ import { headers } from "next/headers";
 import { FaPlus } from "react-icons/fa";
 
 export default async function UsersPage() {
-
+    const userHeaders = await headers()
     const {users} = await auth.api.listUsers({
       query:{
         sortBy: 'email'
       },
-      headers: await headers(),
+      headers: userHeaders,
     })
   
     const adminList = (process.env.ADMIN_IDS || '').split(",")
