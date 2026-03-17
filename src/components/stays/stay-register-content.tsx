@@ -30,10 +30,12 @@ export const StayRegisterContent = ({ rooms }:Props) => {
     </div>
   )
   
-  if(!currentData || !currentData.dateStart) return <NewStayForm rooms={rooms}/>
+  if(!currentData || !currentData.dateStart ) return <NewStayForm rooms={rooms}/>
   const {carPlate,clientInStay,dateStart,origin,reason,id,pays} = currentData
 
   const [newDateStart,newTimeStart] = genVisualDate(dateStart)
+
+  console.log(pays)
 
   return (
     <div className=" w-full flex flex-col gap-2">
@@ -119,6 +121,7 @@ export const StayRegisterContent = ({ rooms }:Props) => {
           </div>
 
           {pays.map(({endDayDate,mount,startDayDate},ix) => {
+
             const [startDatePay,startTimePay] = genVisualDate(startDayDate || new Date())
             const [endDatePay,endTimePay] = genVisualDate(endDayDate || new Date())
             

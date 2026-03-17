@@ -32,7 +32,7 @@ export default async function UsersPage() {
             <TableHeader>
               <p className='w-[20%]'>Apellidos</p>
               <p className='w-[20%]'>Nombres</p>
-              <p className='w-[30%]'>Usuario</p>
+              <p className='w-[30%]'>Correo</p>
               <p className='w-[15%] text-center'>Activo</p>
               <p className='w-[15%] text-center'><span className="hidden md:inline">Clave</span></p>
             </TableHeader>

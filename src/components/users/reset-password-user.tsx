@@ -9,6 +9,7 @@ import { ChangeEvent, useState } from 'react'
 import { authClient } from '@/lib/auth-client'
 import { MdKey } from 'react-icons/md'
 import { closeDialog } from '@/lib/client'
+import { useMessageStore } from '@/store'
 
 
 interface Props{
@@ -19,7 +20,7 @@ interface Props{
 
 export const ResetPasswordUser = ({name,userId,dialogId}:Props) => {
   const [passwordValues, setPasswordValues] = useState({password:'',confirmPassword:''});
-  const [errorMessage, setErrorMessage] = useState('');
+  const {stSetLoadingMsg,stSetStaticMsg} = useMessageStore()
 
   const schema = z.object({
     password: zPassword,
@@ -44,9 +45,9 @@ export const ResetPasswordUser = ({name,userId,dialogId}:Props) => {
     if(result.error){
       const errors = result.error.issues.map( issue => issue.message)
 
-      setErrorMessage(errors[0])
+      stSetStaticMsg(errors[0])
     }else{
-      setErrorMessage('')
+      stSetStaticMsg('')
     }
 
   }
@@ -55,22 +56,22 @@ export const ResetPasswordUser = ({name,userId,dialogId}:Props) => {
     
     const result = schema.safeParse(passwordValues)
     
-    if(result.error) return setErrorMessage('Datos incorrectos');
+    if(result.error) return stSetStaticMsg('Datos incorrectos');
 
-    setErrorMessage('Procesando...')
+    stSetLoadingMsg('guardando')
     
     const { error } = await authClient.admin.setUserPassword({
       newPassword: passwordValues.password,
       userId
     })
 
-    setErrorMessage('')
-
+    
     if(error){
       const message = error.message || 'Algo salió mal'
-      return setErrorMessage(message)
+      return stSetStaticMsg(message)
     }
-
+    
+    stSetStaticMsg('Contraseña actualizada correctamente',true)
     await authClient.admin.revokeUserSessions({userId})
     closeDialog(dialogId)
   }

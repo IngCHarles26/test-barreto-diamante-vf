@@ -20,12 +20,13 @@ interface Props {
 
 export const PayForm = ({ currentData }:Props) => {
   const {paidUntil,roomId} = currentData
+
+  //! No se actualiza el estado de pagos si es que se registran varios pagos 
   const untilDate = transformDate(
       new Date(
         new Date(paidUntil).setHours(11,59) + 24*60*60*1000
       )
     ).join('T')
-
   const fromDateText = transformDate(new Date(paidUntil)).join(' ') 
 
 
@@ -37,6 +38,8 @@ export const PayForm = ({ currentData }:Props) => {
     payType: 'efectivo' as PayType,
     operationNumber: ''
   }
+
+  console.log(initialData)
 
   const [payData, setPayData] = useState(initialData);
   const {stSetLoadingMsg,stSetStaticMsg} = useMessageStore()

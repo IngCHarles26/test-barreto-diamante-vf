@@ -66,7 +66,7 @@ export const Sidebar = async () => {
 
         <div className="h-full">
           <p className="font-bold uppercase text-black-01 text-lg">Hostal Barreto</p>
-          <p className=" text-gray-02 text-base md:text-lg capitalize">{role}</p>
+          <p className=" text-gray-02 text-base md:text-lg">{role}</p>
         </div>
 
       </header>

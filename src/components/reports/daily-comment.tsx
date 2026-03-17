@@ -22,8 +22,6 @@ export const EditDayComment = ({comment,dayIsoFormat,idComment}:Props) => {
   const {stSetLoadingMsg,stSetStaticMsg} = useMessageStore()
 
   const handleClick = async () => {
-    if( !observations ) return stSetStaticMsg('No hay datos para actualizar')
-    
     stSetLoadingMsg('Actualizando')
     const success = await SAupdateComment(idComment,observations,dayIsoFormat)
 

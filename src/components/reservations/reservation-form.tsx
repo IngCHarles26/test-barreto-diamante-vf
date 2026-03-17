@@ -238,7 +238,7 @@ export const ReservationForm = () => {
                 name='Personal'
                 value={reservationData.Personal}
                 onChange={handleChange}
-                selectData={[1,2,3,4,5,6]}
+                selectData={[0,1,2,3,4,5,6]}
               />
 
               <InputApp
@@ -249,7 +249,7 @@ export const ReservationForm = () => {
                 name='Triple_Familiar'
                 value={reservationData.Triple_Familiar}
                 onChange={handleChange}
-                selectData={[1,2,3]}
+                selectData={[0,1,2,3]}
               />
             </div>
 
